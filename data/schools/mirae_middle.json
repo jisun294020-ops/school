@@ -1,0 +1,75 @@
+{
+  "school_name": "미래중학교",
+  "grade": "1~3학년",
+  "test_date": "2026-03-10",
+  "emotional_behavioral": {
+    "screening": {
+      "total_students": 450,
+      "normal": 400,
+      "concern": 50
+    },
+    "secondary_screening": {
+      "general_management": 35,
+      "priority_management": 15
+    },
+    "domain_scores": {
+      "정서영역": 55,
+      "행동영역": 58,
+      "사회성영역": 50,
+      "보호요인": 48
+    }
+  },
+  "learning_psychology": {
+    "total_students": 450,
+    "domain_results": {
+      "학습동기": {
+        "distribution": {"상": 100, "중": 200, "하": 150},
+        "average_level": "중"
+      },
+      "학습전략": {
+        "distribution": {"상": 80, "중": 210, "하": 160},
+        "average_level": "하"
+      },
+      "자기효능감": {
+        "distribution": {"상": 90, "중": 200, "하": 160},
+        "average_level": "하"
+      },
+      "시험불안": {
+        "distribution": {"상": 130, "중": 200, "하": 120},
+        "average_level": "상"
+      }
+    }
+  },
+  "multiphasic_personality": {
+    "total_students": 200,
+    "validity_scales": {
+      "L": 48,
+      "F": 52,
+      "K": 49
+    },
+    "clinical_scales": {
+      "Hs": 50,
+      "D": 58,
+      "Hy": 52,
+      "Pd": 56,
+      "Pa": 53,
+      "Pt": 60,
+      "Sc": 49,
+      "Ma": 55,
+      "Si": 54
+    },
+    "alert_students": {
+      "우울증": 18,
+      "불안(강박증)": 15,
+      "반사회성": 12,
+      "내향성": 10
+    }
+  },
+  "recommendations": [
+    "정서행동 관심군 비율(11.1%)이 평균보다 높아 학교 차원의 정서지원 프로그램 강화 필요",
+    "학습전략·자기효능감이 전반적으로 낮은 수준으로, 학년별 맞춤 학습 코칭 프로그램 도입 권장",
+    "시험불안 상위군(130명, 28.9%) 대상 스트레스 관리 및 이완훈련 프로그램 운영",
+    "우선관리군 15명에 대한 즉각적 Wee센터 연계 및 외부 전문기관 의뢰 필요",
+    "우울·불안 주의군 학생 대상 소규모 집단상담 프로그램 편성"
+  ]
+}

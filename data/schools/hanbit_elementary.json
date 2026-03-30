@@ -1,0 +1,73 @@
+{
+  "school_name": "한빛초등학교",
+  "grade": "4~6학년",
+  "test_date": "2026-03-15",
+  "emotional_behavioral": {
+    "screening": {
+      "total_students": 320,
+      "normal": 295,
+      "concern": 25
+    },
+    "secondary_screening": {
+      "general_management": 18,
+      "priority_management": 7
+    },
+    "domain_scores": {
+      "정서영역": 48,
+      "행동영역": 52,
+      "사회성영역": 45,
+      "보호요인": 55
+    }
+  },
+  "learning_psychology": {
+    "total_students": 320,
+    "domain_results": {
+      "학습동기": {
+        "distribution": {"상": 90, "중": 150, "하": 80},
+        "average_level": "중"
+      },
+      "학습전략": {
+        "distribution": {"상": 75, "중": 160, "하": 85},
+        "average_level": "중"
+      },
+      "자기효능감": {
+        "distribution": {"상": 100, "중": 140, "하": 80},
+        "average_level": "중"
+      },
+      "시험불안": {
+        "distribution": {"상": 70, "중": 170, "하": 80},
+        "average_level": "중"
+      }
+    }
+  },
+  "multiphasic_personality": {
+    "total_students": 120,
+    "validity_scales": {
+      "L": 50,
+      "F": 48,
+      "K": 52
+    },
+    "clinical_scales": {
+      "Hs": 47,
+      "D": 53,
+      "Hy": 49,
+      "Pd": 51,
+      "Pa": 48,
+      "Pt": 55,
+      "Sc": 46,
+      "Ma": 52,
+      "Si": 50
+    },
+    "alert_students": {
+      "우울증": 8,
+      "불안(강박증)": 6,
+      "내향성": 5
+    }
+  },
+  "recommendations": [
+    "관심군 학생 25명에 대한 2차 선별검사 후 우선관리군 7명 전문상담 연계 필요",
+    "학습동기 하위군 80명 대상 자기주도학습 프로그램 운영 권장",
+    "시험불안 상위군 70명 대상 이완훈련 및 시험 대처 전략 교육 실시",
+    "우울 주의군 8명에 대한 개별 상담 및 Wee센터 연계 검토"
+  ]
+}

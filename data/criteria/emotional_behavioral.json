@@ -1,0 +1,64 @@
+{
+  "test_name": "정서행동특성검사",
+  "description": "학생의 정서·행동 특성을 선별하여 관심군 학생을 조기 발견하고 지원하기 위한 검사",
+  "screening_levels": {
+    "1차_선별": {
+      "description": "자기보고형 설문을 통한 1차 선별",
+      "categories": {
+        "정상군": {
+          "label": "정상군",
+          "score_range": "기준점수 미만",
+          "interpretation": "현재 정서·행동상 특별한 문제가 관찰되지 않는 학생",
+          "follow_up": "일반적인 학교생활 지도 및 예방 교육 참여"
+        },
+        "관심군": {
+          "label": "관심군",
+          "score_range": "기준점수 이상",
+          "interpretation": "정서·행동 문제의 위험 요인이 일부 관찰되어 추가 확인이 필요한 학생",
+          "follow_up": "2차 선별검사 실시, 담임교사 관찰 기록, 학부모 면담"
+        }
+      }
+    },
+    "2차_선별": {
+      "description": "관심군 학생 대상 심층 평가",
+      "categories": {
+        "일반관리군": {
+          "label": "일반관리군",
+          "interpretation": "경미한 수준의 정서·행동 어려움이 있으나 학교 내 지원으로 관리 가능한 학생",
+          "follow_up": "학교 내 상담, 또래 지지 프로그램 참여, 담임교사 지속 관찰"
+        },
+        "우선관리군": {
+          "label": "우선관리군",
+          "interpretation": "정서·행동 문제가 뚜렷하여 전문적 지원이 필요한 학생",
+          "follow_up": "Wee센터 연계 상담, 외부 전문기관 의뢰, 학부모 상담 및 협력 체계 구축"
+        }
+      }
+    }
+  },
+  "domains": [
+    {
+      "name": "정서영역",
+      "sub_domains": ["우울", "불안", "자살·자해"],
+      "high_score_interpretation": "정서적 어려움이 높은 수준으로 나타남. 우울감, 불안, 자살·자해 위험에 대한 즉각적 개입 필요",
+      "low_score_interpretation": "정서적으로 안정적인 상태"
+    },
+    {
+      "name": "행동영역",
+      "sub_domains": ["과잉행동", "공격성", "비행"],
+      "high_score_interpretation": "외현화 문제행동이 높은 수준으로 나타남. 행동 조절 어려움, 또래 갈등, 규칙 위반 행동에 대한 개입 필요",
+      "low_score_interpretation": "행동 조절이 양호한 상태"
+    },
+    {
+      "name": "사회성영역",
+      "sub_domains": ["또래관계", "학교적응", "사회적 위축"],
+      "high_score_interpretation": "사회적 관계 및 학교적응에 어려움이 나타남. 또래관계 개선 및 사회성 향상 프로그램 권장",
+      "low_score_interpretation": "또래관계 및 학교적응이 양호한 상태"
+    },
+    {
+      "name": "보호요인",
+      "sub_domains": ["자아탄력성", "가족관계", "교사관계"],
+      "high_score_interpretation": "보호요인이 높아 위기 상황에서 회복 가능성이 높음",
+      "low_score_interpretation": "보호요인이 낮아 위기 상황 시 취약할 수 있음. 지지 체계 강화 필요"
+    }
+  ]
+}

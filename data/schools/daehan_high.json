@@ -1,0 +1,75 @@
+{
+  "school_name": "대한고등학교",
+  "grade": "1~3학년",
+  "test_date": "2026-03-12",
+  "emotional_behavioral": {
+    "screening": {
+      "total_students": 520,
+      "normal": 470,
+      "concern": 50
+    },
+    "secondary_screening": {
+      "general_management": 32,
+      "priority_management": 18
+    },
+    "domain_scores": {
+      "정서영역": 58,
+      "행동영역": 50,
+      "사회성영역": 53,
+      "보호요인": 45
+    }
+  },
+  "learning_psychology": {
+    "total_students": 520,
+    "domain_results": {
+      "학습동기": {
+        "distribution": {"상": 130, "중": 250, "하": 140},
+        "average_level": "중"
+      },
+      "학습전략": {
+        "distribution": {"상": 120, "중": 260, "하": 140},
+        "average_level": "중"
+      },
+      "자기효능감": {
+        "distribution": {"상": 110, "중": 240, "하": 170},
+        "average_level": "중"
+      },
+      "시험불안": {
+        "distribution": {"상": 180, "중": 220, "하": 120},
+        "average_level": "상"
+      }
+    }
+  },
+  "multiphasic_personality": {
+    "total_students": 300,
+    "validity_scales": {
+      "L": 46,
+      "F": 50,
+      "K": 51
+    },
+    "clinical_scales": {
+      "Hs": 48,
+      "D": 60,
+      "Hy": 50,
+      "Pd": 53,
+      "Pa": 50,
+      "Pt": 62,
+      "Sc": 48,
+      "Ma": 50,
+      "Si": 56
+    },
+    "alert_students": {
+      "우울증": 25,
+      "불안(강박증)": 22,
+      "내향성": 18,
+      "반사회성": 8
+    }
+  },
+  "recommendations": [
+    "고등학생 특성상 시험불안 비율(34.6%)이 높으므로 학년별 시험 스트레스 관리 프로그램 필수",
+    "우울·강박 주의군이 가장 많아 정기적 심리상담 체계 구축 시급",
+    "보호요인 점수가 낮아(T=45) 교사-학생 관계 및 가족지지 강화 프로그램 병행 필요",
+    "우선관리군 18명 전원 Wee센터 연계 및 개별 사례관리 계획 수립",
+    "3학년 입시 스트레스 집중 관리를 위한 진로상담 확대 운영"
+  ]
+}

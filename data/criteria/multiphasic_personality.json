@@ -1,0 +1,95 @@
+{
+  "test_name": "다면적 인성검사",
+  "description": "학생의 성격 특성, 적응 수준, 정신건강 상태를 다면적으로 평가하여 종합적인 인성 특성을 파악하기 위한 검사",
+  "validity_scales": [
+    {
+      "name": "타당도척도",
+      "sub_scales": [
+        {
+          "code": "L",
+          "name": "허구척도",
+          "high_interpretation": "자신을 지나치게 좋게 보이려는 경향. 검사 결과의 신뢰성 재검토 필요",
+          "normal_interpretation": "솔직하고 자연스러운 응답 태도"
+        },
+        {
+          "code": "F",
+          "name": "비전형척도",
+          "high_interpretation": "비일관적이거나 과장된 응답 경향. 심리적 고통 호소 또는 무성의 응답 가능성",
+          "normal_interpretation": "일반적인 응답 패턴"
+        },
+        {
+          "code": "K",
+          "name": "교정척도",
+          "high_interpretation": "방어적 태도로 문제를 축소하는 경향",
+          "normal_interpretation": "적절한 수준의 자기개방"
+        }
+      ]
+    }
+  ],
+  "clinical_scales": [
+    {
+      "code": "Hs",
+      "name": "건강염려증",
+      "high_interpretation": "신체 건강에 대한 과도한 걱정, 신체 증상 호소 경향",
+      "guidance": "심리적 원인 탐색, 스트레스 관리 교육, 필요시 의료기관 연계"
+    },
+    {
+      "code": "D",
+      "name": "우울증",
+      "high_interpretation": "우울감, 무기력, 자신감 저하, 비관적 사고 경향",
+      "guidance": "상담 연계, 활동 스케줄링, 긍정 경험 제공, 자살 위험 평가 필요시 실시"
+    },
+    {
+      "code": "Hy",
+      "name": "히스테리",
+      "high_interpretation": "스트레스 상황에서 신체적 증상으로 전환하는 경향, 타인의 관심 추구",
+      "guidance": "감정 표현 훈련, 스트레스 대처 기술 교육"
+    },
+    {
+      "code": "Pd",
+      "name": "반사회성",
+      "high_interpretation": "규칙 위반, 충동 조절 어려움, 권위에 대한 반항적 태도",
+      "guidance": "행동 수정 프로그램, 분노 조절 훈련, 사회기술 훈련"
+    },
+    {
+      "code": "Pa",
+      "name": "편집증",
+      "high_interpretation": "타인에 대한 과도한 의심, 예민함, 피해의식",
+      "guidance": "신뢰관계 구축, 인지적 재구성, 사회적 기술 훈련"
+    },
+    {
+      "code": "Pt",
+      "name": "강박증",
+      "high_interpretation": "과도한 걱정, 완벽주의, 불안, 강박적 사고",
+      "guidance": "이완훈련, 인지행동 접근, 불안 관리 교육"
+    },
+    {
+      "code": "Sc",
+      "name": "조현병",
+      "high_interpretation": "현실 접촉의 어려움, 사고의 혼란, 사회적 고립",
+      "guidance": "전문기관 의뢰 우선, 지지적 상담, 안전한 환경 조성"
+    },
+    {
+      "code": "Ma",
+      "name": "경조증",
+      "high_interpretation": "과도한 활동성, 충동성, 비현실적 자기 과대평가",
+      "guidance": "구조화된 활동 제공, 에너지 조절 지도, 현실적 목표 설정"
+    },
+    {
+      "code": "Si",
+      "name": "내향성",
+      "high_interpretation": "사회적 상황 회피, 소극적 대인관계, 혼자 있기 선호",
+      "guidance": "소규모 사회 참여 기회 제공, 사회기술 훈련, 점진적 노출"
+    }
+  ],
+  "score_interpretation": {
+    "T_score": {
+      "very_low": {"range": "T < 35", "meaning": "매우 낮음 - 해당 특성이 거의 나타나지 않음"},
+      "low": {"range": "35 ≤ T < 45", "meaning": "낮음"},
+      "normal": {"range": "45 ≤ T ≤ 55", "meaning": "보통 - 일반적인 수준"},
+      "mild": {"range": "55 < T ≤ 65", "meaning": "약간 높음 - 주의 관찰 필요"},
+      "high": {"range": "65 < T ≤ 75", "meaning": "높음 - 상담 및 전문적 개입 권장"},
+      "very_high": {"range": "T > 75", "meaning": "매우 높음 - 즉각적 전문 개입 필요"}
+    }
+  }
+}
