@@ -795,7 +795,7 @@
 
   function updateDashboard() {
     const totalSales = filteredData.reduce((sum, row) => {
-      const val = parseFloat(row['매출액']);
+      const val = parseFloat(row['공급가액']);
       return sum + (isNaN(val) ? 0 : val);
     }, 0);
 
@@ -823,7 +823,7 @@
     const mgrData = {};
     filteredData.forEach(row => {
       const mgr = (row['담당(정)'] || row['담당자'] || '미분류').replace(/\([^)]*\)/g, '').trim();
-      const sales = parseFloat(row['매출액']) || 0;
+      const sales = parseFloat(row['공급가액']) || 0;
       mgrData[mgr] = (mgrData[mgr] || 0) + sales;
     });
 
@@ -847,7 +847,7 @@
     const productData = {};
     filteredData.forEach(row => {
       const product = row['제품'] || '미분류';
-      const sales = parseFloat(row['매출액']) || 0;
+      const sales = parseFloat(row['공급가액']) || 0;
       productData[product] = (productData[product] || 0) + sales;
     });
 
@@ -871,7 +871,7 @@
     const clientData = {};
     filteredData.forEach(row => {
       const client = row['매출처'] || row['거래처'] || '미분류';
-      const sales = parseFloat(row['매출액']) || 0;
+      const sales = parseFloat(row['공급가액']) || 0;
       clientData[client] = (clientData[client] || 0) + sales;
     });
 
@@ -900,7 +900,7 @@
       if (!clientData[client]) {
         clientData[client] = { sales: 0, quantity: 0, manager: '', products: new Set() };
       }
-      clientData[client].sales += parseFloat(row['매출액']) || 0;
+      clientData[client].sales += parseFloat(row['공급가액']) || 0;
       clientData[client].quantity += parseInt(row['수량']) || 0;
       clientData[client].manager = row['담당(정)'] || row['담당자'] || '';
       if (row['제품']) clientData[client].products.add(row['제품']);
@@ -935,7 +935,7 @@
       if (!mgrData[mgr]) {
         mgrData[mgr] = { sales: 0, quantity: 0, clients: new Set(), products: new Set() };
       }
-      mgrData[mgr].sales += parseFloat(row['매출액']) || 0;
+      mgrData[mgr].sales += parseFloat(row['공급가액']) || 0;
       mgrData[mgr].quantity += parseInt(row['수량']) || 0;
       mgrData[mgr].clients.add(row['매출처'] || row['거래처']);
       if (row['제품']) mgrData[mgr].products.add(row['제품']);
@@ -968,7 +968,7 @@
 
   function generateReport() {
     const reportDate = new Date().toLocaleDateString('ko-KR');
-    const totalSales = filteredData.reduce((sum, row) => sum + (parseFloat(row['매출액']) || 0), 0);
+    const totalSales = filteredData.reduce((sum, row) => sum + (parseFloat(row['공급가액']) || 0), 0);
     const totalQuantity = filteredData.reduce((sum, row) => sum + (parseInt(row['수량']) || 0), 0);
     const uniqueClients = new Set(filteredData.map(row => row['매출처'] || row['거래처'])).size;
 
@@ -1002,7 +1002,7 @@
       if (!clientData[client]) {
         clientData[client] = { sales: 0, quantity: 0 };
       }
-      clientData[client].sales += parseFloat(row['매출액']) || 0;
+      clientData[client].sales += parseFloat(row['공급가액']) || 0;
       clientData[client].quantity += parseInt(row['수량']) || 0;
     });
 
