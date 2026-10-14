@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>프리헷 세트 메뉴</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background: #eef0f2;
+      color: #222;
+      padding: 24px 16px;
+    }
+
+    .container { max-width: 720px; margin: 0 auto; }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+
+    .menu-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .menu-card {
+      display: flex;
+      gap: 20px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .menu-image {
+      position: relative;
+      flex: 0 0 160px;
+      height: 160px;
+      border: 2px solid #d9534f;
+      border-radius: 10px;
+      background: #f7f3ef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .badge {
+      position: absolute;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      background: #d9534f;
+    }
+
+    .badge.event { top: -12px; left: -8px; }
+    .badge.hot { bottom: -12px; left: 50%; transform: translateX(-50%); background: #c0392b; }
+    .badge.ice { bottom: -12px; left: 50%; transform: translateX(-50%); background: #2e86c1; }
+
+    .shot {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #555;
+    }
+
+    .menu-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-name {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    .menu-desc {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .menu-price {
+      margin-top: auto;
+      padding-top: 12px;
+      text-align: right;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .menu-price .original {
+      font-size: 17px;
+      font-weight: 400;
+      color: #999;
+      text-decoration: line-through;
+      margin-right: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .menu-card { flex-direction: column; }
+      .menu-image { flex-basis: auto; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>☕ 세트 메뉴</h1>
+
+    <div class="menu-list">
+      <div class="menu-card">
+        <div class="menu-image">
+          <span class="badge event">EVENT</span>
+          <span class="shot">2shot</span>
+          🍪☕
+          <span class="badge hot">HOT</span>
+        </div>
+        <div class="menu-info">
+          <div class="menu-name">프리헷 아메리카노 &amp; 딥초코쿠키</div>
+          <div class="menu-desc">시그니처 커피 2Shot + 딥 초코 쿠키 세트</div>
+          <div class="menu-price">
+            <span class="original">5,200원</span>4,680원
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-image">
+          <span class="badge event">EVENT</span>
+          <span class="shot">2shot</span>
+          🍘🧊
+          <span class="badge ice">ICE</span>
+        </div>
+        <div class="menu-info">
+          <div class="menu-name">프리헷 아이스 아메리카노 &amp; 꿀건빵</div>
+          <div class="menu-desc">프리헷 아이스 아메리카노 2Shot + 꿀건빵 세트</div>
+          <div class="menu-price">가격 미정</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
