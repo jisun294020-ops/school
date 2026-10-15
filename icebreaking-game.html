@@ -124,6 +124,26 @@ button:focus-visible, input:focus-visible, select:focus-visible, .reel:focus-vis
 .btn.real { background: var(--mint); border-color: var(--mint); color: #062b20; font-family: var(--font-display); font-weight: 400; font-size: 1.4rem; padding: 10px 32px; }
 .btn.fake { background: var(--coral); border-color: var(--coral); color: #2e0703; font-family: var(--font-display); font-weight: 400; font-size: 1.4rem; padding: 10px 32px; }
 
+/* ---------- 중2 창직 퀴즈 ---------- */
+.q2-card { margin-top: 16px; padding: clamp(18px, 3vw, 28px); border-radius: 18px; background: var(--stage); display: flex; flex-direction: column; gap: 8px; }
+.q2-card .eyebrow { font-size: 0.85rem; letter-spacing: 0.08em; color: var(--gold); font-weight: 700; }
+.q2-q { font-family: var(--font-display); font-size: clamp(1.4rem, 3.6vw, 2.2rem); line-height: 1.3; text-wrap: balance; }
+.options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+.opt { text-align: left; font: 600 clamp(1rem, 2.2vw, 1.25rem) var(--font-body); color: var(--ink); background: var(--stage); border: 3px solid var(--stage-3); border-radius: 14px; padding: 14px 16px; cursor: pointer; display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
+.opt:hover:not(:disabled) { border-color: var(--ink-dim); }
+.opt .n { font-family: var(--font-display); font-weight: 400; color: var(--gold); flex: none; }
+.opt:disabled { cursor: default; }
+.opt.correct { border-color: var(--mint); }
+.opt.correct .n { color: var(--mint); }
+.opt.wrong { border-color: var(--coral); opacity: .75; }
+.opt.wrong .n { color: var(--coral); }
+.options.ox .opt { justify-content: center; font-family: var(--font-display); font-weight: 400; font-size: clamp(2.6rem, 8vw, 4rem); line-height: 1; padding: 18px; }
+.options.ox .opt:first-child { color: var(--mint); }
+.options.ox .opt:last-child { color: var(--coral); }
+.explain { margin-top: 16px; padding: 14px 18px; border-radius: 14px; background: var(--stage); border-left: 4px solid var(--mint); font-size: clamp(1rem, 2vw, 1.15rem); }
+.explain.miss { border-left-color: var(--coral); }
+.explain b { color: var(--gold); }
+
 /* ---------- 점수판 ---------- */
 .board-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
 .board-head h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; margin: 0; }
@@ -147,6 +167,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, .reel:focus-vis
   .reels { grid-template-columns: minmax(0, 1fr); }
   .reel .window { height: 1.8em; }
   .mission { grid-template-columns: minmax(0, 1fr); }
+  .options { grid-template-columns: minmax(0, 1fr); }
+  .options.ox { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tab { padding: 8px 12px; font-size: 0.88rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -162,6 +185,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, .reel:focus-vis
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" id="tab-slot" aria-selected="true" aria-controls="view-slot">창직 슬롯</button>
       <button class="tab" role="tab" id="tab-quiz" aria-selected="false" aria-controls="view-quiz">진짜? 가짜?</button>
+      <button class="tab" role="tab" id="tab-q2" aria-selected="false" aria-controls="view-q2">중2 창직 퀴즈</button>
     </div>
   </header>
 
@@ -228,6 +252,25 @@ button:focus-visible, input:focus-visible, select:focus-visible, .reel:focus-vis
     <div class="quiz-actions" id="q-next" hidden>
       <button class="btn" id="q-next-btn">다음 문제</button>
       <button class="btn" id="q-reshuffle">처음부터 섞어서</button>
+    </div>
+  </section>
+
+  <!-- 중2 창직 퀴즈 -->
+  <section class="panel" id="view-q2" role="tabpanel" aria-labelledby="tab-q2" hidden>
+    <div class="quiz-top">
+      <span>중학교 2학년 창직 개념 퀴즈. 팀별로 답을 정한 뒤 보기를 눌러 확인하세요.</span>
+      <span>문제 <b id="q2-no">1</b> / <b id="q2-total">12</b></span>
+    </div>
+    <div class="q2-card">
+      <div class="eyebrow" id="q2-type">4지선다</div>
+      <div class="q2-q" id="q2-q"></div>
+    </div>
+    <div class="options" id="q2-opts"></div>
+    <div class="explain" id="q2-explain" hidden></div>
+    <div class="quiz-actions">
+      <button class="btn" id="q2-prev">이전 문제</button>
+      <button class="btn" id="q2-show">정답 보기</button>
+      <button class="btn" id="q2-next">다음 문제</button>
     </div>
   </section>
 
@@ -298,7 +341,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, .reel:focus-vis
     locked: [false, false, false],
     teams: [{ name: "1팀", score: 0 }, { name: "2팀", score: 0 }, { name: "3팀", score: 0 }, { name: "4팀", score: 0 }],
     order: [],
-    qi: 0
+    qi: 0,
+    q2i: 0
   };
 
   // ---------- 탭 ----------
@@ -306,11 +350,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, .reel:focus-vis
     state.tab = t;
     $("#tab-slot").setAttribute("aria-selected", t === "slot");
     $("#tab-quiz").setAttribute("aria-selected", t === "quiz");
+    $("#tab-q2").setAttribute("aria-selected", t === "q2");
     $("#view-slot").hidden = t !== "slot";
     $("#view-quiz").hidden = t !== "quiz";
+    $("#view-q2").hidden = t !== "q2";
   }
   $("#tab-slot").onclick = () => setTab("slot");
   $("#tab-quiz").onclick = () => setTab("quiz");
+  $("#tab-q2").onclick = () => setTab("q2");
 
   // ---------- 슬롯 ----------
   const reelEls = $$(".reel");
@@ -451,6 +498,69 @@ button:focus-visible, input:focus-visible, select:focus-visible, .reel:focus-vis
   $("#q-next-btn").onclick = () => { if (state.qi < QUIZ.length - 1) { state.qi++; showQ(); } };
   $("#q-reshuffle").onclick = () => { shuffle(); showQ(); };
 
+  // ---------- 중2 창직 퀴즈 ----------
+  const OX = ["O", "X"];
+  const QUIZ2 = [
+    { q: "'창직(創職)'의 뜻으로 가장 알맞은 것은?", opts: ["이미 있는 회사에 취직하는 것", "새로운 직업을 스스로 만들어 내는 것", "가게를 차려 물건을 파는 것", "자격증을 많이 따는 것"], a: 1, why: "창직은 '직업(職)을 만든다(創)'는 뜻이에요. 자기 아이디어와 재능으로 세상에 없던 직업을 만들거나, 있던 직업을 새롭게 바꾸는 활동이에요." },
+    { q: "창직을 하려면 반드시 회사를 세워야 한다.", opts: OX, a: 1, why: "창업은 회사나 가게를 세우는 것, 창직은 새로운 직업을 만드는 것이에요. 회사에 다니면서도, 혼자 프리랜서로도 창직할 수 있어요." },
+    { q: "창직의 첫걸음으로 가장 알맞은 것은?", opts: ["인기 직업 순위 외우기", "사람들이 겪는 불편함이나 문제 발견하기", "무조건 돈부터 많이 모으기", "남들이 하는 일 그대로 따라 하기"], a: 1, why: "새로운 직업은 대부분 '이거 불편한데?'에서 시작해요. 문제를 찾으면 그 문제를 해결하는 사람이 필요해지죠." },
+    { q: "한번 생긴 직업은 시간이 지나도 사라지지 않는다.", opts: OX, a: 1, why: "전화교환원, 버스 안내원처럼 기술과 사회가 바뀌면서 사라진 직업이 많아요. 그만큼 새로 생기는 직업도 많고요." },
+    { q: "다음 중 기술 발전과 함께 비교적 최근에 생긴 직업이 아닌 것은?", opts: ["드론 조종사", "유튜브 크리에이터", "앱 개발자", "대장장이"], a: 3, why: "대장장이는 아주 오래전부터 있던 직업이에요. 나머지는 드론, 동영상 플랫폼, 스마트폰이 등장하면서 생겼어요." },
+    { q: "'사람들이 앱이나 웹사이트를 쉽고 편하게 쓰도록 화면과 사용 흐름을 설계하는 사람'은?", opts: ["UX 디자이너", "회계사", "통역사", "조경사"], a: 0, why: "UX는 User Experience, 우리말로 '사용자 경험'이에요. 쓰는 사람 입장에서 생각하는 힘이 중요한 직업이에요." },
+    { q: "1인 가구가 늘어나면서 필요성이 커진 서비스와 가장 거리가 먼 것은?", opts: ["반려동물 돌봄 서비스", "소포장 반찬 배달", "혼자 사는 집 안전 점검", "10인용 대형 식탁 제작"], a: 3, why: "사회가 변하면 필요한 서비스도 바뀌어요. 이런 변화를 읽어 내는 눈이 창직의 힘이에요." },
+    { q: "버려지는 물건에 디자인과 아이디어를 더해 더 가치 있는 제품으로 만드는 것은?", opts: ["다운로드", "업사이클링", "리모델링", "스트리밍"], a: 1, why: "버려진 현수막으로 가방을 만드는 것처럼요. 환경 문제를 해결하는 '업사이클링 디자이너'라는 직업도 있어요." },
+    { q: "창직은 어른만 할 수 있고, 중학생은 준비할 수 없다.", opts: OX, a: 1, why: "직업을 실제로 갖는 건 나중이어도, 문제를 찾고 아이디어를 내고 계획을 세워 보는 연습은 지금부터 할 수 있어요. 오늘 수업처럼요!" },
+    { q: "브레인스토밍 규칙으로 옳지 않은 것은?", opts: ["엉뚱한 아이디어도 환영한다", "아이디어는 많을수록 좋다", "다른 사람 아이디어를 바로 비판한다", "친구 아이디어에 내 생각을 덧붙여도 된다"], a: 2, why: "아이디어를 낼 때는 비판을 잠시 미뤄야 해요. 평가는 아이디어를 다 모은 다음에 해요." },
+    { q: "'스마트팜'에 대한 설명으로 알맞은 것은?", opts: ["스마트폰을 기르는 농장", "정보통신기술로 온도·습도·빛을 자동 조절해 작물을 기르는 농장", "가축만 기르는 농장", "사람이 손으로만 관리하는 전통 농장"], a: 1, why: "스마트팜이 늘면서 스마트팜 운영자, 농업 데이터 분석가 같은 새로운 직업도 생겼어요." },
+    { q: "인공지능이 사람을 대신하기 가장 어려운 능력은?", opts: ["많은 숫자를 빠르게 계산하기", "같은 동작을 정확히 반복하기", "정해진 규칙대로 서류 분류하기", "다른 사람의 마음에 공감하고 새로운 아이디어 내기"], a: 3, why: "공감 능력과 창의성은 앞으로 더 중요해질 능력이에요. 창직에 꼭 필요한 힘이기도 하고요." }
+  ];
+  const NUMS = ["①", "②", "③", "④"];
+  function showQ2() {
+    const q = QUIZ2[state.q2i], isOX = q.opts === OX;
+    $("#q2-no").textContent = state.q2i + 1;
+    $("#q2-total").textContent = QUIZ2.length;
+    $("#q2-type").textContent = isOX ? "OX 퀴즈" : "4지선다";
+    $("#q2-q").textContent = q.q;
+    const box = $("#q2-opts");
+    box.classList.toggle("ox", isOX);
+    box.innerHTML = "";
+    q.opts.forEach((o, k) => {
+      const b = document.createElement("button");
+      b.className = "opt";
+      b.innerHTML = isOX ? "" : '<span class="n"></span><span></span>';
+      if (isOX) b.textContent = o; else { b.children[0].textContent = NUMS[k]; b.children[1].textContent = o; }
+      b.onclick = () => answerQ2(k);
+      box.appendChild(b);
+    });
+    $("#q2-explain").hidden = true;
+    $("#q2-show").disabled = false;
+    $("#q2-prev").disabled = state.q2i === 0;
+    $("#q2-next").disabled = state.q2i >= QUIZ2.length - 1;
+  }
+  function answerQ2(k) {
+    const q = QUIZ2[state.q2i], isOX = q.opts === OX;
+    const btns = $$("#q2-opts .opt");
+    btns.forEach((b, i) => {
+      b.disabled = true;
+      if (i === q.a) b.classList.add("correct");
+      else if (i === k) b.classList.add("wrong");
+    });
+    const label = isOX ? q.opts[q.a] : NUMS[q.a] + " " + q.opts[q.a];
+    const ex = $("#q2-explain");
+    const head = k < 0 ? "정답은 " : (k === q.a ? "정답이에요! " : "아쉬워요! 정답은 ");
+    ex.innerHTML = "<b></b> ";
+    ex.firstChild.textContent = head + (k === q.a ? "" : label);
+    ex.appendChild(document.createTextNode(q.why));
+    ex.classList.toggle("miss", k >= 0 && k !== q.a);
+    ex.hidden = false;
+    $("#q2-show").disabled = true;
+    if (k === q.a || k < 0) { beep(660, 0.12, "triangle", 0.07); setTimeout(() => beep(990, 0.2, "triangle", 0.07), 120); }
+    else { beep(300, 0.15, "sawtooth", 0.05); setTimeout(() => beep(220, 0.25, "sawtooth", 0.05), 150); }
+  }
+  $("#q2-show").onclick = () => answerQ2(-1);
+  $("#q2-prev").onclick = () => { if (state.q2i > 0) { state.q2i--; showQ2(); } };
+  $("#q2-next").onclick = () => { if (state.q2i < QUIZ2.length - 1) { state.q2i++; showQ2(); } };
+
   // ---------- 점수판 ----------
   function renderTeams(bumpIdx) {
     const box = $("#teams");
@@ -484,10 +594,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, .reel:focus-vis
     renderReels();
     renderTeams();
     showQ();
+    showQ2();
     setTab(state.tab || "slot");
     drawTimer();
   }
-  window.claude?.hot?.snapshot?.(() => ({ tab: state.tab, words: state.words, locked: state.locked, teams: state.teams, order: state.order, qi: state.qi }));
+  window.claude?.hot?.snapshot?.(() => ({ tab: state.tab, words: state.words, locked: state.locked, teams: state.teams, order: state.order, qi: state.qi, q2i: state.q2i }));
   window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 })();
 </script>
