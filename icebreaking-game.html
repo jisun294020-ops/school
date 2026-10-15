@@ -1,0 +1,493 @@
+<title>잡 슬롯 창직 게임</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap">
+<style>
+/* Layout: 교실 프로젝터용 무대. 상단 탭 → 가운데 큰 게임판 → 하단 팀 점수판. 한 화면 안에서 진행 */
+:root {
+  --stage: #1d2152;      /* 무대 남색 */
+  --stage-2: #272c66;    /* 패널 */
+  --stage-3: #343a80;    /* 패널 테두리, 호버 */
+  --ink: #f6f3ff;        /* 본문 */
+  --ink-dim: #b9b8e0;    /* 보조 글씨 */
+  --gold: #ffcf3f;       /* 주 강조: 슬롯 조명 */
+  --coral: #ff6f61;      /* 가짜 / 경고 */
+  --mint: #4fe0b6;       /* 진짜 / 정답 */
+  --on-gold: #241a00;
+  --font-display: "Black Han Sans", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: var(--stage);
+  background-image: radial-gradient(ellipse 80% 50% at 50% 0%, var(--stage-3), transparent 70%);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 28px;
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; }
+.brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 5vw, 3rem); line-height: 1; margin: 0; letter-spacing: 0.01em; }
+h1 span { color: var(--gold); }
+.brand p { margin: 0; color: var(--ink-dim); font-size: 0.95rem; }
+
+.tabs { display: flex; gap: 6px; background: var(--stage-2); padding: 5px; border-radius: 999px; }
+.tab {
+  font: 600 0.95rem var(--font-body); color: var(--ink-dim); background: transparent;
+  border: 0; border-radius: 999px; padding: 8px 18px; cursor: pointer;
+}
+.tab[aria-selected="true"] { background: var(--gold); color: var(--on-gold); }
+button:focus-visible, input:focus-visible, select:focus-visible, .reel:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
+
+.panel { background: var(--stage-2); border: 1px solid var(--stage-3); border-radius: 20px; padding: clamp(18px, 3vw, 32px); }
+
+/* ---------- 슬롯 ---------- */
+.reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.reel {
+  background: var(--stage); border: 3px solid var(--stage-3); border-radius: 16px;
+  padding: 14px 10px 16px; text-align: center; cursor: pointer; position: relative;
+  display: flex; flex-direction: column; gap: 8px; min-width: 0;
+  transition: border-color .2s;
+}
+.reel .q { font-size: 0.85rem; letter-spacing: 0.06em; color: var(--ink-dim); font-weight: 600; }
+.reel .window { height: 2.6em; overflow: hidden; display: grid; place-items: center; font-size: clamp(1.25rem, 3.6vw, 2.3rem); }
+.reel .word { font-family: var(--font-display); line-height: 1.15; overflow-wrap: anywhere; }
+.reel .word.flick { animation: flick .07s linear; }
+.reel.stopped .word { animation: land .35s cubic-bezier(.2,1.6,.4,1); color: var(--gold); }
+.reel .lock { font-size: 0.78rem; color: var(--ink-dim); }
+.reel.locked { border-color: var(--gold); }
+.reel.locked .lock { color: var(--gold); font-weight: 700; }
+@keyframes flick { from { transform: translateY(-40%); opacity: .3; } to { transform: none; opacity: 1; } }
+@keyframes land { 0% { transform: translateY(-30%); } 100% { transform: none; } }
+
+.slot-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; }
+.btn {
+  font: 700 1rem var(--font-body); border-radius: 12px; border: 2px solid var(--stage-3);
+  background: var(--stage); color: var(--ink); padding: 10px 18px; cursor: pointer;
+}
+.btn:hover { border-color: var(--ink-dim); }
+.btn.big { font-family: var(--font-display); font-weight: 400; font-size: 1.6rem; padding: 12px 40px; background: var(--gold); color: var(--on-gold); border-color: var(--gold); box-shadow: 0 6px 0 #b8860b; }
+.btn.big:active { transform: translateY(4px); box-shadow: 0 2px 0 #b8860b; }
+.btn:disabled { opacity: .5; cursor: default; }
+.kbd { color: var(--ink-dim); font-size: 0.85rem; }
+
+.mission { margin-top: 22px; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.mission h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; margin: 0 0 8px; text-wrap: balance; }
+.mission ol { margin: 0; padding-left: 1.3em; display: grid; gap: 4px; }
+.mission ol b { color: var(--gold); }
+.suffix { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.suffix span.label { color: var(--ink-dim); font-size: 0.85rem; margin-right: 4px; }
+.chip { font-size: 0.85rem; border: 1px solid var(--stage-3); border-radius: 999px; padding: 2px 10px; background: var(--stage); }
+.example { margin-top: 12px; font-size: 0.95rem; color: var(--ink-dim); }
+.example b { color: var(--ink); }
+
+/* 타이머 */
+.timer { background: var(--stage); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.timer .time { font-family: var(--font-display); font-size: clamp(3rem, 9vw, 4.5rem); line-height: 1; font-variant-numeric: tabular-nums; }
+.timer.warn .time { color: var(--coral); }
+.timer.done .time { color: var(--coral); animation: pulse .6s ease-in-out 3; }
+.bar { width: 100%; height: 8px; border-radius: 99px; background: var(--stage-3); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 100%; background: var(--gold); transform-origin: left; }
+.timer.warn .bar i { background: var(--coral); }
+.timer-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.timer-row .btn { padding: 6px 12px; font-size: 0.9rem; }
+.timer-row .btn[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+@keyframes pulse { 50% { transform: scale(1.12); } }
+
+/* ---------- 진짜? 가짜? ---------- */
+.quiz-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; color: var(--ink-dim); font-size: 0.95rem; }
+.quiz-top b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.card { margin-top: 16px; text-align: center; padding: clamp(20px, 4vw, 40px) 12px; border-radius: 18px; background: var(--stage); border: 3px dashed var(--stage-3); }
+.card .eyebrow { font-size: 0.85rem; letter-spacing: 0.08em; color: var(--ink-dim); font-weight: 600; }
+.card .job { font-family: var(--font-display); font-size: clamp(2.2rem, 7vw, 4rem); line-height: 1.1; margin: 8px 0 12px; text-wrap: balance; }
+.card .desc { font-size: clamp(1rem, 2.2vw, 1.25rem); max-width: 38em; margin: 0 auto; }
+.card.real { border: 3px solid var(--mint); }
+.card.fake { border: 3px solid var(--coral); }
+.verdict { margin-top: 18px; display: none; flex-direction: column; gap: 6px; align-items: center; }
+.card.real .verdict, .card.fake .verdict { display: flex; }
+.stamp { font-family: var(--font-display); font-size: 2rem; padding: 2px 18px; border-radius: 10px; transform: rotate(-4deg); animation: stamp .3s cubic-bezier(.2,1.6,.4,1); }
+.card.real .stamp { color: var(--mint); border: 3px solid var(--mint); }
+.card.fake .stamp { color: var(--coral); border: 3px solid var(--coral); }
+.verdict p { margin: 0; max-width: 40em; color: var(--ink-dim); }
+.verdict p b { color: var(--ink); }
+@keyframes stamp { from { transform: rotate(-4deg) scale(2); opacity: 0; } }
+.quiz-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 20px; }
+.btn.real { background: var(--mint); border-color: var(--mint); color: #062b20; font-family: var(--font-display); font-weight: 400; font-size: 1.4rem; padding: 10px 32px; }
+.btn.fake { background: var(--coral); border-color: var(--coral); color: #2e0703; font-family: var(--font-display); font-weight: 400; font-size: 1.4rem; padding: 10px 32px; }
+
+/* ---------- 점수판 ---------- */
+.board-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.board-head h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; margin: 0; }
+.board-head .tools { display: flex; gap: 8px; flex-wrap: wrap; }
+.board-head .btn { padding: 6px 12px; font-size: 0.85rem; }
+.teams { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.team { background: var(--stage); border-radius: 14px; padding: 10px 12px; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 4px 8px; align-items: center; border: 2px solid transparent; }
+.team.lead { border-color: var(--gold); }
+.team input { grid-column: 1 / -1; font: 700 0.95rem var(--font-body); color: var(--ink); background: transparent; border: 0; border-bottom: 1px dashed var(--stage-3); padding: 2px 0; min-width: 0; width: 100%; }
+.team .score { font-family: var(--font-display); font-size: 2.2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.team.lead .score { color: var(--gold); }
+.team .pm { display: flex; gap: 6px; }
+.team .pm button { width: 38px; height: 38px; border-radius: 10px; border: 2px solid var(--stage-3); background: var(--stage-2); color: var(--ink); font: 700 1.2rem var(--font-body); cursor: pointer; }
+.team .pm button.plus { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+.bump { animation: bump .3s; }
+@keyframes bump { 50% { transform: scale(1.3); } }
+
+.guide { color: var(--ink-dim); font-size: 0.9rem; margin: 0; }
+
+@media (max-width: 720px) {
+  .reels { grid-template-columns: minmax(0, 1fr); }
+  .reel .window { height: 1.8em; }
+  .mission { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>잡 <span>슬롯</span></h1>
+      <p>세상에 없던 직업을 만드는 창직 아이스브레이킹</p>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-slot" aria-selected="true" aria-controls="view-slot">창직 슬롯</button>
+      <button class="tab" role="tab" id="tab-quiz" aria-selected="false" aria-controls="view-quiz">진짜? 가짜?</button>
+    </div>
+  </header>
+
+  <!-- 창직 슬롯 -->
+  <section class="panel" id="view-slot" role="tabpanel" aria-labelledby="tab-slot">
+    <div class="reels">
+      <div class="reel" tabindex="0" data-i="0"><div class="q">누구를 위해?</div><div class="window"><div class="word">반려동물</div></div><div class="lock">눌러서 고정</div></div>
+      <div class="reel" tabindex="0" data-i="1"><div class="q">무엇을 활용해?</div><div class="window"><div class="word">인공지능</div></div><div class="lock">눌러서 고정</div></div>
+      <div class="reel" tabindex="0" data-i="2"><div class="q">어떤 문제를 해결?</div><div class="window"><div class="word">외로움</div></div><div class="lock">눌러서 고정</div></div>
+    </div>
+    <div class="slot-actions">
+      <button class="btn big" id="spin">돌리기!</button>
+      <span class="kbd">스페이스바로도 돌릴 수 있어요</span>
+    </div>
+
+    <div class="mission">
+      <div>
+        <h2>세 단어로 새로운 직업을 만들어 보세요</h2>
+        <ol>
+          <li><b>직업 이름</b>을 짓는다</li>
+          <li>이 사람이 <b>하루에 하는 일</b>을 한 문장으로 말한다</li>
+          <li><b>누가 돈을 낼지</b> 한 가지 떠올린다</li>
+        </ol>
+        <div class="suffix"><span class="label">이름 붙이기 힌트</span>
+          <span class="chip">~ 코디네이터</span><span class="chip">~ 큐레이터</span><span class="chip">~ 디자이너</span><span class="chip">~ 닥터</span><span class="chip">~ 매니저</span><span class="chip">~ 크리에이터</span>
+        </div>
+        <p class="example" id="example">예시) 반려동물 + 인공지능 + 외로움 → <b>펫 감정 통역사</b>: 혼자 집에 있는 반려동물의 표정과 소리를 AI로 분석해 주인에게 마음을 전해 주는 사람</p>
+      </div>
+      <div class="timer" id="timer">
+        <div class="time" id="time">1:00</div>
+        <div class="bar"><i id="bar"></i></div>
+        <div class="timer-row" id="durations">
+          <button class="btn" data-sec="30" aria-pressed="false">30초</button>
+          <button class="btn" data-sec="60" aria-pressed="true">60초</button>
+          <button class="btn" data-sec="90" aria-pressed="false">90초</button>
+        </div>
+        <div class="timer-row">
+          <button class="btn" id="t-start">시작</button>
+          <button class="btn" id="t-reset">리셋</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 진짜? 가짜? -->
+  <section class="panel" id="view-quiz" role="tabpanel" aria-labelledby="tab-quiz" hidden>
+    <div class="quiz-top">
+      <span>이 직업, 실제로 있을까요? 팀별로 손을 들어 답하세요.</span>
+      <span>문제 <b id="q-no">1</b> / <b id="q-total">16</b></span>
+    </div>
+    <div class="card" id="card">
+      <div class="eyebrow">이런 직업이 있다?</div>
+      <div class="job" id="q-job"></div>
+      <p class="desc" id="q-desc"></p>
+      <div class="verdict">
+        <div class="stamp" id="q-stamp"></div>
+        <p id="q-note"></p>
+      </div>
+    </div>
+    <div class="quiz-actions" id="q-answer">
+      <button class="btn real" data-ans="real">진짜!</button>
+      <button class="btn fake" data-ans="fake">가짜!</button>
+    </div>
+    <div class="quiz-actions" id="q-next" hidden>
+      <button class="btn" id="q-next-btn">다음 문제</button>
+      <button class="btn" id="q-reshuffle">처음부터 섞어서</button>
+    </div>
+  </section>
+
+  <!-- 점수판 -->
+  <section class="panel">
+    <div class="board-head">
+      <h2>팀 점수판</h2>
+      <div class="tools">
+        <button class="btn" id="add-team">팀 추가</button>
+        <button class="btn" id="remove-team">팀 빼기</button>
+        <button class="btn" id="reset-score">점수 초기화</button>
+      </div>
+    </div>
+    <div class="teams" id="teams"></div>
+  </section>
+
+  <p class="guide">진행 팁: 슬롯을 돌린 뒤 타이머를 켜고 팀별로 직업을 발표하게 하세요. 가장 기발한 직업, 가장 그럴듯한 직업에 박수 투표로 점수를 주면 분위기가 금방 풀립니다. 팀 이름은 눌러서 바꿀 수 있어요.</p>
+</div>
+
+<script>
+(function () {
+  const REELS = [
+    ["반려동물", "어르신", "초등학생", "1인 가구", "외국인 관광객", "농부", "아이돌 팬", "직장인", "캠핑족", "장애인", "운동선수", "유튜버", "수험생", "신혼부부", "동네 가게 사장님", "우주인"],
+    ["인공지능", "드론", "메타버스", "로봇", "3D 프린터", "빅데이터", "웨어러블", "자율주행", "VR·AR", "업사이클링", "스마트팜", "음성인식", "챗봇", "위치 정보", "유전자 분석", "블록체인"],
+    ["외로움", "쓰레기", "건강", "시간 부족", "안전", "돈 관리", "진로 고민", "스트레스", "소통", "기후 위기", "잠 부족", "정보 격차", "추억 보관", "운동 부족", "언어 장벽", "기다림"]
+  ];
+
+  const QUIZ = [
+    { job: "디지털 장의사", desc: "세상을 떠난 사람이 인터넷에 남긴 SNS, 게시글, 사진을 찾아 정리하거나 지워 준다.", real: true, note: "<b>진짜 직업!</b> 온라인 흔적이 늘면서 생긴 새 직업이에요. 기술 변화가 새 직업을 만든 대표 사례입니다." },
+    { job: "골프공 다이버", desc: "골프장 연못에 잠수해 물에 빠진 골프공을 건져 내고, 닦아서 다시 판다.", real: true, note: "<b>진짜 직업!</b> 남들이 버린 것에서 돈이 되는 걸 찾은 직업이에요." },
+    { job: "워터슬라이드 테스터", desc: "여행사와 리조트의 워터슬라이드를 직접 타 보고 속도, 재미, 안전을 평가한다.", real: true, note: "<b>진짜 직업!</b> 해외 여행사가 실제로 채용 공고를 낸 적이 있어요." },
+    { job: "펫푸드 테이스터", desc: "반려동물 사료의 맛과 냄새, 식감을 사람이 직접 확인하고 품질을 평가한다.", real: true, note: "<b>진짜 직업!</b> 반려동물 시장이 커지면서 생긴 품질 관리 직업이에요." },
+    { job: "줄서기 대행", desc: "인기 맛집, 한정판 발매, 공연 예매 줄을 바쁜 사람 대신 서 준다.", real: true, note: "<b>진짜 직업!</b> '시간 부족'이라는 문제를 그대로 직업으로 만든 경우예요." },
+    { job: "영상 태거", desc: "OTT 영화와 드라마를 보고 '긴장감 넘치는', '감동적인' 같은 분위기 태그를 붙인다.", real: true, note: "<b>진짜 직업!</b> 추천 알고리즘이 똑똑해지도록 사람이 직접 영상을 분류해요." },
+    { job: "수면 컨설턴트", desc: "잠을 잘 못 자는 사람의 생활 습관과 방 환경을 분석해 숙면 방법을 코칭한다.", real: true, note: "<b>진짜 직업!</b> 아기 수면 코칭부터 직장인 숙면 상담까지 분야가 넓어요." },
+    { job: "특수청소부", desc: "고독사 현장, 쓰레기로 가득 찬 집 등 일반 청소로 어려운 공간을 전문적으로 치운다.", real: true, note: "<b>진짜 직업!</b> 1인 가구가 늘면서 사회적으로 더 중요해진 직업이에요." },
+    { job: "펭귄 수 세는 우체국 직원", desc: "남극 기지의 작은 우체국을 운영하면서 주변에 사는 펭귄의 수를 세고 기록한다.", real: true, note: "<b>진짜 직업!</b> 영국의 남극 유산 단체가 매년 이런 직원을 뽑아요." },
+    { job: "레고 마스터 빌더", desc: "레고 회사에서 전시용 대형 작품과 새 세트 모델을 설계하고 조립한다.", real: true, note: "<b>진짜 직업!</b> 취미를 직업으로 만든 대표 사례예요." },
+    { job: "구름 모양 감정사", desc: "하늘의 구름 모양을 보고 그날 야외 행사가 비로 취소될 확률을 감정해 보험료를 정한다.", real: false, note: "<b>가짜!</b> 하지만 날씨 데이터로 행사 취소 보험을 설계하는 일은 있어요. 여러분이라면 어떻게 진짜로 만들까요?" },
+    { job: "꿈 녹화 편집자", desc: "잠자는 사람의 꿈을 영상으로 녹화한 뒤, 재미있는 장면만 골라 편집해 준다.", real: false, note: "<b>가짜!</b> 아직 꿈을 녹화하는 기술은 없어요. 기술이 생긴다면 미래의 창직 아이템이 될 수도 있겠죠?" },
+    { job: "양말 짝 매칭 매니저", desc: "세탁소와 빨래방에서 짝을 잃어버린 양말을 찾아 원래 주인에게 돌려준다.", real: false, note: "<b>가짜!</b> 그런데 짝 잃은 양말을 모아 파는 서비스는 실제로 있어요. 문제를 보는 눈이 창직의 시작이에요." },
+    { job: "엘리베이터 침묵 코치", desc: "엘리베이터 안의 어색한 침묵을 깨는 대화법을 직장인에게 가르친다.", real: false, note: "<b>가짜!</b> 대신 '스몰토크 코치'처럼 대화법을 가르치는 직업은 있어요. 이름만 바꿔도 직업이 보이죠?" },
+    { job: "하품 전염 측정사", desc: "회의실에서 하품이 퍼지는 속도를 재서 회의를 몇 분에 끝내야 할지 알려 준다.", real: false, note: "<b>가짜!</b> 하지만 회의 효율을 분석하는 컨설턴트는 있어요. 엉뚱한 아이디어도 다듬으면 직업이 됩니다." },
+    { job: "이모지 공식 번역관", desc: "어려운 정부 공문서를 이모지로 번역해 누구나 이해할 수 있게 만든다.", real: false, note: "<b>가짜!</b> 다만 어려운 공공문서를 쉬운 말로 바꾸는 '쉬운 글 작가'는 실제로 활동하고 있어요." }
+  ];
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- 소리 ----------
+  let ac = null;
+  function beep(freq, dur, type = "square", vol = 0.05) {
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = type; o.frequency.value = freq;
+      g.gain.setValueAtTime(vol, ac.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + dur);
+      o.connect(g).connect(ac.destination);
+      o.start(); o.stop(ac.currentTime + dur);
+    } catch (e) {}
+  }
+
+  const state = {
+    tab: "slot",
+    words: ["반려동물", "인공지능", "외로움"],
+    locked: [false, false, false],
+    teams: [{ name: "1팀", score: 0 }, { name: "2팀", score: 0 }, { name: "3팀", score: 0 }, { name: "4팀", score: 0 }],
+    order: [],
+    qi: 0
+  };
+
+  // ---------- 탭 ----------
+  function setTab(t) {
+    state.tab = t;
+    $("#tab-slot").setAttribute("aria-selected", t === "slot");
+    $("#tab-quiz").setAttribute("aria-selected", t === "quiz");
+    $("#view-slot").hidden = t !== "slot";
+    $("#view-quiz").hidden = t !== "quiz";
+  }
+  $("#tab-slot").onclick = () => setTab("slot");
+  $("#tab-quiz").onclick = () => setTab("quiz");
+
+  // ---------- 슬롯 ----------
+  const reelEls = $$(".reel");
+  let spinning = false;
+  function renderReels() {
+    reelEls.forEach((el, i) => {
+      $(".word", el).textContent = state.words[i];
+      el.classList.toggle("locked", state.locked[i]);
+      $(".lock", el).textContent = state.locked[i] ? "고정됨" : "눌러서 고정";
+    });
+  }
+  function toggleLock(i) {
+    if (spinning) return;
+    state.locked[i] = !state.locked[i];
+    renderReels();
+  }
+  reelEls.forEach((el, i) => {
+    el.onclick = () => toggleLock(i);
+    el.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); toggleLock(i); } };
+  });
+
+  function pick(list, not) {
+    let w;
+    do { w = list[Math.floor(Math.random() * list.length)]; } while (w === not && list.length > 1);
+    return w;
+  }
+
+  function spin() {
+    if (spinning) return;
+    const active = [0, 1, 2].filter(i => !state.locked[i]);
+    if (!active.length) return;
+    spinning = true;
+    $("#spin").disabled = true;
+    $("#example").hidden = true;
+    let done = 0;
+    active.forEach((i, k) => {
+      const el = reelEls[i], word = $(".word", el);
+      el.classList.remove("stopped");
+      const total = reduced ? 1 : 14 + k * 7;
+      let n = 0;
+      (function step() {
+        n++;
+        const w = pick(REELS[i], word.textContent);
+        word.textContent = w;
+        if (!reduced) { word.classList.remove("flick"); void word.offsetWidth; word.classList.add("flick"); }
+        if (n < total) {
+          beep(300 + Math.random() * 200, 0.03, "square", 0.02);
+          setTimeout(step, 45 + Math.pow(n / total, 3) * 220);
+        } else {
+          state.words[i] = w;
+          word.classList.remove("flick");
+          el.classList.add("stopped");
+          beep(660 + k * 110, 0.12, "triangle", 0.06);
+          if (++done === active.length) {
+            spinning = false;
+            $("#spin").disabled = false;
+            setTimeout(() => beep(990, 0.25, "triangle", 0.05), 120);
+          }
+        }
+      })();
+    });
+  }
+  $("#spin").onclick = spin;
+  document.addEventListener("keydown", (e) => {
+    if (e.code !== "Space" || state.tab !== "slot") return;
+    const tag = (e.target.tagName || "").toLowerCase();
+    if (tag === "input" || tag === "button" || e.target.classList.contains("reel")) return;
+    e.preventDefault();
+    spin();
+  });
+
+  // ---------- 타이머 ----------
+  let dur = 60, left = 60, tick = null, endAt = 0;
+  const timerEl = $("#timer");
+  function fmt(s) { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+  function drawTimer() {
+    $("#time").textContent = fmt(left);
+    $("#bar").style.transform = "scaleX(" + Math.max(0, left / dur) + ")";
+    timerEl.classList.toggle("warn", left <= 10 && left > 0);
+  }
+  function stopTimer() { clearInterval(tick); tick = null; $("#t-start").textContent = "시작"; }
+  function resetTimer() { stopTimer(); left = dur; timerEl.classList.remove("done", "warn"); drawTimer(); }
+  $("#t-start").onclick = () => {
+    if (tick) { stopTimer(); return; }
+    if (left <= 0) resetTimer();
+    timerEl.classList.remove("done");
+    endAt = Date.now() + left * 1000;
+    $("#t-start").textContent = "일시정지";
+    let lastSec = Math.ceil(left);
+    tick = setInterval(() => {
+      left = (endAt - Date.now()) / 1000;
+      const sec = Math.ceil(left);
+      if (sec !== lastSec) { lastSec = sec; if (sec <= 5 && sec > 0) beep(880, 0.08, "sine", 0.06); }
+      if (left <= 0) {
+        left = 0; stopTimer(); timerEl.classList.add("done");
+        beep(523, 0.2, "triangle", 0.08); setTimeout(() => beep(392, 0.4, "triangle", 0.08), 220);
+      }
+      drawTimer();
+    }, 100);
+  };
+  $("#t-reset").onclick = resetTimer;
+  $$("#durations .btn").forEach(b => b.onclick = () => {
+    dur = +b.dataset.sec;
+    $$("#durations .btn").forEach(x => x.setAttribute("aria-pressed", x === b));
+    resetTimer();
+  });
+
+  // ---------- 진짜? 가짜? ----------
+  function shuffle() {
+    const a = QUIZ.map((_, i) => i);
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    state.order = a; state.qi = 0;
+  }
+  function showQ() {
+    const q = QUIZ[state.order[state.qi]];
+    const card = $("#card");
+    card.classList.remove("real", "fake");
+    $("#q-job").textContent = q.job;
+    $("#q-desc").textContent = q.desc;
+    $("#q-no").textContent = state.qi + 1;
+    $("#q-total").textContent = QUIZ.length;
+    $("#q-answer").hidden = false;
+    $("#q-next").hidden = true;
+    $("#q-next-btn").hidden = state.qi >= QUIZ.length - 1;
+  }
+  function reveal() {
+    const q = QUIZ[state.order[state.qi]];
+    const card = $("#card");
+    card.classList.add(q.real ? "real" : "fake");
+    $("#q-stamp").textContent = q.real ? "진짜 있는 직업" : "가짜 직업";
+    $("#q-note").innerHTML = q.note;
+    $("#q-answer").hidden = true;
+    $("#q-next").hidden = false;
+    if (q.real) { beep(660, 0.12, "triangle", 0.07); setTimeout(() => beep(990, 0.2, "triangle", 0.07), 120); }
+    else { beep(300, 0.15, "sawtooth", 0.05); setTimeout(() => beep(220, 0.25, "sawtooth", 0.05), 150); }
+  }
+  $$("#q-answer .btn").forEach(b => b.onclick = reveal);
+  $("#q-next-btn").onclick = () => { if (state.qi < QUIZ.length - 1) { state.qi++; showQ(); } };
+  $("#q-reshuffle").onclick = () => { shuffle(); showQ(); };
+
+  // ---------- 점수판 ----------
+  function renderTeams(bumpIdx) {
+    const box = $("#teams");
+    const max = Math.max(...state.teams.map(t => t.score));
+    box.innerHTML = "";
+    state.teams.forEach((t, i) => {
+      const d = document.createElement("div");
+      d.className = "team" + (max > 0 && t.score === max ? " lead" : "");
+      d.innerHTML = '<input id="team-name-' + i + '" aria-label="팀 이름" maxlength="14">' +
+        '<div class="score">' + t.score + '</div>' +
+        '<div class="pm"><button aria-label="1점 빼기">−</button><button class="plus" aria-label="1점 더하기">+</button></div>';
+      const inp = $("input", d);
+      inp.value = t.name;
+      inp.oninput = () => { t.name = inp.value; };
+      const [minus, plus] = $$(".pm button", d);
+      minus.onclick = () => { t.score--; renderTeams(i); };
+      plus.onclick = () => { t.score++; beep(784, 0.1, "triangle", 0.06); renderTeams(i); };
+      if (i === bumpIdx) $(".score", d).classList.add("bump");
+      box.appendChild(d);
+    });
+  }
+  $("#add-team").onclick = () => { if (state.teams.length < 10) { state.teams.push({ name: (state.teams.length + 1) + "팀", score: 0 }); renderTeams(); } };
+  $("#remove-team").onclick = () => { if (state.teams.length > 1) { state.teams.pop(); renderTeams(); } };
+  $("#reset-score").onclick = () => { state.teams.forEach(t => t.score = 0); renderTeams(); };
+
+  // ---------- 시작 ----------
+  function start(data) {
+    if (data && data.teams) Object.assign(state, data);
+    if (!state.order.length) shuffle();
+    state.locked = state.locked || [false, false, false];
+    renderReels();
+    renderTeams();
+    showQ();
+    setTab(state.tab || "slot");
+    drawTimer();
+  }
+  window.claude?.hot?.snapshot?.(() => ({ tab: state.tab, words: state.words, locked: state.locked, teams: state.teams, order: state.order, qi: state.qi }));
+  window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>
