@@ -1,0 +1,467 @@
+<title>AI 프로듀서 미션앱</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one-column game screen, sticky level HUD on top, one level per tab, cards stack on phones and pair up on wide screens */
+:root {
+  color-scheme: dark;
+  --night: #17112E;
+  --panel: #221A42;
+  --panel-2: #2C2354;
+  --line: #3B3170;
+  --ink: #F4F1FF;
+  --muted: #B7AED6;
+  --lv0: #FFB020;
+  --lv1: #A57BFF;
+  --lv2: #6F8BFF;
+  --lv3: #FF5C93;
+  --lv4: #22C9B5;
+  --lv5: #FFB020;
+  --good: #22C9B5;
+  --display: "Jua", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --r: 14px;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--night); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55; margin: 0; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--night); }
+.wrap { max-width: 860px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 40px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; letter-spacing: 0.01em; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid var(--lv5); outline-offset: 2px; }
+
+/* HUD */
+.hud { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--night); padding-block: 12px 10px; border-bottom: 1px solid var(--line); }
+.hud-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--display); font-size: 24px; line-height: 1.1; flex: 1 1 auto; min-width: 0; }
+.brand small { display: block; font-family: var(--body); font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+.xp { display: flex; gap: 5px; align-items: center; }
+.xp i { width: 16px; height: 22px; border-radius: 5px; background: var(--panel-2); display: block; transition: background .3s; }
+.xp span { font-size: 12px; color: var(--muted); margin-left: 4px; font-variant-numeric: tabular-nums; }
+.timer-btn { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.tabs { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: 0 0 auto; border: 1.5px solid var(--line); background: transparent; border-radius: 999px; padding: 6px 13px; font-size: 14px; color: var(--muted); white-space: nowrap; }
+.tab[aria-selected="true"] { color: var(--night); border-color: transparent; font-weight: 700; }
+.tab .ok { margin-left: 4px; }
+
+/* timer panel */
+.timer { margin-top: 10px; background: var(--panel); border-radius: var(--r); padding: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.timer .clock { font-family: var(--display); font-size: 40px; min-width: 120px; font-variant-numeric: tabular-nums; }
+.timer .clock.done { color: var(--lv3); }
+.chip { border: 1.5px solid var(--line); background: var(--panel-2); border-radius: 999px; padding: 6px 12px; font-size: 14px; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--night); border-color: var(--ink); font-weight: 700; }
+
+/* sections */
+.level { padding-top: 18px; display: grid; gap: 14px; }
+.lv-head { display: flex; gap: 14px; align-items: center; padding: 16px; border-radius: var(--r); background: var(--panel); }
+.lv-badge { flex: 0 0 auto; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-size: 22px; color: var(--night); }
+.lv-head h2 { font-size: 26px; }
+.lv-head p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.card { background: var(--panel); border-radius: var(--r); padding: 16px; display: grid; gap: 10px; min-width: 0; }
+.card h3 { font-size: 20px; }
+.hint { color: var(--muted); font-size: 13px; margin: 0; }
+.grid2 { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+.opts { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.opt { text-align: left; background: var(--panel-2); border: 2px solid transparent; border-radius: 12px; padding: 10px 12px; display: grid; gap: 2px; }
+.opt b { font-size: 15px; }
+.opt span { color: var(--muted); font-size: 12.5px; }
+.opt[aria-pressed="true"] { border-color: var(--lv0); background: #3A2E10; }
+.emoji { font-size: 30px; line-height: 1.2; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border: 0; border-radius: 12px; padding: 10px 16px; font-weight: 700; color: var(--night); background: var(--ink); }
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); font-weight: 500; }
+.out { background: var(--night); border: 1.5px dashed var(--line); border-radius: 12px; padding: 12px; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; font-size: 15px; min-width: 0; }
+.out.en { color: var(--muted); font-size: 13.5px; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--night); padding: 10px 18px; border-radius: 999px; font-weight: 700; z-index: 20; }
+label { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
+input[type="text"], textarea { width: 100%; background: var(--night); color: var(--ink); border: 1.5px solid var(--line); border-radius: 10px; padding: 9px 11px; font: inherit; font-size: 15px; }
+textarea { resize: vertical; min-height: 44px; }
+
+/* dice */
+.dice { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+.die { background: var(--panel-2); border-radius: 14px; padding: 12px; text-align: center; display: grid; gap: 4px; }
+.die .face { font-family: var(--display); font-size: 44px; line-height: 1; }
+.die .lab { font-size: 12px; color: var(--muted); }
+.die .val { font-weight: 700; }
+.rolling .face { animation: shake .5s linear infinite; }
+@keyframes shake { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-14deg); } 75% { transform: rotate(14deg); } }
+
+/* recipe */
+.recipe { border-left: 0; background: var(--panel-2); border-radius: 12px; padding: 12px; display: grid; gap: 6px; min-width: 0; }
+.recipe .t { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.recipe .t b { font-family: var(--display); font-size: 19px; font-weight: 400; }
+.recipe .t span { font-size: 12px; color: var(--muted); }
+
+/* checklist */
+.check { display: grid; gap: 8px; }
+.check button { display: flex; gap: 10px; align-items: flex-start; text-align: left; background: var(--panel-2); border: 0; border-radius: 12px; padding: 11px 12px; }
+.check .box { flex: 0 0 auto; width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--muted); display: grid; place-items: center; font-size: 14px; margin-top: 1px; }
+.check button[aria-pressed="true"] .box { background: var(--good); border-color: var(--good); color: var(--night); }
+.check button[aria-pressed="true"] .txt { color: var(--muted); text-decoration: line-through; }
+
+/* bingo */
+.bingo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.cell { min-width: 0; aspect-ratio: 1 / 1; max-width: 100%; background: var(--panel-2); border: 2px solid var(--line); border-radius: 14px; display: grid; place-content: center; text-align: center; gap: 2px; padding: 6px; }
+.cell .e { font-size: 28px; }
+.cell .w { font-size: 12.5px; line-height: 1.3; }
+.cell[aria-pressed="true"] { background: var(--lv3); border-color: var(--lv3); color: var(--night); font-weight: 700; }
+.banner { text-align: center; font-family: var(--display); font-size: 26px; padding: 14px; border-radius: var(--r); color: var(--night); }
+
+/* awards */
+.award { display: flex; gap: 12px; align-items: center; background: var(--panel-2); border-radius: 12px; padding: 12px; }
+.award .e { font-size: 30px; }
+.award b { display: block; }
+.award span { color: var(--muted); font-size: 13px; }
+
+.red { display: grid; gap: 8px; }
+.red div { background: var(--panel-2); border-radius: 12px; padding: 10px 12px; }
+.red b { color: var(--lv3); }
+
+@media (prefers-reduced-motion: reduce) { .rolling .face { animation: none; } * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="hud">
+    <div class="hud-row">
+      <div class="brand">AI 프로듀서 미션앱<small>평택여고 콘텐츠 제작 학과체험</small></div>
+      <div class="xp" id="xp" aria-label="클리어한 레벨"></div>
+      <button class="timer-btn" id="timerToggle" aria-expanded="false">⏱ 타이머</button>
+    </div>
+    <div class="timer" id="timer" hidden>
+      <div class="clock" id="clock">12:00</div>
+      <div class="row" id="presets"></div>
+      <div class="row">
+        <button class="btn" id="tStart">시작</button>
+        <button class="btn ghost" id="tReset">처음으로</button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+  </header>
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const LV = [
+  { id: "lv0", n: 0, name: "몸풀기", color: "var(--lv0)", desc: "기분 BGM 고르고 이모지 노래 퀴즈" },
+  { id: "lv1", n: 1, name: "작사가", color: "var(--lv1)", desc: "주사위 · 프롬프트 · 가사 만들기" },
+  { id: "lv2", n: 2, name: "작곡가", color: "var(--lv2)", desc: "AI 음악 사이트에서 내 노래 만들기" },
+  { id: "lv3", n: 3, name: "감독", color: "var(--lv3)", desc: "촬영 빙고로 장면 모으기" },
+  { id: "lv4", n: 4, name: "편집자", color: "var(--lv4)", desc: "CapCut으로 뮤직비디오 완성" },
+  { id: "lv5", n: 5, name: "시상식", color: "var(--lv5)", desc: "짝 감상 · 어워즈 · GAME CLEAR" },
+];
+const GENRES = [
+  { k: "K-pop 댄스", en: "upbeat K-pop dance" }, { k: "감성 발라드", en: "emotional ballad" }, { k: "힙합", en: "hip hop" },
+  { k: "록", en: "pop rock" }, { k: "트로트", en: "Korean trot" }, { k: "동요", en: "cute children's song" },
+  { k: "로파이", en: "lo-fi" }, { k: "재즈", en: "jazz" }, { k: "어쿠스틱 팝", en: "acoustic pop" },
+];
+// [chip label, 연결형(~고), en]
+const MOODS = [["신나는", "신나고", "upbeat"], ["청량한", "청량하고", "fresh"], ["잔잔한", "잔잔하고", "calm"], ["따뜻한", "따뜻하고", "warm"], ["몽환적인", "몽환적이고", "dreamy"], ["웅장한", "웅장하고", "epic"], ["귀여운", "귀엽고", "cute"], ["웃긴", "웃기고", "funny"], ["신비로운", "신비롭고", "mysterious"]];
+const INST = [["피아노", "piano"], ["기타", "guitar"], ["드럼", "drums"], ["신스", "synths"], ["베이스", "bass"], ["현악기", "strings"], ["우쿨렐레", "ukulele"], ["실로폰", "xylophone"], ["손뼉 소리", "hand claps"]];
+const TEMPO = [["빠른", "fast tempo, 120 BPM"], ["보통", "medium tempo, 100 BPM"], ["느린", "slow tempo, 70 BPM"]];
+const VOCAL = [["맑은 여성 보컬", "clear female vocals"], ["부드러운 남성 보컬", "soft male vocals"], ["랩", "rap vocals"], ["어린이 합창", "kids choir"], ["보컬 없음", "instrumental"]];
+const DICE_G = ["K-pop 댄스", "감성 발라드", "힙합 · 랩", "신나는 록", "뽕짝 트로트", "동요 (반전!)"];
+const DICE_T = ["급식 메뉴", "시험 끝난 날", "내 최애 간식", "월요일 아침", "우리 반 자랑", "나의 꿈"];
+const RECIPES = [
+  { g: "K-pop 댄스", t: "급식 메뉴", ko: "신나고 청량한 K-pop 댄스곡, 밝은 신스와 통통 튀는 베이스, 강한 드럼, 빠른 템포(120BPM), 맑은 여성 보컬, 따라 부르기 쉬운 후렴, 4교시 끝나고 급식실로 달려가는 설렘에 대한 노래", en: "upbeat K-pop dance, bright synths, bouncy bass, punchy drums, 120 BPM, clear female vocals, catchy chorus" },
+  { g: "감성 발라드", t: "시험 끝난 날", ko: "잔잔하고 따뜻한 감성 발라드, 피아노와 현악기, 느린 템포(70BPM), 부드러운 남성 보컬, 후렴에서 감정이 커지는 구성, 시험이 끝난 날 노을을 보며 집에 가는 기분에 대한 노래", en: "emotional ballad, piano and strings, 70 BPM, soft male vocals, chorus builds up" },
+  { g: "힙합 · 랩", t: "내 최애 간식", ko: "자신감 넘치는 힙합, 묵직한 베이스와 붐뱁 드럼, 보통 템포(90BPM), 리듬감 있는 랩과 중독성 있는 후렴, 편의점 최애 간식을 자랑하는 재미있는 노래", en: "confident hip hop, heavy 808 bass, boom bap drums, 90 BPM, rhythmic rap, catchy hook" },
+  { g: "신나는 록", t: "월요일 아침", ko: "에너지 넘치는 록, 강한 일렉 기타와 시원한 드럼, 빠른 템포(140BPM), 힘찬 보컬과 다 같이 외치는 후렴, 월요일 아침 졸음을 이겨내는 응원가", en: "energetic pop rock, loud electric guitars, driving drums, 140 BPM, powerful vocals, gang vocal chorus" },
+  { g: "뽕짝 트로트", t: "우리 반 자랑", ko: "흥겨운 트로트, 아코디언과 신나는 쿵짝 리듬, 보통 템포(110BPM), 꺾기가 있는 구성진 보컬, 우리 반의 웃긴 순간을 자랑하는 노래", en: "Korean trot, accordion, festive two-step rhythm, 110 BPM, playful vocals with vibrato" },
+  { g: "동요 (반전!)", t: "나의 꿈", ko: "귀엽고 밝은 동요 스타일, 실로폰과 우쿨렐레, 손뼉 소리, 보통 템포(100BPM), 어린이 합창, 그런데 가사는 진지하게 나의 꿈을 이야기하는 반전 노래", en: "cute children's song, xylophone, ukulele, hand claps, 100 BPM, kids choir" },
+];
+const REMIX = [
+  ["😴 너무 느려요", "빠른 템포, 120BPM, 신나는 드럼"],
+  ["🙉 가사가 안 들려요", "또렷한 발음의 보컬, 반주는 작게"],
+  ["😐 너무 평범해요", "후렴에 손뼉 소리와 다 같이 외치는 떼창"],
+  ["🌧 분위기가 달라요", "몽환적이고 청량한 분위기"],
+  ["🎤 목소리가 어색해요", "보컬 없음(instrumental)"],
+];
+const BINGO = [["✋", "손 클로즈업"], ["🌤", "창밖 하늘"], ["👟", "걸어가는 운동화"], ["🌑", "내 그림자"], ["⭐", "자유 컷"], ["✏️", "칠판 낙서"], ["🚶", "복도 뒷모습"], ["🍂", "슬로모션 물건"], ["💜", "친구 손하트 (동의!)"]];
+const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+const CHECKS = {
+  lv2: ["칠판 QR로 AI 음악 사이트 접속 (회원가입·결제 창은 누르지 않기)", "내 프롬프트(+가사)를 붙여 넣고 노래 만들기", "2번 이상 만들어 보고 베스트 곡 고르기", "MP3로 다운로드하고 휴대폰에서 재생 확인"],
+  lv4: ["새 프로젝트 → 찍은 사진·영상을 빙고 순서대로 선택", "오디오 → 사운드 → 기기(내 파일)에서 내 노래 넣기", "드럼 '쿵'에 맞춰 클립 분할하고 순서 맞추기", "텍스트로 제목·후렴 가사, 필터 하나로 색감 통일", "마지막 장면에 'AI로 만든 작품' 쓰기", "내보내기 → 패들렛에 올리기"],
+  lv5: ["짝과 휴대폰을 바꿔 서로 작품 감상", "칭찬 1 + 제안 1 적기", "상영회 보고 어워즈 손들기 투표"],
+};
+const AWARDS = [["🎧", "귀호강상", "노래가 제일 좋은 작품"], ["😂", "빵터짐상", "제일 웃긴 작품"], ["🎬", "감독상", "장면이 제일 멋진 작품"], ["🥁", "박자장인상", "박자 컷이 찰떡인 작품"], ["💡", "아이디어상", "기발한 주제의 작품"]];
+
+/* ---------- state ---------- */
+const KEY = "ai-producer-app-v1";
+const blank = () => ({ tab: "lv0", mood: null, quiz: {}, dice: [null, null], b: { mood: [], genre: null, inst: [], tempo: null, vocal: null, topic: "" }, verse: ["", "", "", ""], chorus: ["", "", "", ""], remix: [], checks: {}, bingo: [], fb: { name: "", good: "", tip: "" }, copied: false });
+let S = blank();
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(blank(), JSON.parse(raw)); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => (t.hidden = true), 1600); }
+function copy(text, el) {
+  const done = () => { toast("복사했어요! 사이트에 붙여 넣으세요"); S.copied = true; save(); renderHud(); };
+  try {
+    navigator.clipboard.writeText(text).then(done, () => selectFallback(el));
+  } catch (e) { selectFallback(el); }
+}
+function selectFallback(el) {
+  if (!el) return;
+  const r = document.createRange(); r.selectNodeContents(el);
+  const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  toast("글자가 선택됐어요. 길게 눌러 복사하세요");
+}
+
+/* ---------- prompt builder ---------- */
+function promptKo() {
+  const b = S.b;
+  if (!b.genre) return "";
+  const m = b.mood.map((x) => MOODS.find((y) => y[0] === x)).filter(Boolean);
+  const moodTxt = m.length === 2 ? m[0][1] + " " + m[1][0] + " " : m.length === 1 ? m[0][0] + " " : "";
+  const parts = [moodTxt + b.genre + " 노래"];
+  if (b.inst.length) parts.push(b.inst.join("와 "));
+  if (b.tempo) parts.push(b.tempo + " 템포");
+  if (b.vocal) parts.push(b.vocal);
+  if (S.remix.length) parts.push(...S.remix);
+  const topic = b.topic.trim();
+  return parts.join(", ") + (topic ? ", " + topic + "에 대한 노래" : "");
+}
+function promptEn() {
+  const b = S.b;
+  if (!b.genre) return "";
+  const g = GENRES.find((x) => x.k === b.genre);
+  const out = [];
+  b.mood.forEach((m) => { const f = MOODS.find((x) => x[0] === m); if (f) out.push(f[2]); });
+  out.push(g ? g.en : b.genre);
+  b.inst.forEach((i) => { const f = INST.find((x) => x[0] === i); if (f) out.push(f[1]); });
+  if (b.tempo) out.push(TEMPO.find((x) => x[0] === b.tempo)[1]);
+  if (b.vocal) out.push(VOCAL.find((x) => x[0] === b.vocal)[1]);
+  return out.join(", ");
+}
+function lyricsTxt() {
+  const v = S.verse.filter((x) => x.trim()), c = S.chorus.filter((x) => x.trim());
+  if (!v.length && !c.length) return "";
+  return (v.length ? "[Verse]\n" + v.join("\n") + "\n" : "") + (c.length ? "[Chorus]\n" + c.join("\n") : "");
+}
+
+/* ---------- levels cleared ---------- */
+function allChecked(id) { const n = (CHECKS[id] || []).length; return n > 0 && (S.checks[id] || []).filter(Boolean).length === n; }
+function bingoLines() { return LINES.filter((l) => l.every((i) => S.bingo[i])).length; }
+function cleared() {
+  return {
+    lv0: !!S.mood,
+    lv1: !!promptKo() && !!lyricsTxt(),
+    lv2: allChecked("lv2"),
+    lv3: bingoLines() > 0,
+    lv4: allChecked("lv4"),
+    lv5: allChecked("lv5"),
+  };
+}
+
+/* ---------- render ---------- */
+function renderHud() {
+  const c = cleared();
+  const n = Object.values(c).filter(Boolean).length;
+  $("#xp").innerHTML = LV.map((l) => `<i style="background:${c[l.id] ? l.color : ""}"></i>`).join("") + `<span>${n}/6</span>`;
+  $("#tabs").innerHTML = LV.map((l) => `<button class="tab" role="tab" id="t-${l.id}" aria-selected="${S.tab === l.id}" style="${S.tab === l.id ? "background:" + l.color : ""}" data-tab="${l.id}">LV.${l.n} ${l.name}${c[l.id] ? '<span class="ok">✓</span>' : ""}</button>`).join("");
+}
+function head(l) {
+  return `<div class="lv-head"><div class="lv-badge" style="background:${l.color}">LV.${l.n}</div><div><h2>${l.name} 모드</h2><p>${l.desc}</p></div></div>`;
+}
+function checklist(id) {
+  const items = CHECKS[id], st = S.checks[id] || [];
+  return `<div class="check">${items.map((t, i) => `<button data-check="${id}" data-i="${i}" aria-pressed="${!!st[i]}"><span class="box">${st[i] ? "✓" : ""}</span><span class="txt">${esc(t)}</span></button>`).join("")}</div>`;
+}
+function chips(group, list, multi, max) {
+  const cur = S.b[group];
+  return `<div class="row">${list.map((x) => { const v = Array.isArray(x) ? x[0] : x.k; const on = multi ? cur.includes(v) : cur === v; const label = v; return `<button class="chip" data-b="${group}" data-v="${esc(v)}" data-multi="${multi ? max : 0}" aria-pressed="${on}">${esc(label)}</button>`; }).join("")}</div>`;
+}
+
+const VIEWS = {
+  lv0() {
+    const moods = [["🎉", "신나는 K-pop", "에너지 100%"], ["😴", "졸린 로파이", "아직 잠이 덜 깸"], ["🔥", "불타는 록", "뭐든 할 수 있어"], ["🥲", "감성 발라드", "살짝 센치해"], ["😎", "스웩 힙합", "오늘 좀 멋있음"], ["🕺", "흥 트로트", "어깨가 들썩"]];
+    const quiz = [["🐻 🐻 🐻", "곰 세 마리"], ["⭐ ✨ 🌙", "반짝반짝 작은 별"], ["🎂 🕯️ 🎉", "생일 축하합니다"], ["🔔 🏫 🏃", "학교 종"]];
+    return head(LV[0]) + `
+    <section class="card"><h3>오늘 내 기분 BGM은?</h3><p class="hint">하나를 골라요. 같은 걸 고른 친구와 하이파이브!</p>
+      <div class="opts">${moods.map((m, i) => `<button class="opt" data-mood="${i}" aria-pressed="${S.mood === i}"><span class="emoji">${m[0]}</span><b>${m[1]}</b><span>${m[2]}</span></button>`).join("")}</div>
+      ${S.mood !== null ? `<p>오늘 내 BGM은 <b>${moods[S.mood][1]}</b>! 이따 노래 만들 때 이 장르로 해 봐도 좋아요.</p>` : ""}
+    </section>
+    <section class="card"><h3>이모지 노래 퀴즈</h3><p class="hint">무슨 노래일까? 먼저 맞히고 정답을 눌러 확인해요.</p>
+      <div class="grid2">${quiz.map((q, i) => `<div class="recipe"><div class="emoji" style="text-align:center">${q[0]}</div><button class="btn ghost" data-quiz="${i}">${S.quiz[i] ? "정답: " + q[1] : "정답 보기"}</button></div>`).join("")}</div>
+      <p class="hint">이모지 3개만으로 맞혔죠? AI도 힌트(프롬프트)를 잘 주면 원하는 노래를 만들어요.</p>
+    </section>`;
+  },
+  lv1() {
+    const ko = promptKo(), en = promptEn(), ly = lyricsTxt();
+    const d = S.dice;
+    return head(LV[1]) + `
+    <section class="card"><h3>🎲 운명의 주사위</h3><p class="hint">고민되면 굴려요! 나온 조합의 레시피가 아래 빌더에 자동으로 채워져요.</p>
+      <div class="dice" id="dice">
+        <div class="die"><span class="lab">장르</span><span class="face" id="f0">${d[0] === null ? "?" : d[0] + 1}</span><span class="val" id="v0">${d[0] === null ? "-" : DICE_G[d[0]]}</span></div>
+        <div class="die"><span class="lab">주제</span><span class="face" id="f1">${d[1] === null ? "?" : d[1] + 1}</span><span class="val" id="v1">${d[1] === null ? "-" : DICE_T[d[1]]}</span></div>
+      </div>
+      <button class="btn" id="roll">주사위 굴리기</button>
+    </section>
+    <section class="card"><h3>🧱 프롬프트 빌더</h3><p class="hint">칩을 눌러 고르면 문장이 자동으로 완성돼요.</p>
+      <label>분위기 (2개까지)</label>${chips("mood", MOODS, true, 2)}
+      <label>장르</label>${chips("genre", GENRES, false)}
+      <label>악기 (2개까지)</label>${chips("inst", INST, true, 2)}
+      <label>템포</label>${chips("tempo", TEMPO, false)}
+      <label>보컬</label>${chips("vocal", VOCAL, false)}
+      <label for="topic">주제 (내 이야기로)<input type="text" id="topic" value="${esc(S.b.topic)}" placeholder="예: 4교시 끝나고 급식실로 달려가는 설렘"></label>
+      <div class="out" id="ko">${ko ? esc(ko) : "장르를 고르면 여기에 프롬프트가 만들어져요"}</div>
+      <div class="out en" id="en">${en ? "영어 스타일 칸용: " + esc(en) : ""}</div>
+      <div class="row"><button class="btn" data-copy="ko">한국어 복사</button><button class="btn ghost" data-copy="en">영어 복사</button><button class="btn ghost" id="clearB">다시 고르기</button></div>
+    </section>
+    <section class="card"><h3>📖 레시피 6가지</h3><p class="hint">그대로 복사해도 되고, 주제만 바꿔도 돼요.</p>
+      <div class="grid2">${RECIPES.map((r, i) => `<div class="recipe"><div class="t"><b>🎲 ${i + 1} ${r.g}</b><span>${r.t}</span></div><div class="out" id="r${i}">${esc(r.ko)}</div><div class="out en" id="re${i}">${esc(r.en)}</div><div class="row"><button class="btn" data-copyr="${i}">한국어 복사</button><button class="btn ghost" data-copyre="${i}">영어 복사</button></div></div>`).join("")}</div>
+    </section>
+    <section class="card"><h3>✍️ 가사 만들기</h3><p class="hint">한 줄씩 써요. 보컬이 안 되는 사이트라면 이 가사는 영상 자막으로 써요. 친구·연예인 실제 이름은 넣지 않기!</p>
+      <div class="grid2">
+        <div style="display:grid;gap:6px;min-width:0"><b>[Verse] 이야기</b>${S.verse.map((v, i) => `<input type="text" id="verse${i}" data-verse="${i}" value="${esc(v)}" placeholder="${["4교시 종이 울리면", "내 다리는 이미 급식실", "줄 서는 시간도 설레", "오늘 메뉴 뭐냐고 묻지 마"][i]}">`).join("")}</div>
+        <div style="display:grid;gap:6px;min-width:0"><b>[Chorus] 후렴</b>${S.chorus.map((v, i) => `<input type="text" id="chorus${i}" data-chorus="${i}" value="${esc(v)}" placeholder="${["돈가스 돈가스 오늘은 돈가스", "이 맛에 학교 온다!", "(반복해도 좋아요)", "(비워 둬도 돼요)"][i]}">`).join("")}</div>
+      </div>
+      <p class="hint">칸이 두 개인 사이트는 A(가사 칸용), 칸이 하나인 사이트는 B(스타일+가사 한 번에)를 복사해요.</p>
+      <div class="out" id="lyA">${ly ? esc(ly) : "가사를 쓰면 여기에 태그가 붙어서 정리돼요"}</div>
+      <div class="row"><button class="btn" data-copy="lyA">A 가사 칸용 복사</button><button class="btn ghost" data-copy="lyB">B 한 번에 복사</button></div>
+      <div class="out en" id="lyB">${ko && ly ? esc(ko + ". 아래 한국어 가사로 불러 줘.\n" + ly) : "프롬프트와 가사를 둘 다 쓰면 B가 만들어져요"}</div>
+    </section>`;
+  },
+  lv2() {
+    const ko = promptKo();
+    return head(LV[2]) + `
+    <section class="card"><h3>🎵 미션 체크리스트</h3><p class="hint">사이트는 선생님이 칠판에 띄운 QR로 들어가요. 5분 안에 안 되면 패들렛 예비 음원을 써도 레벨업 인정!</p>${checklist("lv2")}</section>
+    <section class="card"><h3>📋 내 프롬프트</h3>
+      <div class="out" id="ko2">${ko ? esc(ko) : "LV.1에서 프롬프트를 먼저 만들어요"}</div>
+      <div class="row"><button class="btn" data-copy="ko2">복사</button></div>
+    </section>
+    <section class="card"><h3>🔁 마음에 안 들면? 리믹스</h3><p class="hint">누르면 내 프롬프트 끝에 문장이 붙어요. 다시 복사해서 만들어 보세요.</p>
+      <div class="row">${REMIX.map((r, i) => `<button class="chip" data-remix="${i}" aria-pressed="${S.remix.includes(r[1])}">${r[0]}</button>`).join("")}</div>
+      <p class="hint">⏱ 노래가 너무 길어도 괜찮아요. CapCut에서 30초만 잘라 쓰면 돼요.</p>
+    </section>`;
+  },
+  lv3() {
+    const n = bingoLines();
+    return head(LV[3]) + `
+    <section class="card"><h3>📸 촬영 빙고</h3><p class="hint">찍은 칸을 눌러요. 한 줄(3컷)이면 빙고! 세로로, 한 컷 3~5초, 얼굴 대신 손·뒷모습.</p>
+      ${n ? `<div class="banner" style="background:var(--lv3)">BINGO × ${n}! 🎉</div>` : ""}
+      <div class="bingo">${BINGO.map((b, i) => `<button class="cell" data-bingo="${i}" aria-pressed="${!!S.bingo[i]}"><span class="e">${b[0]}</span><span class="w">${b[1]}</span></button>`).join("")}</div>
+      <p class="hint">${S.bingo.filter(Boolean).length}컷 찍음 · 4~6컷이면 뮤직비디오 완성에 충분해요</p>
+    </section>
+    <section class="card"><h3>🎬 감독님 꿀팁</h3><div class="red">
+      <div><b>세로로 찍기</b> 쇼츠처럼 9:16으로 통일</div><div><b>한 컷 3~5초</b> 흔들리지 않게 천천히</div>
+      <div><b>밝은 곳에서</b> 창가·복도, 빛을 등지지 않기</div><div><b>카메라도 움직이기</b> 따라가기, 아래에서 위로</div></div></section>`;
+  },
+  lv4() {
+    return head(LV[4]) + `
+    <section class="card"><h3>✂️ CapCut 미션</h3><p class="hint">노래 파일 찾기: 갤럭시는 '내 파일 → 다운로드', 아이폰은 '파일' 앱.</p>${checklist("lv4")}</section>
+    <section class="card"><h3>⚡ 레벨업 아이템</h3><div class="red">
+      <div><b>박자 컷</b> 드럼 '쿵'에 맞춰 장면 바꾸기</div><div><b>속도 조절</b> 슬로모션·빨리감기로 재미 UP</div>
+      <div><b>가사 자막</b> 후렴 가사를 크게 팡!</div><div><b>필터 하나</b> 모든 장면에 같은 필터</div><div><b>전환 1~2개</b> 후렴 시작에만</div></div></section>
+    <section class="card"><h3>🟥 레드카드! AI 반칙</h3><div class="red">
+      <div><b>얼굴·목소리 합성</b> 허락 없는 합성은 딥페이크 범죄</div><div><b>몰래 찍기</b> 친구가 나오면 먼저 허락받기</div>
+      <div><b>AI 작품 숨기기</b> 마지막 장면에 'AI로 만든 작품'</div><div><b>팔거나 수익 내기</b> 오늘 작품은 개인 감상용</div></div></section>`;
+  },
+  lv5() {
+    const c = cleared(), all = Object.values(c).every(Boolean);
+    return head(LV[5]) + `
+    ${all ? `<div class="banner" style="background:var(--lv5)">🎉 GAME CLEAR! 오늘 나는 진짜 AI 프로듀서!</div>` : ""}
+    <section class="card"><h3>🏆 오늘의 미션</h3>${checklist("lv5")}</section>
+    <section class="card"><h3>💬 짝 피드백</h3>
+      <label for="fbName">친구 이름<input type="text" id="fbName" data-fb="name" value="${esc(S.fb.name)}"></label>
+      <label for="fbGood">칭찬 한 마디<textarea id="fbGood" data-fb="good" rows="2" placeholder="후렴에서 장면이 바뀌는 타이밍이 정말 좋았어!">${esc(S.fb.good)}</textarea></label>
+      <label for="fbTip">제안 한 마디<textarea id="fbTip" data-fb="tip" rows="2" placeholder="마지막 장면을 조금 더 길게 보여주면 여운이 남을 것 같아">${esc(S.fb.tip)}</textarea></label>
+    </section>
+    <section class="card"><h3>🎖 AI 뮤직비디오 어워즈</h3><div class="grid2">${AWARDS.map((a) => `<div class="award"><span class="e">${a[0]}</span><div><b>${a[1]}</b><span>${a[2]}</span></div></div>`).join("")}</div>
+      <p class="hint">상영회를 보고 상 이름이 불리면 손들기 투표!</p></section>`;
+  },
+};
+
+function render() {
+  renderHud();
+  const l = LV.find((x) => x.id === S.tab) || LV[0];
+  $("#main").innerHTML = `<div class="level" role="tabpanel" aria-labelledby="t-${l.id}">${VIEWS[l.id]()}</div>`;
+}
+function refreshPrompt() {
+  const ko = promptKo(), en = promptEn(), ly = lyricsTxt();
+  const k = $("#ko"); if (k) k.textContent = ko || "장르를 고르면 여기에 프롬프트가 만들어져요";
+  const e = $("#en"); if (e) e.textContent = en ? "영어 스타일 칸용: " + en : "";
+  const a = $("#lyA"); if (a) a.textContent = ly || "가사를 쓰면 여기에 태그가 붙어서 정리돼요";
+  const b = $("#lyB"); if (b) b.textContent = ko && ly ? ko + ". 아래 한국어 가사로 불러 줘.\n" + ly : "프롬프트와 가사를 둘 다 쓰면 B가 만들어져요";
+  renderHud();
+}
+function loadRecipe(gi, ti) {
+  const map = [["신나는", "청량한"], ["잔잔한", "따뜻한"], ["웃긴"], ["신나는"], ["웃긴"], ["귀여운"]];
+  const gen = ["K-pop 댄스", "감성 발라드", "힙합", "록", "트로트", "동요"][gi];
+  const inst = [["신스", "드럼"], ["피아노", "현악기"], ["베이스", "드럼"], ["기타", "드럼"], ["드럼", "손뼉 소리"], ["실로폰", "우쿨렐레"]][gi];
+  const tempo = ["빠른", "느린", "보통", "빠른", "보통", "보통"][gi];
+  const vocal = ["맑은 여성 보컬", "부드러운 남성 보컬", "랩", "부드러운 남성 보컬", "맑은 여성 보컬", "어린이 합창"][gi];
+  S.b = { mood: map[gi], genre: gen, inst, tempo, vocal, topic: DICE_T[ti] };
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click", (ev) => {
+  const t = ev.target.closest("button");
+  if (!t) return;
+  const d = t.dataset;
+  if (d.tab) { S.tab = d.tab; save(); render(); window.scrollTo({ top: 0 }); return; }
+  if (d.mood !== undefined) { S.mood = +d.mood; save(); render(); return; }
+  if (d.quiz !== undefined) { S.quiz[d.quiz] = true; save(); render(); return; }
+  if (t.id === "roll") {
+    const box = $("#dice"); box.classList.add("rolling");
+    let k = 0;
+    const iv = setInterval(() => {
+      $("#f0").textContent = 1 + Math.floor(Math.random() * 6); $("#f1").textContent = 1 + Math.floor(Math.random() * 6);
+      if (++k > 8) {
+        clearInterval(iv); box.classList.remove("rolling");
+        S.dice = [Math.floor(Math.random() * 6), Math.floor(Math.random() * 6)];
+        loadRecipe(S.dice[0], S.dice[1]); save(); render();
+        toast(`${DICE_G[S.dice[0]]} × ${DICE_T[S.dice[1]]}!`);
+      }
+    }, 70);
+    return;
+  }
+  if (d.b) {
+    const g = d.b, v = d.v, max = +d.multi;
+    if (max) {
+      const arr = S.b[g]; const i = arr.indexOf(v);
+      if (i >= 0) arr.splice(i, 1); else { arr.push(v); if (arr.length > max) arr.shift(); }
+    } else S.b[g] = S.b[g] === v ? null : v;
+    save(); render(); return;
+  }
+  if (t.id === "clearB") { S.b = blank().b; S.remix = []; S.dice = [null, null]; save(); render(); return; }
+  if (d.copy) { const el = $("#" + (d.copy === "ko2" ? "ko2" : d.copy)); const map = { ko: promptKo(), en: promptEn(), ko2: promptKo(), lyA: lyricsTxt(), lyB: (promptKo() && lyricsTxt()) ? promptKo() + ". 아래 한국어 가사로 불러 줘.\n" + lyricsTxt() : "" }; const txt = map[d.copy]; if (!txt) { toast("먼저 내용을 만들어요"); return; } copy(txt, el); return; }
+  if (d.copyr !== undefined) { copy(RECIPES[+d.copyr].ko, $("#r" + d.copyr)); return; }
+  if (d.copyre !== undefined) { copy(RECIPES[+d.copyre].en, $("#re" + d.copyre)); return; }
+  if (d.remix !== undefined) { const p = REMIX[+d.remix][1]; const i = S.remix.indexOf(p); if (i >= 0) S.remix.splice(i, 1); else S.remix.push(p); save(); render(); return; }
+  if (d.check) { const arr = S.checks[d.check] || []; arr[+d.i] = !arr[+d.i]; S.checks[d.check] = arr; save(); render(); return; }
+  if (d.bingo !== undefined) { const before = bingoLines(); S.bingo[+d.bingo] = !S.bingo[+d.bingo]; save(); render(); if (bingoLines() > before) toast("BINGO! 🎉"); return; }
+});
+document.addEventListener("input", (ev) => {
+  const t = ev.target, d = t.dataset;
+  if (t.id === "topic") { S.b.topic = t.value; save(); refreshPrompt(); }
+  else if (d.verse !== undefined) { S.verse[+d.verse] = t.value; save(); refreshPrompt(); }
+  else if (d.chorus !== undefined) { S.chorus[+d.chorus] = t.value; save(); refreshPrompt(); }
+  else if (d.fb) { S.fb[d.fb] = t.value; save(); }
+});
+
+/* ---------- timer ---------- */
+let tLeft = 12 * 60, tTotal = 12 * 60, tIv = null;
+const PRESETS = [3, 5, 10, 12, 15, 20];
+function fmt(s) { return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); }
+function drawClock() { const c = $("#clock"); c.textContent = fmt(tLeft); c.classList.toggle("done", tLeft === 0); }
+$("#presets").innerHTML = PRESETS.map((m) => `<button class="chip" data-min="${m}" aria-pressed="${m === 12}">${m}분</button>`).join("");
+$("#presets").addEventListener("click", (e) => { const b = e.target.closest("[data-min]"); if (!b) return; clearInterval(tIv); tIv = null; $("#tStart").textContent = "시작"; tTotal = tLeft = +b.dataset.min * 60; $("#presets").querySelectorAll(".chip").forEach((x) => x.setAttribute("aria-pressed", x === b)); drawClock(); });
+$("#tStart").addEventListener("click", () => {
+  if (tIv) { clearInterval(tIv); tIv = null; $("#tStart").textContent = "계속"; return; }
+  if (tLeft === 0) tLeft = tTotal;
+  $("#tStart").textContent = "멈춤";
+  tIv = setInterval(() => { tLeft = Math.max(0, tLeft - 1); drawClock(); if (!tLeft) { clearInterval(tIv); tIv = null; $("#tStart").textContent = "시작"; toast("⏰ 시간 끝!"); } }, 1000);
+});
+$("#tReset").addEventListener("click", () => { clearInterval(tIv); tIv = null; tLeft = tTotal; $("#tStart").textContent = "시작"; drawClock(); });
+$("#timerToggle").addEventListener("click", () => { const p = $("#timer"); p.hidden = !p.hidden; $("#timerToggle").setAttribute("aria-expanded", String(!p.hidden)); });
+drawClock();
+
+const h = (location.hash || "").slice(1);
+if (LV.some((l) => l.id === h)) S.tab = h;
+render();
+</script>
