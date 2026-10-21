@@ -1,0 +1,483 @@
+<title>AI 작사작곡 미션앱</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one-column game screen, sticky level HUD, two levels (lyricist, composer) each walked through as numbered steps */
+:root {
+  color-scheme: dark;
+  --night: #17112E;
+  --panel: #221A42;
+  --panel-2: #2C2354;
+  --line: #3B3170;
+  --ink: #F4F1FF;
+  --muted: #B7AED6;
+  --lv1: #A57BFF;
+  --lv2: #6F8BFF;
+  --hot: #FF5C93;
+  --gold: #FFB020;
+  --good: #22C9B5;
+  --display: "Jua", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --r: 14px;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--night); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55; margin: 0; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--night); }
+.wrap { max-width: 860px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; letter-spacing: 0.01em; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+.hud { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--night); padding-block: 12px 10px; border-bottom: 1px solid var(--line); }
+.hud-row { display: flex; align-items: center; gap: 12px; }
+.brand { font-family: var(--display); font-size: 23px; line-height: 1.15; flex: 1 1 auto; min-width: 0; }
+.brand small { display: block; font-family: var(--body); font-size: 12px; color: var(--muted); letter-spacing: 0.03em; }
+.xp { display: flex; gap: 5px; align-items: center; flex: 0 0 auto; }
+.xp i { width: 26px; height: 10px; border-radius: 5px; background: var(--panel-2); display: block; }
+.xp span { font-size: 12px; color: var(--muted); margin-left: 4px; font-variant-numeric: tabular-nums; }
+.tabs { display: flex; gap: 8px; margin-top: 10px; }
+.tab { flex: 1 1 0; border: 1.5px solid var(--line); background: transparent; border-radius: 999px; padding: 8px 10px; font-size: 15px; color: var(--muted); }
+.tab[aria-selected="true"] { color: var(--night); border-color: transparent; font-weight: 700; }
+
+.level { padding-top: 16px; display: grid; gap: 14px; }
+.lv-head { display: flex; gap: 14px; align-items: center; padding: 16px; border-radius: var(--r); background: var(--panel); }
+.lv-badge { flex: 0 0 auto; width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-size: 20px; color: var(--night); }
+.lv-head h2 { font-size: 25px; }
+.lv-head p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+
+.step { background: var(--panel); border-radius: var(--r); padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.step-h { display: flex; gap: 10px; align-items: center; }
+.step-n { flex: 0 0 auto; font-family: var(--display); font-size: 14px; padding: 3px 10px; border-radius: 999px; color: var(--night); }
+.step-h h3 { font-size: 20px; flex: 1 1 auto; min-width: 0; }
+.step-h .ok { font-size: 13px; color: var(--good); font-weight: 700; flex: 0 0 auto; }
+.hint { color: var(--muted); font-size: 13.5px; margin: 0; }
+.sub { font-size: 14px; font-weight: 700; margin: 4px 0 -4px; }
+.grid2 { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chip { border: 1.5px solid var(--line); background: var(--panel-2); border-radius: 999px; padding: 6px 12px; font-size: 14px; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--night); border-color: var(--ink); font-weight: 700; }
+.chip.word { padding: 4px 10px; font-size: 13.5px; }
+.btn { border: 0; border-radius: 12px; padding: 10px 16px; font-weight: 700; color: var(--night); background: var(--ink); }
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); font-weight: 500; }
+.btn.sm { padding: 7px 12px; font-size: 14px; }
+.out { background: var(--night); border: 1.5px dashed var(--line); border-radius: 12px; padding: 12px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15px; min-width: 0; }
+.out.en { color: var(--muted); font-size: 13.5px; }
+.out.empty { color: var(--muted); font-size: 13.5px; }
+label { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
+input[type="text"], textarea { width: 100%; background: var(--night); color: var(--ink); border: 1.5px solid var(--line); border-radius: 10px; padding: 9px 11px; font: inherit; font-size: 15px; }
+textarea { resize: vertical; min-height: 44px; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--night); padding: 10px 18px; border-radius: 999px; font-weight: 700; z-index: 20; max-width: calc(100% - 32px); text-align: center; }
+
+.dice { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+.die { background: var(--panel-2); border-radius: 14px; padding: 12px; text-align: center; display: grid; gap: 4px; }
+.die .face { font-family: var(--display); font-size: 42px; line-height: 1; }
+.die .lab { font-size: 12px; color: var(--muted); }
+.die .val { font-weight: 700; }
+.rolling .face { animation: shake .5s linear infinite; }
+@keyframes shake { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-14deg); } 75% { transform: rotate(14deg); } }
+
+.line { display: grid; gap: 4px; }
+.line .g { font-size: 12.5px; color: var(--muted); }
+.line .g b { color: var(--ink); font-weight: 700; }
+.tagbox { border-radius: 12px; padding: 12px; background: var(--panel-2); display: grid; gap: 10px; min-width: 0; }
+.tagbox h4 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 18px; }
+
+.check { display: grid; gap: 8px; }
+.check .it { display: flex; gap: 10px; align-items: flex-start; text-align: left; background: var(--panel-2); border: 0; border-radius: 12px; padding: 10px 12px; width: 100%; }
+.check .box { flex: 0 0 auto; width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--muted); display: grid; place-items: center; font-size: 14px; margin-top: 1px; }
+.check .on .box { background: var(--good); border-color: var(--good); color: var(--night); }
+.check .auto { font-size: 11.5px; color: var(--muted); margin-left: auto; padding-left: 8px; flex: 0 0 auto; }
+
+.howto { display: grid; gap: 8px; counter-reset: h; }
+.howto > div { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start; background: var(--panel-2); border-radius: 12px; padding: 10px 12px; }
+.howto > div::before { counter-increment: h; content: counter(h); width: 26px; height: 26px; border-radius: 50%; background: var(--lv2); color: var(--night); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+.howto p { margin: 0 0 6px; }
+
+.songs { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); }
+.song { background: var(--panel-2); border-radius: 12px; padding: 12px; display: grid; gap: 8px; border: 2px solid transparent; min-width: 0; }
+.song.best { border-color: var(--gold); }
+.stars { display: flex; gap: 2px; }
+.stars button { background: none; border: 0; font-size: 24px; padding: 0 2px; color: var(--line); line-height: 1; }
+.stars button.on { color: var(--gold); }
+.banner { text-align: center; font-family: var(--display); font-size: 23px; padding: 14px; border-radius: var(--r); color: var(--night); }
+.example { background: var(--night); border-radius: 12px; padding: 12px; font-size: 14px; white-space: pre-wrap; }
+
+@media (prefers-reduced-motion: reduce) { .rolling .face { animation: none; } }
+</style>
+
+<div class="wrap">
+  <header class="hud">
+    <div class="hud-row">
+      <div class="brand">AI 작사작곡 미션앱<small>평택여고 콘텐츠 제작 학과체험</small></div>
+      <div class="xp" id="xp" aria-label="진행도"></div>
+    </div>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+  </header>
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const LV = [
+  { id: "lv1", n: 1, name: "작사가", color: "var(--lv1)", desc: "주제 → 스타일 → 가사 → 점검 → 최종 주문서, 5단계로 따라 만들어요" },
+  { id: "lv2", n: 2, name: "작곡가", color: "var(--lv2)", desc: "AI 음악 사이트에 붙여 넣고, 듣고 비교하고, 저장까지" },
+];
+const GENRES = [
+  { k: "K-pop 댄스", en: "upbeat K-pop dance" }, { k: "감성 발라드", en: "emotional ballad" }, { k: "힙합", en: "hip hop" },
+  { k: "록", en: "pop rock" }, { k: "트로트", en: "Korean trot" }, { k: "동요", en: "cute children's song" },
+  { k: "로파이", en: "lo-fi" }, { k: "재즈", en: "jazz" }, { k: "어쿠스틱 팝", en: "acoustic pop" },
+];
+// [chip label, 연결형(~고), en]
+const MOODS = [["신나는", "신나고", "upbeat"], ["청량한", "청량하고", "fresh"], ["잔잔한", "잔잔하고", "calm"], ["따뜻한", "따뜻하고", "warm"], ["몽환적인", "몽환적이고", "dreamy"], ["웅장한", "웅장하고", "epic"], ["귀여운", "귀엽고", "cute"], ["웃긴", "웃기고", "funny"], ["신비로운", "신비롭고", "mysterious"]];
+const INST = [["피아노", "piano"], ["기타", "guitar"], ["드럼", "drums"], ["신스", "synths"], ["베이스", "bass"], ["현악기", "strings"], ["우쿨렐레", "ukulele"], ["실로폰", "xylophone"], ["손뼉 소리", "hand claps"], ["아코디언", "accordion"]];
+const TEMPO = [["빠른", "fast tempo, 120 BPM"], ["보통", "medium tempo, 100 BPM"], ["느린", "slow tempo, 70 BPM"]];
+const VOCAL = [["맑은 여성 보컬", "clear female vocals"], ["부드러운 남성 보컬", "soft male vocals"], ["랩", "rap vocals"], ["어린이 합창", "kids choir"], ["보컬 없음", "instrumental"]];
+const FORM = [["짧은 인트로", "short intro"], ["따라 부르기 쉬운 후렴", "catchy chorus"], ["후렴 2번 반복", "repeat the chorus twice"], ["마지막 후렴은 더 크게", "big final chorus"], ["떼창", "gang vocals"], ["기타 솔로", "guitar solo"]];
+const DICE_G = ["K-pop 댄스", "감성 발라드", "힙합 · 랩", "신나는 록", "뽕짝 트로트", "동요 (반전!)"];
+const DICE_T = [
+  { t: "급식 메뉴", who: "나", when: "4교시 끝나고 급식실에서", feel: "오늘 메뉴에 설레는" },
+  { t: "시험 끝난 날", who: "나", when: "시험이 끝난 날 노을 지는 길에서", feel: "홀가분한" },
+  { t: "내 최애 간식", who: "나", when: "학교 끝나고 편의점에서", feel: "최애 간식을 자랑하는" },
+  { t: "월요일 아침", who: "우리", when: "월요일 아침 교실에서", feel: "졸음을 이겨내는" },
+  { t: "우리 반 자랑", who: "우리 반", when: "쉬는 시간 교실에서", feel: "웃음이 끊이지 않는" },
+  { t: "나의 꿈", who: "나", when: "밤하늘 아래 내 방에서", feel: "꿈을 다짐하는" },
+];
+const DICE_STYLE = [
+  { mood: ["신나는", "청량한"], genre: "K-pop 댄스", inst: ["신스", "드럼"], tempo: "빠른", vocal: "맑은 여성 보컬" },
+  { mood: ["잔잔한", "따뜻한"], genre: "감성 발라드", inst: ["피아노", "현악기"], tempo: "느린", vocal: "부드러운 남성 보컬" },
+  { mood: ["웃긴"], genre: "힙합", inst: ["베이스", "드럼"], tempo: "보통", vocal: "랩" },
+  { mood: ["신나는"], genre: "록", inst: ["기타", "드럼"], tempo: "빠른", vocal: "부드러운 남성 보컬" },
+  { mood: ["웃긴"], genre: "트로트", inst: ["아코디언", "손뼉 소리"], tempo: "보통", vocal: "맑은 여성 보컬" },
+  { mood: ["귀여운"], genre: "동요", inst: ["실로폰", "우쿨렐레"], tempo: "보통", vocal: "어린이 합창" },
+];
+const VERSE_GUIDE = [["① 장면 시작", "언제, 어디서? 노래가 시작되는 장면", "4교시 종이 울리면"], ["② 무슨 일이?", "그때 일어나는 일", "내 다리는 이미 급식실"], ["③ 내 기분", "그 순간 내 마음", "줄 서는 시간도 설레"], ["④ 후렴으로 연결", "후렴을 부르기 직전의 한 마디", "오늘 메뉴 뭐냐고 묻지 마"]];
+const CHORUS_GUIDE = [["① 핵심 한 마디", "제목처럼 쓰는 가장 중요한 말", "돈가스 돈가스 오늘은 돈가스"], ["② 꾸며 주는 말", "핵심을 더 신나게/슬프게", "이 맛에 학교 온다"], ["③ 반복해도 OK", "①을 한 번 더 써도 좋아요", "돈가스 돈가스 오늘은 돈가스"], ["④ 마무리 외침", "다짐이나 외침으로 끝내기", "내일도 기다릴게!"]];
+const BRIDGE_GUIDE = [["① 분위기 반전", "갑자기 조용해지거나 반대 상황", "그런데 오늘은 카레라고?"], ["② 다시 힘내기", "후렴으로 돌아가기 전 한 마디", "괜찮아 그래도 맛있어"]];
+const WORDS = {
+  "소리말": ["두근두근", "쿵쿵", "반짝반짝", "랄랄라", "예이예", "빠밤", "띵동"],
+  "기분": ["설레", "신나", "떨려", "뿌듯해", "졸려", "행복해", "아쉬워"],
+  "학교": ["종소리", "복도", "운동장", "급식", "쉬는 시간", "창밖", "칠판"],
+  "시간": ["오늘", "내일도", "월요일", "노을", "아침", "밤하늘"],
+};
+const REMIX = [
+  ["😴 너무 느려요", "빠른 템포, 120BPM, 신나는 드럼"],
+  ["🙉 가사가 안 들려요", "또렷한 발음의 보컬, 반주는 작게"],
+  ["😐 너무 평범해요", "후렴에 손뼉 소리와 다 같이 외치는 떼창"],
+  ["🌧 분위기가 달라요", "몽환적이고 청량한 분위기"],
+  ["🎤 목소리가 어색해요", "보컬 없음(instrumental)"],
+];
+const SAVE_STEPS = ["다운로드(⬇) 버튼 → MP3 선택", "갤럭시: '내 파일 → 다운로드' / 아이폰: '파일에 저장' 후 '파일' 앱", "휴대폰에서 노래가 재생되는지 들어 보기", "안 되면? 5분 넘게 막히면 패들렛 예비 음원에서 같은 장르로 받기"];
+
+/* ---------- state ---------- */
+const KEY = "ai-lyric-compose-app-v2";
+const blank = () => ({
+  tab: "lv1", dice: [null, null],
+  tq: { who: "", when: "", feel: "" },
+  b: { mood: [], genre: null, inst: [], tempo: null, vocal: null, form: [], topic: "" },
+  verse: ["", "", "", ""], chorus: ["", "", "", ""], bridgeOn: false, bridge: ["", ""],
+  title: "", noName: false, ex: false,
+  site: "two", remix: [], songs: [{ s: 0, memo: "" }, { s: 0, memo: "" }], best: null, saved: [],
+});
+let S = blank();
+try { const raw = localStorage.getItem(KEY); if (raw) { const v = JSON.parse(raw); S = Object.assign(blank(), v, { b: Object.assign(blank().b, v.b || {}), tq: Object.assign(blank().tq, v.tq || {}) }); } } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => (t.hidden = true), 1700); }
+function copy(text, el, what) {
+  if (!text) { toast("먼저 내용을 만들어요"); return; }
+  const done = () => toast((what || "") + " 복사했어요! 사이트에 붙여 넣으세요");
+  try { navigator.clipboard.writeText(text).then(done, () => selectFallback(el)); } catch (e) { selectFallback(el); }
+}
+function selectFallback(el) {
+  if (!el) return;
+  const r = document.createRange(); r.selectNodeContents(el);
+  const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  toast("글자가 선택됐어요. 길게 눌러 복사하세요");
+}
+
+/* ---------- builders ---------- */
+function wa(w) { const c = w.charCodeAt(w.length - 1) - 0xac00; return c >= 0 && c < 11172 && c % 28 ? "과" : "와"; }
+function topicFromQ() { const q = S.tq; return [q.when, q.feel, q.who].map((x) => x.trim()).filter(Boolean).join(" "); }
+function promptKo() {
+  const b = S.b;
+  if (!b.genre) return "";
+  const m = b.mood.map((x) => MOODS.find((y) => y[0] === x)).filter(Boolean);
+  const moodTxt = m.length === 2 ? m[0][1] + " " + m[1][0] + " " : m.length === 1 ? m[0][0] + " " : "";
+  const parts = [moodTxt + b.genre + " 노래"];
+  if (b.inst.length) parts.push(b.inst.length === 2 ? b.inst[0] + wa(b.inst[0]) + " " + b.inst[1] : b.inst[0]);
+  if (b.tempo) parts.push(b.tempo + " 템포");
+  if (b.vocal) parts.push(b.vocal);
+  if (b.form.length) parts.push(...b.form);
+  if (S.remix.length) parts.push(...S.remix);
+  const topic = b.topic.trim();
+  return parts.join(", ") + (topic ? ", " + topic + "에 대한 노래" : "");
+}
+function promptEn() {
+  const b = S.b;
+  if (!b.genre) return "";
+  const out = [];
+  b.mood.forEach((x) => { const f = MOODS.find((y) => y[0] === x); if (f) out.push(f[2]); });
+  const g = GENRES.find((x) => x.k === b.genre); out.push(g ? g.en : b.genre);
+  b.inst.forEach((x) => { const f = INST.find((y) => y[0] === x); if (f) out.push(f[1]); });
+  if (b.tempo) out.push(TEMPO.find((x) => x[0] === b.tempo)[1]);
+  if (b.vocal) out.push(VOCAL.find((x) => x[0] === b.vocal)[1]);
+  b.form.forEach((x) => { const f = FORM.find((y) => y[0] === x); if (f) out.push(f[1]); });
+  return out.join(", ");
+}
+function lyricsTxt() {
+  const v = S.verse.filter((x) => x.trim()), c = S.chorus.filter((x) => x.trim()), br = S.bridgeOn ? S.bridge.filter((x) => x.trim()) : [];
+  const parts = [];
+  if (v.length) parts.push("[Verse]\n" + v.join("\n"));
+  if (c.length) parts.push("[Chorus]\n" + c.join("\n"));
+  if (br.length) parts.push("[Bridge]\n" + br.join("\n"));
+  if (br.length && c.length) parts.push("[Chorus]\n" + c.join("\n"));
+  return parts.join("\n\n");
+}
+function oneShot() { const p = promptKo(), l = lyricsTxt(); return p && l ? p + ". 아래 한국어 가사로 불러 줘." + (S.title.trim() ? " 제목은 '" + S.title.trim() + "'." : "") + "\n\n" + l : ""; }
+
+/* ---------- checks ---------- */
+function lineCount() { return [...S.verse, ...S.chorus, ...(S.bridgeOn ? S.bridge : [])].filter((x) => x.trim()).length; }
+function chorusRepeats() {
+  const words = S.chorus.join(" ").split(/\s+/).map((w) => w.replace(/[^가-힣a-zA-Z0-9]/g, "")).filter((w) => w.length >= 2);
+  const seen = {}; return words.some((w) => (seen[w] = (seen[w] || 0) + 1) >= 2);
+}
+function selfCheck() {
+  return [
+    ["주제를 정했어요", !!S.b.topic.trim(), true],
+    ["장르를 골랐어요", !!S.b.genre, true],
+    ["가사가 6줄 이상이에요", lineCount() >= 6, true],
+    ["후렴에 반복되는 말이 있어요 (중독성 UP)", chorusRepeats(), true],
+    ["노래 제목을 정했어요", !!S.title.trim(), true],
+    ["친구·연예인의 실제 이름을 쓰지 않았어요", S.noName, false],
+  ];
+}
+function cleared() {
+  return { lv1: selfCheck().every((c) => c[1]), lv2: S.best !== null && S.saved.filter(Boolean).length >= 3 };
+}
+
+/* ---------- render helpers ---------- */
+function stepHead(n, title, color, ok, key) {
+  return `<div class="step-h"><span class="step-n" style="background:${color}">STEP ${n}</span><h3>${title}</h3><span class="ok" ${key ? `data-ok="${key}"` : ""} ${ok ? "" : "hidden"}>✓ 완료</span></div>`;
+}
+function okMap() { const ko = promptKo(), ly = lyricsTxt(); return { topic: !!S.b.topic.trim(), style: !!S.b.genre, lyrics: lineCount() >= 6, check: selfCheck().every((x) => x[1]), final: !!(ko && ly) }; }
+function checkHtml() { return selfCheck().map((x) => `<button class="it ${x[1] ? "on" : ""}" ${x[2] ? "disabled" : 'id="noName"'} aria-pressed="${x[1]}"><span class="box">${x[1] ? "✓" : ""}</span><span>${x[0]}</span>${x[2] ? '<span class="auto">자동 체크</span>' : '<span class="auto">눌러서 체크</span>'}</button>`).join(""); }
+function chips(group, list, max) {
+  const cur = S.b[group];
+  return `<div class="row">${list.map((x) => { const v = Array.isArray(x) ? x[0] : x.k; const on = max ? cur.includes(v) : cur === v; return `<button class="chip" data-b="${group}" data-v="${esc(v)}" data-max="${max || 0}" aria-pressed="${on}">${esc(v)}</button>`; }).join("")}</div>`;
+}
+function lines(key, guide) {
+  return guide.map((g, i) => `<div class="line"><span class="g"><b>${g[0]}</b> · ${g[1]}</span><input type="text" id="${key}${i}" data-${key}="${i}" value="${esc(S[key][i] || "")}" placeholder="예: ${esc(g[2])}"></div>`).join("");
+}
+function outBox(id, text, empty, cls = "") { return `<div class="out ${cls} ${text ? "" : "empty"}" id="${id}">${esc(text || empty)}</div>`; }
+
+/* ---------- views ---------- */
+const VIEWS = {
+  lv1() {
+    const d = S.dice, ko = promptKo(), en = promptEn(), ly = lyricsTxt(), chk = selfCheck(), c = LV[0].color;
+    return `<div class="lv-head"><div class="lv-badge" style="background:${c}">LV.1</div><div><h2>작사가 모드</h2><p>${LV[0].desc}</p></div></div>
+
+    <section class="step">${stepHead(1, "주제 정하기", c, !!S.b.topic.trim(), "topic")}
+      <p class="hint">주사위를 굴리거나, 아래 세 가지 질문에 답해서 나만의 주제를 만들어요. 주제가 구체적일수록 노래가 살아나요!</p>
+      <div class="dice" id="dice">
+        <div class="die"><span class="lab">장르 주사위</span><span class="face" id="f0">${d[0] === null ? "?" : d[0] + 1}</span><span class="val">${d[0] === null ? "-" : DICE_G[d[0]]}</span></div>
+        <div class="die"><span class="lab">주제 주사위</span><span class="face" id="f1">${d[1] === null ? "?" : d[1] + 1}</span><span class="val">${d[1] === null ? "-" : DICE_T[d[1]].t}</span></div>
+      </div>
+      <button class="btn" id="roll">🎲 주사위 굴리기</button>
+      <p class="sub">주제를 구체적으로 만드는 3가지 질문</p>
+      <div class="grid2">
+        <label for="q-when">언제, 어디서?<input type="text" id="q-when" data-tq="when" value="${esc(S.tq.when)}" placeholder="예: 4교시 끝나고 급식실에서"></label>
+        <label for="q-feel">어떤 기분·상황?<input type="text" id="q-feel" data-tq="feel" value="${esc(S.tq.feel)}" placeholder="예: 오늘 메뉴에 설레는"></label>
+        <label for="q-who">누구의 이야기?<input type="text" id="q-who" data-tq="who" value="${esc(S.tq.who)}" placeholder="예: 나 / 우리 반 / 우리 집 강아지"></label>
+      </div>
+      ${outBox("topicOut", S.b.topic, "세 칸을 채우면 여기에 주제 문장이 만들어져요")}
+    </section>
+
+    <section class="step">${stepHead(2, "노래 스타일 고르기", c, !!S.b.genre, "style")}
+      <p class="hint">칩을 눌러 고르면 AI에게 보낼 주문서가 자동으로 만들어져요. 주사위를 굴렸다면 이미 골라져 있어요. 마음대로 바꿔도 돼요!</p>
+      <p class="sub">분위기 (2개까지)</p>${chips("mood", MOODS, 2)}
+      <p class="sub">장르</p>${chips("genre", GENRES)}
+      <p class="sub">악기 (2개까지)</p>${chips("inst", INST, 2)}
+      <p class="sub">템포</p>${chips("tempo", TEMPO)}
+      <p class="sub">보컬</p>${chips("vocal", VOCAL)}
+      <p class="sub">곡 구성 (선택, 여러 개 OK)</p>${chips("form", FORM, 6)}
+      ${outBox("ko", ko, "장르를 고르면 여기에 주문서(프롬프트)가 만들어져요")}
+      ${outBox("en", en ? "영어 스타일 칸용: " + en : "", "", "en")}
+    </section>
+
+    <section class="step">${stepHead(3, "가사 쓰기", c, lineCount() >= 6, "lyrics")}
+      <p class="hint">줄마다 무엇을 쓸지 안내가 있어요. 막히면 아래 단어 칩을 눌러 보세요. 마지막으로 눌렀던 칸에 단어가 들어가요.</p>
+      <div class="row"><button class="btn ghost sm" id="exToggle" aria-expanded="${S.ex}">${S.ex ? "예시 닫기" : "👀 예시 가사 보기"}</button></div>
+      ${S.ex ? `<div class="example">[Verse]\n4교시 종이 울리면\n내 다리는 이미 급식실\n줄 서는 시간도 설레\n오늘 메뉴 뭐냐고 묻지 마\n\n[Chorus]\n돈가스 돈가스 오늘은 돈가스\n이 맛에 학교 온다\n돈가스 돈가스 오늘은 돈가스\n내일도 기다릴게!</div>` : ""}
+      <div class="grid2">
+        <div class="tagbox"><h4>[Verse] 이야기 부분</h4>${lines("verse", VERSE_GUIDE)}</div>
+        <div class="tagbox"><h4>[Chorus] 후렴 부분</h4>${lines("chorus", CHORUS_GUIDE)}</div>
+      </div>
+      <div class="row"><button class="chip" id="bridgeToggle" aria-pressed="${S.bridgeOn}">＋ [Bridge] 분위기 반전 넣기 (선택)</button></div>
+      ${S.bridgeOn ? `<div class="tagbox"><h4>[Bridge] 반전 부분</h4>${lines("bridge", BRIDGE_GUIDE)}</div>` : ""}
+      <p class="sub">단어 도우미</p>
+      ${Object.entries(WORDS).map(([k, ws]) => `<div class="row"><span class="hint" style="width:44px">${k}</span>${ws.map((w) => `<button class="chip word" data-word="${esc(w)}">${esc(w)}</button>`).join("")}</div>`).join("")}
+      <p class="hint">💡 꿀팁: 후렴은 짧게, 같은 말을 반복하면 귀에 쏙! 줄 끝 글자를 비슷하게 맞추면(설레·내·해) 랩처럼 리듬이 생겨요.</p>
+    </section>
+
+    <section class="step">${stepHead(4, "제목 짓고 스스로 점검하기", c, chk.every((x) => x[1]), "check")}
+      <label for="title">노래 제목<input type="text" id="title" value="${esc(S.title)}" placeholder="예: 오늘은 돈가스"></label>
+      <div class="check" id="chk">${checkHtml()}</div>
+    </section>
+
+    <section class="step">${stepHead(5, "최종 주문서 완성!", c, !!(ko && ly), "final")}
+      <p class="hint">LV.2에서 이 내용을 그대로 AI 음악 사이트에 붙여 넣어요.</p>
+      <p class="sub">🎨 스타일 (한국어)</p>${outBox("fKo", ko, "STEP 2를 먼저 해요")}
+      <p class="sub">🎨 스타일 (영어)</p>${outBox("fEn", en, "STEP 2를 먼저 해요", "en")}
+      <p class="sub">📝 가사</p>${outBox("fLy", ly, "STEP 3을 먼저 해요")}
+      <button class="btn" data-tab="lv2" id="toLv2" ${ko && ly ? "" : "hidden"}>LV.2 작곡가로 레벨업 →</button>
+    </section>`;
+  },
+
+  lv2() {
+    const c = LV[1].color, ko = promptKo(), en = promptEn(), ly = lyricsTxt(), one = oneShot(), title = S.title.trim();
+    const ready = !!(ko && ly);
+    const songs = S.songs;
+    return `<div class="lv-head"><div class="lv-badge" style="background:${c}">LV.2</div><div><h2>작곡가 모드</h2><p>${LV[1].desc}</p></div></div>
+    ${ready ? "" : `<div class="step"><p class="hint">⚠️ LV.1의 주문서와 가사를 먼저 완성해요. 아래 복사 버튼은 그다음에 쓸 수 있어요.</p><button class="btn ghost" data-tab="lv1">← LV.1로 가기</button></div>`}
+
+    <section class="step">${stepHead(1, "AI 음악 사이트 열기", c, false)}
+      <div class="howto">
+        <div><span><p>휴대폰 카메라로 <b>칠판의 QR</b>을 찍어 선생님이 알려 준 사이트를 열어요.</p></span></div>
+        <div><span><p><b>회원가입·결제·앱 설치</b> 창이 뜨면 누르지 말고 닫거나 손을 들어요.</p></span></div>
+        <div><span><p>와이파이가 느리면 휴대폰 데이터로 바꿔도 돼요.</p></span></div>
+      </div>
+    </section>
+
+    <section class="step">${stepHead(2, "주문서 붙여 넣기", c, false)}
+      <p class="hint">사이트 화면을 보고 입력 칸이 몇 개인지 골라요.</p>
+      <div class="row"><button class="chip" data-site="two" aria-pressed="${S.site === "two"}">칸이 여러 개 (스타일 + 가사)</button><button class="chip" data-site="one" aria-pressed="${S.site === "one"}">칸이 하나</button></div>
+      ${S.site === "two" ? `<div class="howto">
+        <div><span><p><b>가사 직접 입력</b> 모드를 켜요. (사이트마다 Custom, Lyrics, 가사 입력 같은 이름이에요)</p></span></div>
+        <div><span><p><b>스타일 칸</b>에 붙여 넣기. 영어가 더 잘 되는 사이트가 많아요.</p><div class="row"><button class="btn sm" data-copy="en">영어 스타일 복사</button><button class="btn ghost sm" data-copy="ko">한국어 스타일 복사</button></div></span></div>
+        <div><span><p><b>가사 칸</b>에 붙여 넣기.</p><button class="btn sm" data-copy="ly">가사 복사</button></span></div>
+        <div><span><p><b>제목 칸</b>이 있으면 제목도 넣어요.${title ? " (" + esc(title) + ")" : ""}</p><button class="btn ghost sm" data-copy="title">제목 복사</button></span></div>
+        <div><span><p><b>만들기(Create, Generate)</b> 버튼을 누르고 1~2분 기다려요.</p></span></div>
+      </div>` : `<div class="howto">
+        <div><span><p>스타일 + 가사 + 제목이 한 번에 들어간 주문서를 복사해요.</p><button class="btn sm" data-copy="one">한 번에 복사</button></span></div>
+        <div><span><p>입력 칸에 붙여 넣고 <b>만들기</b> 버튼! 1~2분 기다려요.</p></span></div>
+        <div><span><p>가사를 안 불러 주는 사이트라면? 괜찮아요. 가사는 뮤직비디오 자막으로 써요.</p></span></div>
+      </div>
+      ${outBox("oneOut", one, "LV.1을 먼저 완성하면 여기에 나타나요", "en")}`}
+      <div hidden>${outBox("hKo", ko, "")}${outBox("hEn", en, "")}${outBox("hLy", ly, "")}${outBox("hTi", title, "")}</div>
+    </section>
+
+    <section class="step">${stepHead(3, "듣고 비교하기", c, S.best !== null)}
+      <p class="hint">한 번 만들면 보통 2곡이 나와요. 끝까지 들어 보고 별점을 매긴 뒤, 베스트 곡을 골라요.</p>
+      <div class="songs">${songs.map((sg, i) => `<div class="song ${S.best === i ? "best" : ""}">
+        <b>곡 ${i + 1}</b>
+        <div class="stars" aria-label="곡 ${i + 1} 별점">${[1, 2, 3, 4, 5].map((n) => `<button class="${sg.s >= n ? "on" : ""}" data-star="${i}" data-n="${n}" aria-label="${n}점">★</button>`).join("")}</div>
+        <label for="memo${i}">어땠어요?<input type="text" id="memo${i}" data-memo="${i}" value="${esc(sg.memo)}" placeholder="예: 후렴이 신나요 / 목소리가 어색해요"></label>
+        <button class="btn ${S.best === i ? "" : "ghost"} sm" data-best="${i}">${S.best === i ? "🏆 베스트 곡!" : "이 곡으로 할래요"}</button>
+      </div>`).join("")}</div>
+    </section>
+
+    <section class="step">${stepHead(4, "마음에 안 들면? 리믹스", c, false)}
+      <p class="hint">해당하는 걸 누르면 주문서에 고침 문장이 붙어요. 다시 STEP 2에서 복사해서 만들어 보세요. (선택)</p>
+      <div class="row">${REMIX.map((r, i) => `<button class="chip" data-remix="${i}" aria-pressed="${S.remix.includes(r[1])}">${r[0]}</button>`).join("")}</div>
+      ${S.remix.length ? outBox("remixOut", ko, "") : ""}
+      <p class="hint">⏱ 노래가 길어도 괜찮아요. 편집할 때 30초만 잘라 쓰면 돼요.</p>
+    </section>
+
+    <section class="step">${stepHead(5, "휴대폰에 저장하기", c, S.saved.filter(Boolean).length >= 3)}
+      <div class="check">${SAVE_STEPS.map((t, i) => `<button class="it ${S.saved[i] ? "on" : ""}" data-saved="${i}" aria-pressed="${!!S.saved[i]}"><span class="box">${S.saved[i] ? "✓" : ""}</span><span>${esc(t)}</span></button>`).join("")}</div>
+    </section>
+    ${cleared().lv1 && cleared().lv2 ? `<div class="banner" style="background:var(--gold)">🎉 작사·작곡 완료! 이제 LV.3 감독 모드로 촬영하러 가요</div>` : ""}`;
+  },
+};
+
+/* ---------- render ---------- */
+function renderHud() {
+  const c = cleared(), n = Object.values(c).filter(Boolean).length;
+  $("#xp").innerHTML = LV.map((l) => `<i style="background:${c[l.id] ? l.color : ""}"></i>`).join("") + `<span>${n}/2</span>`;
+  $("#tabs").innerHTML = LV.map((l) => `<button class="tab" role="tab" id="t-${l.id}" aria-selected="${S.tab === l.id}" style="${S.tab === l.id ? "background:" + l.color : ""}" data-tab="${l.id}">LV.${l.n} ${l.name}${c[l.id] ? " ✓" : ""}</button>`).join("");
+}
+function render() {
+  renderHud();
+  const l = LV.find((x) => x.id === S.tab) || LV[0];
+  $("#main").innerHTML = `<div class="level" role="tabpanel" aria-labelledby="t-${l.id}">${VIEWS[l.id]()}</div>`;
+}
+function setText(id, text, empty) { const el = $("#" + id); if (!el) return; el.textContent = text || empty; el.classList.toggle("empty", !text); }
+function refresh() {
+  const ko = promptKo(), en = promptEn(), ly = lyricsTxt();
+  setText("topicOut", S.b.topic, "세 칸을 채우면 여기에 주제 문장이 만들어져요");
+  setText("ko", ko, "장르를 고르면 여기에 주문서(프롬프트)가 만들어져요");
+  setText("en", en ? "영어 스타일 칸용: " + en : "", "");
+  setText("fKo", ko, "STEP 2를 먼저 해요"); setText("fEn", en, "STEP 2를 먼저 해요"); setText("fLy", ly, "STEP 3을 먼저 해요");
+  const ok = okMap();
+  document.querySelectorAll("[data-ok]").forEach((el) => { el.hidden = !ok[el.dataset.ok]; });
+  const chk = $("#chk"); if (chk) chk.innerHTML = checkHtml();
+  const b = $("#toLv2"); if (b) b.hidden = !ok.final;
+  renderHud();
+}
+let lastField = null;
+
+/* ---------- events ---------- */
+document.addEventListener("focusin", (e) => { if (e.target.matches("[data-verse],[data-chorus],[data-bridge]")) lastField = e.target.id; });
+document.addEventListener("click", (ev) => {
+  const t = ev.target.closest("button");
+  if (!t) return;
+  const d = t.dataset;
+  if (d.tab) { S.tab = d.tab; save(); render(); window.scrollTo({ top: 0 }); return; }
+  if (t.id === "roll") {
+    const box = $("#dice"); box.classList.add("rolling"); let k = 0;
+    const iv = setInterval(() => {
+      $("#f0").textContent = 1 + Math.floor(Math.random() * 6); $("#f1").textContent = 1 + Math.floor(Math.random() * 6);
+      if (++k > 8) {
+        clearInterval(iv); box.classList.remove("rolling");
+        const g = Math.floor(Math.random() * 6), tp = Math.floor(Math.random() * 6);
+        S.dice = [g, tp];
+        const st = DICE_STYLE[g], q = DICE_T[tp];
+        S.tq = { who: q.who, when: q.when, feel: q.feel };
+        S.b = Object.assign({}, S.b, { mood: [...st.mood], genre: st.genre, inst: [...st.inst], tempo: st.tempo, vocal: st.vocal, topic: topicFromQ() });
+        save(); render(); toast(`${DICE_G[g]} × ${q.t}! 질문 칸을 내 이야기로 바꿔도 돼요`);
+      }
+    }, 70);
+    return;
+  }
+  if (d.b) {
+    const g = d.b, v = d.v, max = +d.max;
+    if (max) { const arr = S.b[g]; const i = arr.indexOf(v); if (i >= 0) arr.splice(i, 1); else { arr.push(v); if (arr.length > max) arr.shift(); } }
+    else S.b[g] = S.b[g] === v ? null : v;
+    save(); render(); return;
+  }
+  if (t.id === "exToggle") { S.ex = !S.ex; save(); render(); return; }
+  if (t.id === "bridgeToggle") { S.bridgeOn = !S.bridgeOn; save(); render(); return; }
+  if (t.id === "noName") { S.noName = !S.noName; save(); refresh(); return; }
+  if (d.word) {
+    const id = lastField || "verse0"; const el = $("#" + id); if (!el) return;
+    el.value = (el.value.trim() ? el.value.replace(/\s*$/, " ") : "") + d.word; el.dispatchEvent(new Event("input", { bubbles: true })); el.focus(); return;
+  }
+  if (d.site) { S.site = d.site; save(); render(); return; }
+  if (d.copy) {
+    const m = { en: [promptEn(), "hEn", "영어 스타일"], ko: [promptKo(), "hKo", "한국어 스타일"], ly: [lyricsTxt(), "hLy", "가사"], title: [S.title.trim(), "hTi", "제목"], one: [oneShot(), "oneOut", "주문서"] }[d.copy];
+    copy(m[0], $("#" + m[1]), m[2]); return;
+  }
+  if (d.star !== undefined) { S.songs[+d.star].s = +d.n; save(); render(); return; }
+  if (d.best !== undefined) { S.best = +d.best; save(); render(); toast("베스트 곡 결정! 이제 저장해요"); return; }
+  if (d.remix !== undefined) { const p = REMIX[+d.remix][1]; const i = S.remix.indexOf(p); if (i >= 0) S.remix.splice(i, 1); else S.remix.push(p); save(); render(); return; }
+  if (d.saved !== undefined) { S.saved[+d.saved] = !S.saved[+d.saved]; save(); render(); return; }
+});
+document.addEventListener("input", (ev) => {
+  const t = ev.target, d = t.dataset;
+  if (d.tq) { S.tq[d.tq] = t.value; S.b.topic = topicFromQ(); }
+  else if (d.verse !== undefined) S.verse[+d.verse] = t.value;
+  else if (d.chorus !== undefined) S.chorus[+d.chorus] = t.value;
+  else if (d.bridge !== undefined) S.bridge[+d.bridge] = t.value;
+  else if (t.id === "title") S.title = t.value;
+  else if (d.memo !== undefined) { S.songs[+d.memo].memo = t.value; save(); return; }
+  else return;
+  save(); refresh();
+});
+
+const h = (location.hash || "").slice(1);
+if (LV.some((l) => l.id === h)) S.tab = h;
+render();
+</script>
