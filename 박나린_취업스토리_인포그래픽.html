@@ -1,0 +1,442 @@
+<title>박나린의 디자이너 취업 Story</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a designer's artboard — ruler-marked header, then eight numbered worksheet steps as frames on a cool grid paper */
+:root {
+  --paper: #f3f5fa;
+  --frame: #ffffff;
+  --ink: #18203a;
+  --muted: #5d6680;
+  --line: #d9deea;
+  --cobalt: #2f56e0;
+  --cobalt-soft: #e4eafd;
+  --sun: #f0b11a;
+  --sun-soft: #fdf2d6;
+  --rose: #e2456f;
+  --rose-soft: #fce4ea;
+  --teal: #0f9b8a;
+  --teal-soft: #dcf3ef;
+  --grid: rgba(47, 86, 224, .06);
+  --f-display: "Black Han Sans", "Noto Sans KR", system-ui, sans-serif;
+  --f-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10141f; --frame: #181e2d; --ink: #e9ecf5; --muted: #9aa3bd; --line: #2a3247;
+    --cobalt: #7b97ff; --cobalt-soft: #1f2a4d; --sun: #f5c451; --sun-soft: #3a3019;
+    --rose: #ff7d9d; --rose-soft: #40202b; --teal: #4fd1bd; --teal-soft: #15362f;
+    --grid: rgba(123, 151, 255, .07); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10141f; --frame: #181e2d; --ink: #e9ecf5; --muted: #9aa3bd; --line: #2a3247;
+  --cobalt: #7b97ff; --cobalt-soft: #1f2a4d; --sun: #f5c451; --sun-soft: #3a3019;
+  --rose: #ff7d9d; --rose-soft: #40202b; --teal: #4fd1bd; --teal-soft: #15362f;
+  --grid: rgba(123, 151, 255, .07); color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 56px;
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p, ul, ol { margin: 0; }
+ul { padding: 0; list-style: none; }
+
+/* ---------- Header ---------- */
+.hero {
+  position: relative;
+  background: var(--frame);
+  border: 1px solid var(--line);
+  padding: 40px 32px 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+}
+.hero::before {
+  content: "";
+  position: absolute; inset: 0 0 auto 0; height: 14px;
+  background: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 12px),
+              repeating-linear-gradient(90deg, var(--muted) 0 1px, transparent 1px 60px);
+  background-size: 100% 7px, 100% 14px;
+  background-repeat: no-repeat;
+  opacity: .7;
+}
+.eyebrow {
+  font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em;
+  color: var(--cobalt); text-transform: uppercase;
+}
+.hero h1 {
+  font-family: var(--f-display); font-weight: 400;
+  font-size: clamp(32px, 6vw, 58px); line-height: 1.12; margin-top: 10px;
+}
+.hero h1 em { font-style: normal; color: var(--cobalt); }
+.hero .lead { color: var(--muted); margin-top: 12px; max-width: 58ch; }
+.badge {
+  border: 2px solid var(--ink);
+  padding: 14px 18px; min-width: 200px;
+  display: grid; gap: 4px;
+  background: var(--frame);
+}
+.badge .k { font-family: var(--f-mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; }
+.badge .name { font-family: var(--f-display); font-size: 30px; line-height: 1.1; }
+.badge .meta { font-size: 13px; color: var(--muted); }
+.swatches { display: flex; gap: 6px; margin-top: 8px; }
+.swatches i { width: 22px; height: 22px; display: block; }
+
+/* ---------- Step frames ---------- */
+.steps { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
+.step {
+  background: var(--frame);
+  border: 1px solid var(--line);
+  padding: 24px;
+  display: grid; gap: 16px; align-content: start;
+  min-width: 0;
+}
+.span-12 { grid-column: span 12; }
+.span-7 { grid-column: span 7; }
+.span-5 { grid-column: span 5; }
+.span-6 { grid-column: span 6; }
+.step-head { display: flex; align-items: center; gap: 12px; }
+.num {
+  font-family: var(--f-mono); font-weight: 600; font-size: 13px;
+  width: 34px; height: 34px; display: grid; place-items: center;
+  background: var(--ink); color: var(--frame); flex: none;
+}
+.step-head h2 { font-family: var(--f-display); font-weight: 400; font-size: 24px; line-height: 1.2; }
+.step-head .q { font-size: 12.5px; color: var(--muted); margin-left: auto; text-align: right; max-width: 30ch; }
+
+/* 1. Fields */
+.fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.field { border-top: 6px solid var(--c); padding: 14px 14px 16px; background: var(--cs); display: grid; gap: 8px; align-content: start; }
+.field h3 { font-size: 17px; font-weight: 900; }
+.field p { font-size: 14px; }
+.field .where { font-size: 12.5px; color: var(--muted); }
+.field .where b { font-family: var(--f-mono); font-weight: 600; font-size: 11px; color: var(--c); letter-spacing: .06em; display: block; }
+.c-cobalt { --c: var(--cobalt); --cs: var(--cobalt-soft); }
+.c-sun { --c: var(--sun); --cs: var(--sun-soft); }
+.c-rose { --c: var(--rose); --cs: var(--rose-soft); }
+.c-teal { --c: var(--teal); --cs: var(--teal-soft); }
+
+/* 2. Career path */
+.path { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; position: relative; }
+.stage { padding: 0 12px 0 0; display: grid; gap: 6px; position: relative; }
+.stage .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--cobalt); border: 3px solid var(--frame); box-shadow: 0 0 0 2px var(--cobalt); position: relative; z-index: 1; }
+.stage::before { content: ""; position: absolute; top: 6px; left: 0; right: 0; height: 2px; background: var(--cobalt); opacity: .35; }
+.stage:last-child::before { right: 50%; }
+.stage .when { font-family: var(--f-mono); font-size: 11px; color: var(--cobalt); letter-spacing: .06em; margin-top: 4px; }
+.stage b { font-size: 15px; }
+.stage p { font-size: 13.5px; color: var(--muted); }
+.sub { font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+.jobs { display: grid; gap: 8px; }
+.job { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--line); font-weight: 700; }
+.job:last-child { border-bottom: 0; }
+.job .i { font-family: var(--f-mono); font-size: 12px; color: var(--muted); font-weight: 500; }
+.tag { font-size: 11.5px; font-weight: 500; padding: 2px 8px; border: 1px solid currentColor; color: var(--rose); }
+
+/* 3. Competencies */
+.comp { display: grid; gap: 10px; }
+.comp li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.comp li:last-child { border-bottom: 0; }
+.comp .n { font-family: var(--f-display); font-size: 22px; color: var(--cobalt); line-height: 1.2; }
+.comp h3 { font-size: 16px; font-weight: 700; }
+.shift { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 13.5px; margin-top: 4px; }
+.shift s { color: var(--muted); text-decoration-color: var(--rose); text-decoration-thickness: 2px; }
+.shift .arr { color: var(--cobalt); font-weight: 700; }
+.shift strong { background: var(--cobalt-soft); padding: 1px 8px; font-weight: 700; }
+
+/* 4. Knowledge & attitude */
+.ka { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.ka-col { display: grid; gap: 8px; }
+.ka-col .sub { color: var(--c); }
+.pill-list { display: grid; gap: 8px; }
+.pill-list li { padding: 10px 12px; background: var(--cs); border-left: 4px solid var(--c); font-weight: 700; font-size: 14.5px; }
+.pill-list li small { display: block; font-weight: 400; color: var(--muted); font-size: 12.5px; }
+
+/* 5. Certificates */
+.ladder { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: end; }
+.rung { background: var(--sun-soft); border: 1px solid var(--sun); padding: 14px; display: grid; gap: 4px; align-content: end; }
+.rung:nth-child(1) { min-height: 110px; }
+.rung:nth-child(2) { min-height: 150px; }
+.rung:nth-child(3) { min-height: 190px; }
+.rung .lv { font-family: var(--f-mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; }
+.rung b { font-size: 16px; line-height: 1.35; }
+.rung small { color: var(--muted); font-size: 12.5px; }
+.plus { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 2px dashed var(--sun); font-weight: 700; font-size: 14.5px; }
+.plus span { font-family: var(--f-display); font-size: 22px; color: var(--sun); line-height: 1; }
+
+/* 6. Activities */
+.acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.act { display: grid; gap: 4px; padding: 12px; border: 1px solid var(--line); align-content: start; }
+.act .where { font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; color: var(--teal); }
+.act b { font-size: 14.5px; line-height: 1.4; }
+
+/* 7. Effort */
+.effort { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.effort ol { padding: 0; list-style: none; display: grid; gap: 8px; counter-reset: e; }
+.effort ol li { counter-increment: e; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; align-items: baseline; font-weight: 700; font-size: 14.5px; }
+.effort ol li::before { content: counter(e, decimal-leading-zero); font-family: var(--f-mono); font-size: 12px; color: var(--rose); font-weight: 600; }
+
+/* 8. Future */
+.future { background: var(--ink); color: var(--frame); border-color: var(--ink); }
+.future .num { background: var(--sun); color: var(--ink); }
+.future .step-head .q { color: color-mix(in srgb, var(--frame) 65%, transparent); }
+.keywords { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.kw { border-top: 2px solid var(--sun); padding-top: 14px; display: grid; gap: 8px; align-content: start; }
+.kw h3 { font-family: var(--f-display); font-weight: 400; font-size: 26px; line-height: 1.2; }
+.kw p { font-size: 14px; opacity: .82; }
+.kw .hash { font-family: var(--f-mono); font-size: 12px; color: var(--sun); }
+
+.flow-note { text-align: center; font-size: 12.5px; color: var(--muted); font-family: var(--f-mono); }
+
+@media (max-width: 900px) {
+  .span-7, .span-5, .span-6 { grid-column: span 12; }
+  .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  body { font-size: 14.5px; }
+  .hero { grid-template-columns: minmax(0, 1fr); padding: 32px 20px 24px; }
+  .step { padding: 18px; }
+  .step-head { flex-wrap: wrap; }
+  .step-head .q { margin-left: 46px; text-align: left; }
+  .fields, .acts, .effort, .keywords { grid-template-columns: minmax(0, 1fr); }
+  .path { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .stage::before { display: none; }
+  .ladder { grid-template-columns: minmax(0, 1fr); }
+  .rung:nth-child(n) { min-height: 0; }
+}
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow">취중진담 II · 꼬리에 꼬리를 무는 나만의 취업 Story</p>
+      <h1>예쁜 화면을 넘어,<br><em>목적을 설계하는</em> 디자이너</h1>
+      <p class="lead">희망 분야에서 출발해 직무, 역량, 자격증, 활동, 노력을 차례로 묻고 답하며 그려 본 나의 진로 지도입니다.</p>
+    </div>
+    <div class="badge" aria-label="학생 정보">
+      <span class="k">DESIGNER PROFILE</span>
+      <span class="name">박나린</span>
+      <span class="meta">시각디자인과 · 특성화고 1학년</span>
+      <div class="swatches" aria-hidden="true">
+        <i style="background:var(--cobalt)"></i><i style="background:var(--sun)"></i><i style="background:var(--rose)"></i><i style="background:var(--teal)"></i>
+      </div>
+    </div>
+  </header>
+
+  <div class="steps">
+
+    <!-- 1 -->
+    <section class="step span-12">
+      <div class="step-head">
+        <span class="num">01</span>
+        <h2>희망 취업 &amp; 진로 분야</h2>
+        <p class="q">시각디자인과를 졸업하면 어떤 곳에 취업할 수 있을까?</p>
+      </div>
+      <div class="fields">
+        <article class="field c-cobalt">
+          <h3>UI/UX 디자이너</h3>
+          <p>앱·웹 서비스의 화면과 사용 흐름을 디자인</p>
+          <p class="where"><b>WHERE</b>네이버, 카카오, 쿠팡</p>
+        </article>
+        <article class="field c-sun">
+          <h3>브랜드 디자이너</h3>
+          <p>로고와 브랜드 아이덴티티 구축</p>
+          <p class="where"><b>WHERE</b>광고대행사, 브랜딩 전문 에이전시</p>
+        </article>
+        <article class="field c-rose">
+          <h3>편집 디자이너</h3>
+          <p>책, 잡지, 포스터 등 인쇄물 디자인</p>
+          <p class="where"><b>WHERE</b>출판사, 잡지사, 기업 홍보팀</p>
+        </article>
+        <article class="field c-teal">
+          <h3>모션그래픽 디자이너</h3>
+          <p>광고, 방송, 영상, 유튜브 콘텐츠 제작</p>
+          <p class="where"><b>WHERE</b>방송국 CG팀, 광고제작사</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="step span-7">
+      <div class="step-head">
+        <span class="num">02</span>
+        <h2>구체적인 직무</h2>
+        <p class="q">고등학교 졸업 후 바로 이 분야로 가면 어떤 일을 할까?</p>
+      </div>
+      <div class="path">
+        <div class="stage">
+          <span class="dot"></span>
+          <span class="when">STAGE 1 · 초반</span>
+          <b>아르바이트 · 인턴</b>
+          <p>계약직을 거쳐 정규직으로</p>
+        </div>
+        <div class="stage">
+          <span class="dot"></span>
+          <span class="when">STAGE 2 · 중반</span>
+          <b>실무 경험 + 포트폴리오</b>
+          <p>디자인 전문가, 에이전시 진출</p>
+        </div>
+        <div class="stage">
+          <span class="dot"></span>
+          <span class="when">STAGE 3 · 확장</span>
+          <b>디자인 프리랜서</b>
+          <p>나만의 이름으로 활동</p>
+        </div>
+      </div>
+      <p class="sub">추천 직무</p>
+      <ul class="jobs">
+        <li class="job"><span class="i">01</span>그래픽 디자인</li>
+        <li class="job"><span class="i">02</span>편집 디자인</li>
+        <li class="job"><span class="i">03</span>웹 · SNS 디자인</li>
+        <li class="job"><span class="i">04</span>모션그래픽 · 영상 디자인<span class="tag">초급</span></li>
+      </ul>
+    </section>
+
+    <!-- 3 -->
+    <section class="step span-5">
+      <div class="step-head">
+        <span class="num">03</span>
+        <h2>필요한 역량</h2>
+      </div>
+      <ol class="comp" style="padding:0;list-style:none">
+        <li><span class="n">1</span><div><h3>디자인 툴 숙련도</h3><div class="shift"><s>단순 제작</s><span class="arr">→</span><strong>디자인 시스템 구축</strong></div></div></li>
+        <li><span class="n">2</span><div><h3>UI/UX와 사용자 중심 사고</h3><div class="shift"><s>예쁘기만 한 디자인</s><span class="arr">→</span><strong>목적에 따라 설계</strong></div></div></li>
+        <li><span class="n">3</span><div><h3>기본적인 웹 퍼블리싱 이해</h3><div class="shift"><span class="arr">→</span><strong>개발자와 원활한 협업</strong></div></div></li>
+        <li><span class="n">4</span><div><h3>데이터 기반 의사 결정</h3><div class="shift"><span>데이터 분석</span><span class="arr">→</span><strong>디자인 개선에 반영</strong></div></div></li>
+        <li><span class="n">5</span><div><h3>비즈니스 관점과 전략적 사고</h3></div></li>
+      </ol>
+    </section>
+
+    <!-- 4 -->
+    <section class="step span-5">
+      <div class="step-head">
+        <span class="num">04</span>
+        <h2>필요한 지식 · 태도</h2>
+      </div>
+      <div class="ka">
+        <div class="ka-col c-cobalt">
+          <p class="sub">지식 Knowledge</p>
+          <ul class="pill-list">
+            <li>디자인 툴 이해<small>반응형 웹, 모션그래픽</small></li>
+            <li>시각 커뮤니케이션 원리</li>
+            <li>UI/UX 및 사용자 경험 설계</li>
+          </ul>
+        </div>
+        <div class="ka-col c-rose">
+          <p class="sub">태도 Attitude</p>
+          <ul class="pill-list">
+            <li>창의성과 호기심</li>
+            <li>협업과 소통 능력</li>
+            <li>문제 해결 중심 사고</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="step span-7">
+      <div class="step-head">
+        <span class="num">05</span>
+        <h2>필요한 자격증</h2>
+        <p class="q">고등학교 시절에 준비할 수 있는 순서대로</p>
+      </div>
+      <div class="ladder">
+        <div class="rung"><span class="lv">STEP 1</span><b>GTQ</b><small>그래픽기술자격</small></div>
+        <div class="rung"><span class="lv">STEP 2</span><b>웹디자인개발기능사</b><small>웹 화면 설계 · 구현</small></div>
+        <div class="rung"><span class="lv">STEP 3</span><b>컴퓨터그래픽스운용기능사</b><small>그래픽 실무 운용</small></div>
+      </div>
+      <div class="plus"><span>+</span>자격증과 함께 포트폴리오를 꾸준히 준비하기</div>
+    </section>
+
+    <!-- 6 -->
+    <section class="step span-6">
+      <div class="step-head">
+        <span class="num">06</span>
+        <h2>필요한 교내외 활동</h2>
+      </div>
+      <div class="acts">
+        <div class="act"><span class="where">교내 · 수업</span><b>컴퓨터그래픽 / 미술 관련 선택 수업</b></div>
+        <div class="act"><span class="where">교내 · 동아리</span><b>디자인 동아리 활동</b></div>
+        <div class="act"><span class="where">교내 · 부서</span><b>방송부 · 영상제작부 참여</b></div>
+        <div class="act"><span class="where">교외 · 대회</span><b>공모전 · 대회 참가</b></div>
+        <div class="act"><span class="where">온라인</span><b>온라인 강의 · 자격증 준비</b></div>
+        <div class="act"><span class="where">교내외</span><b>봉사 · 프로젝트 활동</b></div>
+        <div class="act"><span class="where">기초</span><b>미술 · 드로잉 기초 훈련</b></div>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="step span-6">
+      <div class="step-head">
+        <span class="num">07</span>
+        <h2>역량을 기르기 위한 노력</h2>
+      </div>
+      <div class="effort">
+        <div class="ka-col c-cobalt">
+          <p class="sub">학습 노력</p>
+          <ol>
+            <li>디자인 툴 능력 숙련</li>
+            <li>기초 미술 · 시각 원리 학습</li>
+            <li>트렌드와 기술 연구</li>
+          </ol>
+        </div>
+        <div class="ka-col c-rose">
+          <p class="sub">태도</p>
+          <ol>
+            <li>포트폴리오 지속적 업데이트</li>
+            <li>피드백을 수용하는 자세</li>
+            <li>꾸준한 자기 관리와 실천</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section class="step span-12 future">
+      <div class="step-head">
+        <span class="num">08</span>
+        <h2>미래 나의 모습</h2>
+        <p class="q">모든 경험을 거친 나를 세 개의 키워드로</p>
+      </div>
+      <div class="keywords">
+        <div class="kw">
+          <span class="hash">#KEYWORD 1</span>
+          <h3>디지털 디자인 역량</h3>
+          <p>툴을 자유롭게 활용하고, UI/UX 이해를 바탕으로 설계하는 디자이너</p>
+        </div>
+        <div class="kw">
+          <span class="hash">#KEYWORD 2</span>
+          <h3>창의적 문제 해결력</h3>
+          <p>예쁘기만 한 결과가 아니라 목적에 맞는 디자인을 만드는 디자이너</p>
+        </div>
+        <div class="kw">
+          <span class="hash">#KEYWORD 3</span>
+          <h3>협업과 커뮤니케이션</h3>
+          <p>피드백을 수용하고, 디자인 의도를 명확하게 전달하는 디자이너</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <p class="flow-note">취중진담 II 활동지 내용을 바탕으로 재구성 · ChatGPT를 활용한 진로 설계</p>
+</div>
