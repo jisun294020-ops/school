@@ -291,15 +291,26 @@ section("Chapter 05 스마트 스피커");
   stepCard(s, 8.2, 1.45, 4.5, 2.25, 7, "이름 듣기", "마이크 연결을 확인하고 안내를 읽어준 뒤 음성을 인식해요. 인식한 값이 '이름+야'면 '작업 명령' 신호를 보내요.", "7B52D6");
   tip(s, 8.2, 3.9, 4.5, 2.85, "'읽어주고 기다리기'는 다 읽은 뒤 다음 블록을 실행하고, '읽어주기'는 읽는 동시에 다음 블록을 실행해요. 음성 인식 전에는 '기다리기'를 써야 스피커 소리가 녹음되지 않아요.");
 }
-{ const s = add("CONTENT"); s.addText("코딩 ③ 명령 속 단어를 찾아요", { placeholder:"title" });
+{ const s = add("CONTENT"); s.addText("코딩 ③ 무엇을 도와 드릴까요?", { placeholder:"title" });
   codePanel(s, 0.6, 1.45, 7.6, 5.3, "스마트 스피커");
-  codeImg(s, "c05_3", 0.9, 2.0, 7.1, 4.65);
+  codeImg(s, "c05_3a", 0.9, 2.0, 7.1, 4.65);
+  stepCard(s, 8.5, 1.45, 4.2, 2.6, 9, "명령 듣기", "'작업 명령' 신호를 받으면 \"무엇을 도와 드릴까요?\"를 읽어준 뒤 음성을 인식해요.", "7B52D6");
+}
+{ const s = add("CONTENT"); s.addText("코딩 ④ '날씨'가 들어 있나요?", { placeholder:"title" });
+  codePanel(s, 0.6, 1.45, 7.6, 5.3, "스마트 스피커");
+  codeImg(s, "c05_3b", 0.9, 2.0, 7.1, 4.65);
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x:8.5, y:1.45, w:4.2, h:2.75, rectRadius:0.12, fill:{color:C.background2}, line:{color:C.background2,width:0} });
   tb(s, "'시작 위치 > 0' 의 뜻", { x:8.75, y:1.65, w:3.8, h:0.4, fontSize:16, bold:true, color:"2B2F7A" });
   tb(s, "\"오늘 날씨 알려줘\"에서 '날씨'는 4번째 글자에서 시작 → 4 > 0 → 참!\n단어가 없으면 시작 위치가 0이라서 거짓이 돼요.", { x:8.75, y:2.1, w:3.75, h:2.0, fontSize:14, color:"3A3E66", paraSpaceAfter:6 });
-  stepCard(s, 8.5, 4.4, 4.2, 2.35, "9~12", "명령 분기", "'날씨' → 날씨 신호\n'음악' → 음악 신호\n둘 다 없으면 다시 '작업 명령'", "3D9BE0");
+  stepCard(s, 8.5, 4.4, 4.2, 2.35, 10, "날씨 찾기", "'날씨'가 들어 있으면 '날씨' 신호를 보내고 기다린 뒤 이 코드를 멈춰요.", "3D9BE0");
 }
-{ const s = add("CONTENT"); s.addText("코딩 ④ 날씨 알려주기 · 음악 틀기", { placeholder:"title" });
+{ const s = add("CONTENT"); s.addText("코딩 ⑤ '음악'도 찾고, 없으면 다시", { placeholder:"title" });
+  codePanel(s, 0.6, 1.45, 7.6, 5.3, "스마트 스피커");
+  codeImg(s, "c05_3", 0.9, 2.0, 7.1, 4.65);
+  stepCard(s, 8.5, 1.45, 4.2, 2.6, 11, "음악 찾기", "⑩과 같은 방법으로 '음악'이 들어 있으면 '음악' 신호를 보내요.", "3D9BE0");
+  stepCard(s, 8.5, 4.25, 4.2, 2.5, 12, "다시 듣기", "'날씨'나 '음악'이 없으면 다시 '작업 명령' 신호를 보내요.", "4AA84E");
+}
+{ const s = add("CONTENT"); s.addText("코딩 ⑥ 날씨 알려주기 · 음악 틀기", { placeholder:"title" });
   codePanel(s, 0.6, 1.45, 6.2, 3.6, "스마트 스피커 – 날씨");
   codeImg(s, "c05_4w", 0.9, 2.0, 5.7, 2.9);
   codePanel(s, 7.0, 1.45, 5.7, 3.6, "스마트 스피커 – 음악");
