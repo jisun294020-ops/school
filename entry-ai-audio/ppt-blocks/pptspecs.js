@@ -9,7 +9,7 @@ const mic={t:"cmd",c:"flow",p:[{hex:["마이크가 연결되었는가?"],c:"ai"}
 const rec={t:"cmd",c:"ai",p:["음성 인식하기"]};
 const stt={rp:["음성을 문자로 바꾼 값"],c:"ai"};
 const stop=(d)=>({t:"cmd",c:"flow",p:[D(d),"코드 멈추기"]});
-const find=(w)=>({hex:[{rp:[{rp:["음성 값"],c:"ai"},"에서",S(w),"의 시작 위치"],c:"calc"},">",N("0")]});
+const find=(w)=>({hex:[{rp:[{rp:["음성을 문자로 바꾼 값"],c:"ai"},"에서",S(w),"의 시작 위치"],c:"calc"},">",N("0")]});
 const B=(file,blocks)=>({file,bare:1,scripts:[{blocks}]});
 module.exports=[
  B("c04_1",[play,say("주문을 외쳐주세요!","2"),mic,{t:"cmd",c:"start",p:[D("주문"),"신호 보내기"]}]),
@@ -25,13 +25,13 @@ module.exports=[
  B("c05_2",[{t:"hat",icon:"sig",p:[D("음성 인식"),"신호를 받았을 때"]},mic,read("명령을 내리려면, 저의 이름을 불러 주세요."),rec,
    {t:"c",p:["만일",{hex:[stt,"=",{rp:[{rp:["대답"],c:"data"},"과(와)",N("야"),"를 합치기"],c:"calc"}]},"(이)라면"],body:[{t:"cmd",c:"start",p:[D("작업 명령"),"신호 보내기"]}],
     else:[say("다시 불러주세요","1"),{t:"cmd",c:"start",p:[D("음성 인식"),"신호 보내기"]}]}]),
- B("c05_3",[{t:"hat",icon:"sig",p:[D("작업 명령"),"신호를 받았을 때"]},read("무엇을 도와드릴까요?"),rec,
+ B("c05_3",[{t:"hat",icon:"sig",p:[D("작업 명령"),"신호를 받았을 때"]},read("무엇을 도와 드릴까요?"),rec,
    {t:"c",p:["만일",find("날씨"),"(이)라면"],body:[{t:"cmd",c:"start",p:[D("날씨"),"신호 보내고 기다리기"]},stop("이")]},
    {t:"c",p:["만일",find("음악"),"(이)라면"],body:[{t:"cmd",c:"start",p:[D("음악"),"신호 보내고 기다리기"]},stop("이")]},
-   {t:"cmd",c:"start",p:[D("작업 명령"),"신호 보내기"]}]),
+   {t:"cmd",c:"start",redg:1,p:[D("작업 명령"),"신호 보내기"]}]),
  B("c05_4w",[{t:"hat",icon:"sig",p:[D("날씨"),"신호를 받았을 때"]},read("현재 서울의 기온은"),
-   {t:"cmd",c:"ai",p:[{rp:["현재",D("서울"),D("전체"),"의 기온"],c:"looks"},"읽어주고 기다리기"]},read("도 입니다."),{t:"cmd",c:"start",p:[D("음성 인식"),"신호 보내기"]}]),
- B("c05_4m",[{t:"hat",icon:"sig",p:[D("음악"),"신호를 받았을 때"]},{t:"cmd",c:"sound",p:["소리",S("1~5 사이 무작위 수"),"재생하고 기다리기"]},{t:"cmd",c:"start",p:[D("음성 인식"),"신호 보내기"]}]),
+   {t:"cmd",c:"ai",p:[{rp:["현재",D("서울"),D("전체"),"의",D("기온(℃)")],c:"weather"},"읽어주고 기다리기"]},read("도 입니다."),{t:"cmd",c:"start",p:[D("음성 인식"),"신호 보내기"]}]),
+ B("c05_4m",[{t:"hat",icon:"sig",redg:1,p:[D("음악"),"신호를 받았을 때"]},{t:"cmd",c:"sound",redg:1,p:["소리",{rp:[N("1"),"부터",N("5"),"사이의 무작위 수"],c:"calc"},"재생하고 기다리기"]},{t:"cmd",c:"start",redg:1,p:[D("음성 인식"),"신호 보내기"]}]),
  B("k_mic",[{t:"raw",p:[{hex:["마이크가 연결되었는가?"],c:"ai"}]}]),
  B("k_rec",[rec]),
  B("k_stt",[{t:"raw",p:[{rp:["음성을 문자로 바꾼 값"],c:"ai"}]}]),
