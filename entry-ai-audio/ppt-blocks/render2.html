@@ -59,16 +59,20 @@ function block(b,host){
   }
   if(node.className!=="c") host.appendChild(node);
   if(b.red) node.dataset.red=1;
+  if(b.redg) node.dataset.redg=1;
   return node;
 }
 function render(spec){
   const cap=document.getElementById("cap");
-  if(spec.bare){ document.body.style.background="transparent"; cap.style.background="transparent"; cap.style.padding="4px 16px 14px 10px"; }
+  if(spec.bare){ document.body.style.background="transparent"; cap.style.background="transparent"; cap.style.padding="8px 36px 16px 14px"; }
   else cap.appendChild(el("div","obj","<i></i>"+spec.obj));
   for(const sc of spec.scripts){ const s=el("div","script"); cap.appendChild(s); sc.blocks.forEach(b=>block(b,s)); if(sc.red) s.dataset.red=1; }
   // fix C widths (inner first)
   [...cap.querySelectorAll(".c")].reverse().forEach(n=>n._fix&&n._fix());
   const c=cap.getBoundingClientRect();
+  const g=[...cap.querySelectorAll("[data-redg]")].map(n=>n.getBoundingClientRect());
+  if(g.length){ const L=Math.min(...g.map(r=>r.left)),T=Math.min(...g.map(r=>r.top)),R=Math.max(...g.map(r=>r.right)),B=Math.max(...g.map(r=>r.bottom)); const d=el("div","red");
+    Object.assign(d.style,{left:(L-c.left-10)+"px",top:(T-c.top-6)+"px",width:(R-L+24)+"px",height:(B-T+18)+"px"}); cap.appendChild(d); }
   cap.querySelectorAll("[data-red]").forEach(n=>{ const r=n.getBoundingClientRect(); const d=el("div","red");
     Object.assign(d.style,{left:(r.left-c.left-10)+"px",top:(r.top-c.top-8)+"px",width:(r.width+24)+"px",height:(r.height+20)+"px"}); cap.appendChild(d); });
 }
