@@ -31,6 +31,16 @@ function chip(s, x, y, text, fill, o={}){
   return w;
 }
 
+
+const IMGDIR = process.argv[3];
+function pngSize(f){ const b=require("fs").readFileSync(f); return [b.readUInt32BE(16), b.readUInt32BE(20)]; }
+function codeImg(s, key, x, y, maxW, maxH, fixedH){
+  const f = IMGDIR+"/"+key+".png"; const [pw,ph] = pngSize(f);
+  let w = pw/2/96, h = ph/2/96;            // CSS px at 2x -> inches
+  let k = fixedH ? fixedH/h : Math.min(1, maxW/w, maxH/h);
+  s.addImage({ path:f, x, y, w:w*k, h:h*k, altText:key });
+  return w*k;
+}
 // ---------- Entry code-block renderer ----------
 // line: {k:"hat"|"cmd"|"open"|"else"|"close", c:color, r:[ "text", {v:"value"} ...]}
 function runs(r){ return r.map(p => typeof p === "string" ? { text:p, options:{ color:"FFFFFF", bold:true } } : { text:" "+p.v+" ", options:{ color:"1F2041", bold:true, highlight:"FFF3B0" } }); }
@@ -149,12 +159,12 @@ section("Chapter 04 열려라, 미래도시!");
 }
 // blocks & devices
 { const s = add("CONTENT"); s.addText("주요 인공지능 블록과 필요 장치", { placeholder:"title" });
-  const rows = [["마이크가 연결되었는가?","판단 블록 – 마이크가 연결되어 있으면 '참'이 돼요. '~이(가) 될 때까지 기다리기'와 함께 써요."],
-    ["음성 인식하기","마이크로 들어온 목소리를 인식해요. 실행되면 녹음 창이 나타나요."],
-    ["음성을 문자로 바꾼 값","인식한 목소리를 글자로 바꾼 값이에요. 이 값을 비교해서 조건을 만들어요."]];
+  const rows = [["k_mic","마이크가 연결되었는가?","판단 블록 – 마이크가 연결되어 있으면 '참'이 돼요. '~이(가) 될 때까지 기다리기'와 함께 써요."],
+    ["k_rec","음성 인식하기","마이크로 들어온 목소리를 인식해요. 실행되면 녹음 창이 나타나요."],
+    ["k_stt","음성을 문자로 바꾼 값","인식한 목소리를 글자로 바꾼 값이에요. 이 값을 비교해서 조건을 만들어요."]];
   rows.forEach((r,i)=>{ const y=1.6+i*1.3;
-    chip(s, 0.6, y+0.15, r[0], BK.ai, { w:3.6, h:0.55, fs:15 });
-    tb(s, r[1], { x:4.5, y:y, w:5.0, h:0.9, fontSize:15, color:"3A3E66", valign:"middle" }); });
+    codeImg(s, r[0], 0.6, y+0.1, 3.7, 0.7, 0.62);
+    tb(s, r[2], { x:4.5, y:y, w:5.0, h:0.9, fontSize:15, color:"3A3E66", valign:"middle" }); });
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x:9.9, y:1.6, w:2.8, h:3.6, rectRadius:0.15, fill:{color:C.background2}, line:{color:C.background2,width:0} });
   tb(s, "🎤", { x:9.9, y:1.9, w:2.8, h:1.4, fontSize:60, align:"center", valign:"middle" });
   tb(s, "마이크", { x:9.9, y:3.4, w:2.8, h:0.5, fontSize:20, bold:true, align:"center" });
@@ -170,46 +180,26 @@ section("Chapter 04 열려라, 미래도시!");
   st.forEach((t,i)=> stepCard(s, 0.6+i*3.1, 1.6, 2.9, 3.3, i+1, t[0], t[1], ["5B6CF0","8C5CE6","3D9BE0","2DB88F"][i]));
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x:0.6, y:5.3, w:12.1, h:1.4, rectRadius:0.12, fill:{color:"F6F7FC"}, line:{color:"D9DDF0",width:1} });
   tb(s, "불러오기가 끝나면 [인공지능] 꾸러미에 이런 블록이 생겨요", { x:0.9, y:5.45, w:11, h:0.4, fontSize:14, bold:true, color:"6B7099" });
-  let x=0.9; ["마이크가 연결되었는가?","음성 인식하기","음성을 문자로 바꾼 값"].forEach(t=>{ x += chip(s, x, 5.95, t, BK.ai, { fs:14, h:0.45 })+0.3; });
+  let x=0.9; ["k_mic","k_rec","k_stt"].forEach(t=>{ x += codeImg(s, t, x, 5.88, 4, 0.6, 0.6)+0.3; });
 }
 // code 1
 { const s = add("CONTENT"); s.addText("코딩 ① 시작하면 주문을 요청해요", { placeholder:"title" });
   codePanel(s, 0.6, 1.45, 7.0, 5.3, "명수");
-  code(s, 0.9, 2.0, [
-    { k:"hat", c:BK.start, r:["▶ 시작하기 버튼을 클릭했을 때"] },
-    { k:"cmd", c:BK.looks, r:[{v:"주문을 외쳐주세요!"}, "을(를)", {v:"2"}, "초 동안 말하기"] },
-    { k:"cmd", c:BK.flow, r:["〈마이크가 연결되었는가?〉 이(가) 될 때까지 기다리기"] },
-    { k:"cmd", c:BK.start, r:[{v:"주문"}, "신호 보내기"] } ], 13);
+  codeImg(s, "c04_1", 0.9, 2.0, 6.5, 4.6);
   stepCard(s, 8.0, 1.45, 4.7, 2.4, 4, "말하기", "'명수'를 선택하고 [시작], [생김새] 블록으로 2초 동안 \"주문을 외쳐주세요!\"를 말하게 해요.", "E8466F");
   stepCard(s, 8.0, 4.05, 4.7, 2.7, 5, "마이크 확인 후 신호", "[흐름], [인공지능] 블록으로 마이크가 연결될 때까지 기다린 뒤 '주문' 신호를 보내요.\n※ 신호는 [속성] 탭 → [신호 추가하기]로 먼저 만들어요.", "3D9BE0");
 }
 // code 2
 { const s = add("CONTENT"); s.addText("코딩 ② 주문을 듣고 맞는지 판단해요", { placeholder:"title" });
   codePanel(s, 0.6, 1.45, 7.0, 5.3, "명수");
-  code(s, 0.9, 2.0, [
-    { k:"hat", c:BK.start, r:["◉ ", {v:"주문"}, "신호를 받았을 때"] },
-    { k:"cmd", c:BK.ai, r:["음성 인식하기"] },
-    { k:"open", c:BK.flow, r:["만일 〈음성을 문자로 바꾼 값 =", {v:"열려라 참깨"}, "〉 (이)라면"] },
-    { k:"cmd", c:BK.start, r:[{v:"열림"}, "신호 보내기"] },
-    { k:"else", c:BK.flow, r:["아니면"] },
-    { k:"cmd", c:BK.looks, r:[{v:"실패! 다시 외쳐주세요!"}, "을(를)", {v:"1"}, "초 동안 말하기"] },
-    { k:"cmd", c:BK.start, r:[{v:"주문"}, "신호 보내기"] },
-    { k:"close" } ], 13);
+  codeImg(s, "c04_2", 0.9, 2.0, 6.5, 4.6);
   stepCard(s, 8.0, 1.45, 4.7, 2.0, 6, "음성 인식", "'주문' 신호를 받으면 [인공지능]의 음성 인식하기를 실행해요.", "7B52D6");
   stepCard(s, 8.0, 3.65, 4.7, 3.1, 7, "조건 판단", "인식한 값이 \"열려라 참깨\"면 → '열림' 신호\n아니면 → 1초 동안 실패 메시지를 말하고 '주문' 신호를 다시 보내 재도전!", "3D9BE0");
 }
 // code 3
 { const s = add("CONTENT"); s.addText("코딩 ③ 미래도시 도착! 만세 동작", { placeholder:"title" });
   codePanel(s, 0.6, 1.45, 7.0, 5.3, "명수");
-  code(s, 0.9, 2.0, [
-    { k:"hat", c:BK.start, r:["◉ ", {v:"열림"}, "신호를 받았을 때"] },
-    { k:"cmd", c:BK.flow, r:[{v:"1"}, "초 기다리기"] },
-    { k:"cmd", c:BK.looks, r:[{v:"우와! 미래도시다!!"}, "을(를)", {v:"2"}, "초 동안 말하기"] },
-    { k:"open", c:BK.flow, r:[{v:"10"}, "번 반복하기"] },
-    { k:"cmd", c:BK.looks, r:[{v:"다음"}, "모양으로 바꾸기"] },
-    { k:"cmd", c:BK.flow, r:[{v:"0.3"}, "초 기다리기"] },
-    { k:"close" },
-    { k:"cmd", c:BK.flow, r:[{v:"모든"}, "코드 멈추기"] } ], 13);
+  codeImg(s, "c04_3", 0.9, 2.0, 6.5, 4.6);
   stepCard(s, 8.0, 1.45, 4.7, 1.7, 8, "도착 인사", "1초 뒤 \"우와! 미래도시다!!\"를 2초 동안 말해요.", "E8466F");
   stepCard(s, 8.0, 3.3, 4.7, 1.7, 9, "만세 동작", "모양을 0.3초마다 10번 바꿔 만세하는 모습을 표현해요.", "FFB547");
   stepCard(s, 8.0, 5.15, 4.7, 1.6, 10, "프로그램 종료", "[흐름]의 모든 코드 멈추기로 끝내요.", "3D9BE0");
@@ -217,17 +207,9 @@ section("Chapter 04 열려라, 미래도시!");
 // code 4
 { const s = add("CONTENT"); s.addText("코딩 ④ 회색도시가 양옆으로 열려요", { placeholder:"title" });
   codePanel(s, 0.6, 1.45, 5.95, 3.0, "회색도시_왼쪽");
-  code(s, 0.9, 2.0, [
-    { k:"hat", c:BK.start, r:["◉ ", {v:"열림"}, "신호를 받았을 때"] },
-    { k:"open", c:BK.flow, r:[{v:"50"}, "번 반복하기"] },
-    { k:"cmd", c:BK.move, r:["x 좌표를", {v:"-5"}, "만큼 바꾸기"] },
-    { k:"close" } ], 13);
+  codeImg(s, "c04_4L", 0.9, 2.0, 5.4, 1.85);
   codePanel(s, 6.75, 1.45, 5.95, 3.0, "회색도시_오른쪽");
-  code(s, 7.05, 2.0, [
-    { k:"hat", c:BK.start, r:["◉ ", {v:"열림"}, "신호를 받았을 때"] },
-    { k:"open", c:BK.flow, r:[{v:"50"}, "번 반복하기"] },
-    { k:"cmd", c:BK.move, r:["x 좌표를", {v:"5"}, "만큼 바꾸기"] },
-    { k:"close" } ], 13);
+  codeImg(s, "c04_4R", 7.05, 2.0, 5.4, 1.85);
   tb(s, "◀ 왼쪽으로 -5씩 × 50번", { x:0.9, y:3.95, w:5, h:0.35, fontSize:13, bold:true, color:"A04FDB" });
   tb(s, "오른쪽으로 +5씩 × 50번 ▶", { x:7.05, y:3.95, w:5, h:0.35, fontSize:13, bold:true, color:"A04FDB" });
   tip(s, 0.6, 4.75, 12.1, 2.0, "'회색도시_왼쪽'에서 완성한 코드를 마우스 오른쪽 버튼으로 클릭 → [코드 복사] → '회색도시_오른쪽'의 블록 조립소에서 마우스 오른쪽 버튼 → [붙여넣기]. 그다음 -5를 5로만 바꾸면 빠르게 완성돼요!");
@@ -295,50 +277,23 @@ section("Chapter 05 스마트 스피커");
   st.forEach((t,i)=> stepCard(s, 0.6+i*3.1, 1.6, 2.9, 3.3, i+1, t[0], t[1], ["2DB88F","3D9BE0","7B52D6","E8466F"][i]));
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x:0.6, y:5.3, w:12.1, h:1.4, rectRadius:0.12, fill:{color:"F6F7FC"}, line:{color:"D9DDF0",width:1} });
   tb(s, "새로 쓰는 블록", { x:0.9, y:5.45, w:11, h:0.4, fontSize:14, bold:true, color:"6B7099" });
-  let x=0.9; [["엔트리 읽어주고 기다리기",BK.ai],["음성을 문자로 바꾼 값",BK.ai],["현재 서울 전체 의 기온",BK.looks]].forEach(t=>{ x += chip(s, x, 5.95, t[0], t[1], { fs:14, h:0.45 })+0.3; });
+  let x=0.9; ["k_read","k_stt","k_temp"].forEach(t=>{ x += codeImg(s, t, x, 5.88, 4, 0.6, 0.6)+0.3; });
 }
 { const s = add("CONTENT"); s.addText("코딩 ① 스마트 스피커에게 이름 지어주기", { placeholder:"title" });
   codePanel(s, 0.6, 1.45, 7.3, 5.3, "스마트 스피커");
-  code(s, 0.9, 2.0, [
-    { k:"hat", c:BK.start, r:["▶ 시작하기 버튼을 클릭했을 때"] },
-    { k:"cmd", c:BK.data, r:["대답", {v:"숨기기"}] },
-    { k:"cmd", c:BK.data, r:[{v:"나의 이름을 지어주세요."}, "을(를) 묻고 대답 기다리기"] },
-    { k:"cmd", c:BK.ai, r:[{v:"나의 이름은 + 대답 + 이에요."}, "읽어주고 기다리기"] },
-    { k:"cmd", c:BK.start, r:[{v:"음성 인식"}, "신호 보내기"] } ], 13);
+  codeImg(s, "c05_1", 0.9, 2.0, 6.8, 4.6);
   stepCard(s, 8.2, 1.45, 4.5, 2.4, 5, "이름 묻기", "[시작], [자료] 블록으로 이름을 묻고 대답을 기다려요. 입력한 대답이 스피커의 이름이 돼요.", "E58A2E");
   stepCard(s, 8.2, 4.05, 4.5, 2.7, 6, "이름 읽어주기", "[계산]의 합치기 블록으로 \"나의 이름은 ○○이에요.\"를 만들어 읽어준 뒤 '음성 인식' 신호를 보내요.", "7B52D6");
 }
 { const s = add("CONTENT"); s.addText("코딩 ② 이름을 부르면 깨어나요", { placeholder:"title" });
   codePanel(s, 0.6, 1.45, 7.3, 5.3, "스마트 스피커");
-  code(s, 0.9, 2.0, [
-    { k:"hat", c:BK.start, r:["◉ ", {v:"음성 인식"}, "신호를 받았을 때"] },
-    { k:"cmd", c:BK.flow, r:["〈마이크가 연결되었는가?〉 이(가) 될 때까지 기다리기"] },
-    { k:"cmd", c:BK.ai, r:[{v:"명령을 내리려면, 저의 이름을 불러주세요."}, "읽어주고 기다리기"] },
-    { k:"cmd", c:BK.ai, r:["음성 인식하기"] },
-    { k:"open", c:BK.flow, r:["만일 〈음성을 문자로 바꾼 값 = 대답〉 (이)라면"] },
-    { k:"cmd", c:BK.start, r:[{v:"작업 명령"}, "신호 보내기"] },
-    { k:"else", c:BK.flow, r:["아니면"] },
-    { k:"cmd", c:BK.ai, r:[{v:"다시 불러주세요."}, "읽어주고 기다리기"] },
-    { k:"cmd", c:BK.start, r:[{v:"음성 인식"}, "신호 보내기"] },
-    { k:"close" } ], 12);
+  codeImg(s, "c05_2", 0.9, 2.0, 6.8, 4.6);
   stepCard(s, 8.2, 1.45, 4.5, 2.25, 7, "이름 듣기", "마이크 연결을 확인하고 안내를 읽어준 뒤 음성을 인식해요.", "7B52D6");
   tip(s, 8.2, 3.9, 4.5, 2.85, "'읽어주고 기다리기'는 다 읽은 뒤 다음 블록을 실행하고, '읽어주기'는 읽는 동시에 다음 블록을 실행해요. 음성 인식 전에는 '기다리기'를 써야 스피커 소리가 녹음되지 않아요.");
 }
 { const s = add("CONTENT"); s.addText("코딩 ③ 명령 속 단어를 찾아요", { placeholder:"title" });
   codePanel(s, 0.6, 1.45, 7.6, 5.3, "스마트 스피커");
-  code(s, 0.9, 2.0, [
-    { k:"hat", c:BK.start, r:["◉ ", {v:"작업 명령"}, "신호를 받았을 때"] },
-    { k:"cmd", c:BK.ai, r:[{v:"무엇을 도와드릴까요?"}, "읽어주고 기다리기"] },
-    { k:"cmd", c:BK.ai, r:["음성 인식하기"] },
-    { k:"open", c:BK.flow, r:["만일 〈(음성 값)에서", {v:"날씨"}, "의 시작 위치 > 0〉 (이)라면"] },
-    { k:"cmd", c:BK.start, r:[{v:"날씨"}, "신호 보내고 기다리기"] },
-    { k:"cmd", c:BK.flow, r:[{v:"이"}, "코드 멈추기"] },
-    { k:"close" },
-    { k:"open", c:BK.flow, r:["만일 〈(음성 값)에서", {v:"음악"}, "의 시작 위치 > 0〉 (이)라면"] },
-    { k:"cmd", c:BK.start, r:[{v:"음악"}, "신호 보내고 기다리기"] },
-    { k:"cmd", c:BK.flow, r:[{v:"이"}, "코드 멈추기"] },
-    { k:"close" },
-    { k:"cmd", c:BK.start, r:[{v:"작업 명령"}, "신호 보내기"] } ], 12, 0.37);
+  codeImg(s, "c05_3", 0.9, 2.0, 7.1, 4.65);
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x:8.5, y:1.45, w:4.2, h:2.75, rectRadius:0.12, fill:{color:C.background2}, line:{color:C.background2,width:0} });
   tb(s, "'시작 위치 > 0' 의 뜻", { x:8.75, y:1.65, w:3.8, h:0.4, fontSize:16, bold:true, color:"2B2F7A" });
   tb(s, "\"오늘 날씨 알려줘\"에서 '날씨'는 4번째 글자에서 시작 → 4 > 0 → 참!\n단어가 없으면 시작 위치가 0이라서 거짓이 돼요.", { x:8.75, y:2.1, w:3.75, h:2.0, fontSize:14, color:"3A3E66", paraSpaceAfter:6 });
@@ -346,17 +301,9 @@ section("Chapter 05 스마트 스피커");
 }
 { const s = add("CONTENT"); s.addText("코딩 ④ 날씨 알려주기 · 음악 틀기", { placeholder:"title" });
   codePanel(s, 0.6, 1.45, 6.2, 3.6, "스마트 스피커 – 날씨");
-  code(s, 0.9, 2.0, [
-    { k:"hat", c:BK.start, r:["◉ ", {v:"날씨"}, "신호를 받았을 때"] },
-    { k:"cmd", c:BK.ai, r:[{v:"현재 서울의 기온은"}, "읽어주고 기다리기"] },
-    { k:"cmd", c:BK.ai, r:["(현재", {v:"서울"}, {v:"전체"}, "의 기온) 읽어주고 기다리기"] },
-    { k:"cmd", c:BK.ai, r:[{v:"도 입니다."}, "읽어주고 기다리기"] },
-    { k:"cmd", c:BK.start, r:[{v:"음성 인식"}, "신호 보내기"] } ], 12);
+  codeImg(s, "c05_4w", 0.9, 2.0, 5.7, 2.9);
   codePanel(s, 7.0, 1.45, 5.7, 3.6, "스마트 스피커 – 음악");
-  code(s, 7.3, 2.0, [
-    { k:"hat", c:BK.start, r:["◉ ", {v:"음악"}, "신호를 받았을 때"] },
-    { k:"cmd", c:BK.sound, r:["소리", {v:"1~5 사이 무작위 수"}, "재생하고 기다리기"] },
-    { k:"cmd", c:BK.start, r:[{v:"음성 인식"}, "신호 보내기"] } ], 12);
+  codeImg(s, "c05_4m", 7.3, 2.0, 5.2, 2.9);
   tip(s, 0.6, 5.3, 6.2, 1.45, "날씨 블록의 지역 목록 버튼(▼)을 눌러 우리 지역으로 바꿔 보세요.");
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x:7.0, y:5.3, w:5.7, h:1.45, rectRadius:0.12, fill:{color:C.background2}, line:{color:C.background2,width:0} });
   tb(s, "15  직접 해 보기", { x:7.25, y:5.45, w:5, h:0.35, fontSize:15, bold:true, color:"2B2F7A" });
