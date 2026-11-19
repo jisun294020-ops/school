@@ -1,0 +1,322 @@
+<title>꼬마 조향사 놀이 가게</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: classroom TV screen, home menu → 4 new games, sticker-style deck look (pink grid, yellow, red) */
+:root{
+  --bg:#FCEEF0; --grid:#F5C9CF; --paper:#FFFFFF; --ink:#2A2224; --muted:#7A6A6D;
+  --red:#D9544D; --yellow:#F6C343; --orange:#F08A24; --sky:#7CC6E8; --ok:#2E9A5E; --soft:#FFF7F8;
+  --font:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;font-family:var(--font);color:var(--ink);font-size:clamp(16px,1.5vw,24px);line-height:1.45;background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:14px 14px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
+.frame{max-width:1280px;margin:0 auto;padding-block:16px 28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sheet{background:var(--paper);border-radius:8px;box-shadow:0 0 0 10px rgba(255,255,255,.55);padding:clamp(16px,2.4vw,36px);display:flex;flex-direction:column;gap:2.2vh;min-height:calc(100vh - 60px)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.crumb{color:var(--red);font-weight:900}
+.home-btn{border:3px solid var(--grid);background:var(--paper);border-radius:12px;padding:4px 14px;font-weight:800}
+section{display:flex;flex-direction:column;gap:2.2vh;flex:1}
+.pop{font-weight:900;line-height:1.1;margin:0;text-align:center;-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:3px 3px 0 var(--ink)}
+.c1{color:var(--sky)} .c2{color:#F4A6A6} .c3{color:var(--orange)} .c4{color:var(--yellow)}
+.lead{text-align:center;font-weight:900;font-size:1.25em;margin:0;word-break:keep-all}
+.lead em{font-style:normal;color:var(--red)}
+.sub{color:var(--muted);text-align:center;margin:0}
+.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.mcard{display:flex;gap:16px;align-items:center;text-align:left;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:18px;box-shadow:5px 5px 0 var(--ink);transition:transform .12s}
+.mcard:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+.mcard .em{font-size:3.2em;line-height:1;flex:none}
+.mcard b{font-size:1.3em;display:block}
+.mcard span.d{color:var(--muted);font-size:.9em}
+.btn{border:3px solid var(--ink);border-radius:14px;padding:.45em 1.3em;font-weight:900;background:var(--yellow);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn.white{background:var(--paper)} .btn.red{background:var(--red);color:#fff}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:center}
+.msg{min-height:1.5em;text-align:center;font-weight:900;font-size:1.3em}
+.msg.ok{color:var(--ok)} .msg.no{color:var(--red)}
+@keyframes pop{50%{transform:scale(1.07)}}
+@keyframes shake{25%,75%{transform:translateX(-10px)}50%{transform:translateX(10px)}}
+.shake{animation:shake .4s}
+
+/* 1. shop */
+.shop-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.coins{font-weight:900;font-size:1.3em;background:#FFF4D1;border:3px solid var(--yellow);border-radius:99px;padding:2px 16px}
+.customer{display:flex;align-items:center;justify-content:center;gap:2.5vw;flex-wrap:wrap}
+.customer .face{font-size:clamp(90px,14vh,160px);line-height:1}
+.bubble{position:relative;background:var(--soft);border:4px solid var(--ink);border-radius:26px;padding:18px 26px;max-width:640px;box-shadow:4px 4px 0 var(--ink)}
+.bubble::before{content:"";position:absolute;left:-22px;top:40%;border:12px solid transparent;border-right:12px solid var(--ink)}
+.bubble small{display:block;color:var(--muted);font-weight:800}
+.bubble p{margin:0;font-weight:900;font-size:clamp(24px,2.8vw,46px);word-break:keep-all;line-height:1.3}
+.shelf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2vw;border-bottom:10px solid #C79A6B;padding-bottom:8px}
+.jarbtn{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--paper);border:4px solid var(--ink);border-radius:20px 20px 12px 12px;padding:14px 8px;box-shadow:4px 4px 0 var(--ink)}
+.jarbtn .em{font-size:clamp(56px,8vh,96px);line-height:1}
+.jarbtn .nm{font-weight:900;font-size:clamp(22px,2.4vw,38px)}
+.jarbtn .no{color:var(--muted);font-weight:800;font-size:.85em}
+.jarbtn.right{background:#DFF3E6;border-color:var(--ok);animation:pop .45s}
+
+/* 2. hint game */
+.hints{display:flex;flex-direction:column;gap:12px;max-width:820px;width:100%;margin:0 auto}
+.hint{display:flex;align-items:center;gap:14px;border:4px solid var(--ink);border-radius:18px;padding:12px 18px;background:var(--paper);font-weight:900;font-size:clamp(22px,2.6vw,42px);min-height:2.4em;box-shadow:4px 4px 0 var(--ink)}
+.hint .n{flex:none;width:1.6em;height:1.6em;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:.7em}
+.hint.locked{background:var(--soft);color:var(--muted);border-style:dashed;box-shadow:none}
+.reveal{display:flex;flex-direction:column;align-items:center;gap:4px;animation:pop .5s}
+.reveal .em{font-size:clamp(80px,13vh,150px);line-height:1}
+.reveal .nm{font-weight:900;font-size:clamp(32px,4vw,64px);color:var(--red)}
+.mystery{font-size:clamp(80px,13vh,150px);text-align:center;line-height:1}
+
+/* 3. memory */
+.teams{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.team{border:3px solid var(--grid);border-radius:16px;padding:6px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:900;background:var(--soft)}
+.team.on{border-color:var(--red);background:#FFE7E9}
+.team .sc{font-size:1.8em}
+.board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.4vw;max-width:min(900px,95vh);width:100%;margin:0 auto}
+.card{aspect-ratio:4/3;max-width:100%;border:4px solid var(--ink);border-radius:16px;background:var(--red);box-shadow:3px 3px 0 var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;
+  background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.18) 0 8px,transparent 8px 16px)}
+.card .q{font-size:clamp(30px,4.5vh,52px);color:#fff;font-weight:900}
+.card.open{background:var(--paper);background-image:none}
+.card.done{background:#DFF3E6;background-image:none;border-color:var(--ok);box-shadow:none}
+.card .em{font-size:clamp(34px,5.5vh,64px);line-height:1}
+.card .nm{font-weight:900;font-size:clamp(14px,1.4vw,22px)}
+
+/* 4. drops lab */
+.lab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr) minmax(0,1fr);gap:2vw;align-items:center}
+.side{display:flex;flex-direction:column;align-items:center;gap:10px;border:4px solid var(--ink);border-radius:20px;padding:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink)}
+.pick{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.pick button{border:2px solid var(--grid);background:var(--paper);border-radius:12px;font-size:1.5em;padding:2px 6px;line-height:1.2}
+.pick button.sel{border-color:var(--red);background:#FFE7E9}
+.side .nm{font-weight:900;font-size:1.4em}
+.drops{display:flex;align-items:center;gap:12px}
+.step{width:2.2em;height:2.2em;border-radius:50%;border:3px solid var(--ink);background:var(--yellow);font-weight:900;font-size:1.2em}
+.drops .n{font-weight:900;font-size:2em;min-width:2.4em;text-align:center;font-variant-numeric:tabular-nums}
+.dd{min-height:1.6em;font-size:1.3em;text-align:center;word-break:break-all}
+.flask{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.flask svg{width:min(220px,100%);height:auto}
+.result{font-weight:900;font-size:1.2em;word-break:keep-all}
+.counter{background:#FFF4D1;border:3px solid var(--yellow);border-radius:16px;padding:10px 16px;text-align:center;font-weight:900}
+.counter b{color:var(--red);font-size:1.6em}
+
+@media (max-width:820px){
+  .menu,.lab,.teams{grid-template-columns:1fr}
+  .shelf{grid-template-columns:1fr}
+  .bubble::before{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="frame"><div class="sheet">
+  <div class="bar"><span class="crumb" id="crumb">꼬마 조향사 놀이 가게</span><button class="home-btn" id="home" hidden>처음 화면</button></div>
+
+  <section id="v-home">
+    <h1 class="pop" style="font-size:clamp(38px,5.6vw,86px)"><span class="c1">꼬마</span> <span class="c2">조향사</span><br><span class="c3">놀이</span> <span class="c4">가게!</span></h1>
+    <p class="sub">수업에서 만난 향료 8가지로 하는 새로운 놀이예요. 화면은 TV에 띄우고, 아이들 대답은 선생님이 눌러 주세요.</p>
+    <div class="menu">
+      <button class="mcard" data-go="shop"><span class="em">🏪</span><span><b>향기 가게 손님 주문</b><span class="d">요정, 인어, 졸린 곰이 향을 사러 왔어요! 손님 말을 듣고 딱 맞는 향을 골라 팔아요.</span></span></button>
+      <button class="mcard" data-go="hint"><span class="em">🕵️</span><span><b>힌트 세 개, 무슨 향?</b><span class="d">색깔, 장소, 느낌 힌트가 하나씩 열려요. 일찍 맞힐수록 점수가 커요!</span></span></button>
+      <button class="mcard" data-go="memory"><span class="em">🃏</span><span><b>향기 짝꿍 카드</b><span class="d">카드 16장을 뒤집어 같은 향기 짝을 찾아요. 두 팀이 번갈아 도전!</span></span></button>
+      <button class="mcard" data-go="drops"><span class="em">💧</span><span><b>방울 실험실</b><span class="d">같은 향 두 가지도 방울 수만 바꾸면 새 향수가 계속 생겨요. 무한대의 비밀!</span></span></button>
+    </div>
+  </section>
+
+  <!-- 1. SHOP -->
+  <section id="v-shop" hidden>
+    <div class="shop-top"><span class="lead" style="font-size:1em" id="shop-count"></span><span class="coins">🪙 <span id="coins">0</span></span></div>
+    <div class="customer"><span class="face" id="cust-face"></span><div class="bubble"><small id="cust-name"></small><p id="cust-say"></p></div></div>
+    <p class="lead">어떤 향을 드릴까요? 👇</p>
+    <div class="shelf" id="shelf"></div>
+    <div class="msg" id="shop-msg" aria-live="polite"></div>
+    <div class="row"><button class="btn" id="shop-next">다음 손님 →</button></div>
+  </section>
+
+  <!-- 2. HINT -->
+  <section id="v-hint" hidden>
+    <div class="shop-top"><span class="lead" style="font-size:1em" id="hint-count"></span><span class="coins">⭐ <span id="stars">0</span></span></div>
+    <div id="hint-top" class="mystery">❓</div>
+    <div class="hints" id="hints"></div>
+    <div class="msg" id="hint-msg"></div>
+    <div class="row"><button class="btn white" id="hint-open">힌트 더 보기</button><button class="btn red" id="hint-ok">맞혔어요!</button><button class="btn white" id="hint-show">정답 보기</button><button class="btn" id="hint-next" hidden>다음 향 →</button></div>
+  </section>
+
+  <!-- 3. MEMORY -->
+  <section id="v-memory" hidden>
+    <div class="teams"><div class="team" id="tm0">🐰 토끼팀 <span class="sc" id="ts0">0</span></div><div class="team" id="tm1">🐻 곰팀 <span class="sc" id="ts1">0</span></div></div>
+    <div class="msg" id="mem-msg" aria-live="polite"></div>
+    <div class="board" id="board"></div>
+    <div class="row"><button class="btn white" id="mem-new">새로 섞기</button></div>
+  </section>
+
+  <!-- 4. DROPS -->
+  <section id="v-drops" hidden>
+    <p class="lead">향 <em>두 가지</em>를 고르고 <em>방울 수</em>를 바꿔 보세요. 향수가 몇 가지나 생길까요?</p>
+    <div class="lab">
+      <div class="side" id="sideA"></div>
+      <div class="flask">
+        <svg viewBox="0 0 200 240" aria-hidden="true">
+          <defs><clipPath id="fc"><path d="M80 20 H120 V90 L175 200 Q182 225 155 228 H45 Q18 225 25 200 L80 90 Z"/></clipPath></defs>
+          <rect id="liq" x="0" y="228" width="200" height="0" fill="#ccc" clip-path="url(#fc)" style="transition:all .35s"/>
+          <path d="M80 20 H120 V90 L175 200 Q182 225 155 228 H45 Q18 225 25 200 L80 90 Z" fill="none" stroke="#2A2224" stroke-width="6"/>
+          <rect x="72" y="10" width="56" height="14" rx="4" fill="#2A2224"/>
+        </svg>
+        <div class="result" id="mix-result"></div>
+      </div>
+      <div class="side" id="sideB"></div>
+    </div>
+    <div class="counter">우리 반이 지금까지 만든 서로 다른 향수: <b id="made">0</b>가지<br><span class="sub" id="made-note">방울 수를 바꿀 때마다 새 레시피가 생겨요!</span></div>
+    <div class="row"><button class="btn white" id="drops-reset">처음부터</button></div>
+  </section>
+</div></div>
+
+<script>
+const SCENTS = [
+  { id:'freesia',  jar:1,  n:'프리지아', e:'🌼', c:'#F6D23A', h:['🎨 노란색 꽃이에요','📍 봄 꽃밭에 피어요','💭 은은하고 부드러워요'] },
+  { id:'musk',     jar:3,  n:'머스크',   e:'🦌', c:'#B79A86', h:['🎨 갈색 사슴 친구가 떠올라요','📍 포근한 이불 속 같아요','💭 향수에서 제일 오래 남아요'] },
+  { id:'peach',    jar:4,  n:'복숭아',   e:'🍑', c:'#F7A08C', h:['🎨 분홍색 과일이에요','📍 여름에 먹어요','💭 달콤하고 말랑말랑해요'] },
+  { id:'spa',      jar:5,  n:'스파',     e:'🌊', c:'#6EC3E6', h:['🎨 파란색이 떠올라요','📍 수영장, 목욕탕 같아요','💭 맑고 시원해요'] },
+  { id:'sandal',   jar:6,  n:'샌달우드', e:'🌳', c:'#A0703F', h:['🎨 갈색 나무 조각이에요','📍 깊은 숲속이 떠올라요','💭 따뜻하고 부드러운 나무 냄새'] },
+  { id:'bergamot', jar:7,  n:'버가못',   e:'🍋', c:'#9CCB3B', h:['🎨 초록색 과일이에요','📍 귤, 레몬의 친구예요','💭 톡톡 상큼해요'] },
+  { id:'bamboo',   jar:9,  n:'대나무',   e:'🎋', c:'#4FA36B', h:['🎨 초록색 긴 줄기예요','📍 판다가 좋아해요','💭 싱그럽고 가벼워요'] },
+  { id:'rose',     jar:10, n:'로즈',     e:'🌹', c:'#E5577A', h:['🎨 빨강, 분홍색 꽃이에요','📍 꽃의 여왕이라고 불러요','💭 화려하고 풍부해요'] },
+];
+const S = Object.fromEntries(SCENTS.map(s => [s.id, s]));
+const $ = id => document.getElementById(id);
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const START = {};
+
+/* routing */
+const TITLES = { home:'꼬마 조향사 놀이 가게', shop:'🏪 향기 가게 손님 주문', hint:'🕵️ 힌트 세 개, 무슨 향?', memory:'🃏 향기 짝꿍 카드', drops:'💧 방울 실험실' };
+function go(v){ Object.keys(TITLES).forEach(k => $('v-'+k).hidden = k!==v); $('crumb').textContent = TITLES[v]; $('home').hidden = v==='home'; scrollTo(0,0); }
+document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { go(b.dataset.go); START[b.dataset.go](); });
+$('home').onclick = () => go('home');
+
+/* 1. SHOP */
+const CUSTOMERS = [
+  ['🧜‍♀️','인어 공주','바다처럼 맑고 시원한 향이 필요해요!','spa'],
+  ['👸','공주님','꽃의 여왕 향을 뿌리고 무도회에 갈래요.','rose'],
+  ['🐻','졸린 곰','포근한 이불 같은 향으로 푹 자고 싶어요.','musk'],
+  ['🧒','여름 친구','달콤하고 말랑한 과일 향 주세요!','peach'],
+  ['🦋','봄 나비','봄 꽃밭에 핀 노란 꽃 향이 좋아요.','freesia'],
+  ['🧙','숲 할아버지','따뜻하고 부드러운 나무 향을 찾고 있단다.','sandal'],
+  ['🦸','상큼 히어로','톡톡 쏘는 초록 과일 향으로 힘을 낼 거야!','bergamot'],
+  ['🐼','판다','내가 제일 좋아하는 식물 향을 주세요!','bamboo'],
+];
+let shop = { q:[], i:0, coins:0, done:false };
+START.shop = () => { shop = { q:shuffle(CUSTOMERS), i:0, coins:0, done:false }; renderShop(); };
+function renderShop(){
+  const c = shop.q[shop.i]; shop.done = false;
+  $('shop-count').textContent = '손님 ' + (shop.i+1) + ' / ' + shop.q.length;
+  $('coins').textContent = shop.coins;
+  $('cust-face').textContent = c[0]; $('cust-name').textContent = c[1] + ' 손님'; $('cust-say').textContent = '"' + c[2] + '"';
+  $('shop-msg').textContent = ''; $('shop-msg').className = 'msg';
+  const opts = shuffle([c[3], ...shuffle(SCENTS.map(s=>s.id).filter(id => id!==c[3])).slice(0,2)]);
+  const sh = $('shelf'); sh.innerHTML = '';
+  opts.forEach(id => { const s = S[id]; const b = document.createElement('button'); b.className = 'jarbtn';
+    b.innerHTML = '<span class="em">'+s.e+'</span><span class="nm">'+s.n+'</span><span class="no">'+s.jar+'번 통</span>';
+    b.onclick = () => {
+      if (shop.done) return;
+      if (id === c[3]){ shop.done = true; shop.coins++; b.classList.add('right'); $('coins').textContent = shop.coins;
+        $('shop-msg').textContent = c[1] + ' 손님: "고마워요! 딱 제가 원하던 향이에요!" 🪙+1'; $('shop-msg').className = 'msg ok'; }
+      else { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
+        $('shop-msg').textContent = '"음… 이건 제가 찾는 향이 아니에요. ' + s.jar + '번 통을 맡아 보고 다시 골라 볼래요?"'; $('shop-msg').className = 'msg no'; }
+    }; sh.appendChild(b); });
+  $('shop-next').textContent = shop.i === shop.q.length-1 ? '가게 문 닫기 🏁' : '다음 손님 →';
+}
+$('shop-next').onclick = () => {
+  if (shop.i === -1){ START.shop(); return; }
+  if (shop.i < shop.q.length-1){ shop.i++; renderShop(); return; }
+  $('cust-face').textContent = '🏪'; $('cust-name').textContent = '오늘 장사 끝!';
+  $('cust-say').textContent = '손님 ' + shop.q.length + '명 중 ' + shop.coins + '명이 웃으며 돌아갔어요. 🪙 ' + shop.coins + '개!';
+  $('shelf').innerHTML = ''; $('shop-msg').textContent = ''; $('shop-next').textContent = '가게 다시 열기'; shop.i = -1;
+};
+
+/* 2. HINT */
+let hg = { q:[], i:0, open:1, stars:0, solved:false };
+START.hint = () => { hg = { q:shuffle(SCENTS), i:0, open:1, stars:0, solved:false }; renderHint(); };
+function renderHint(){
+  const s = hg.q[hg.i];
+  $('hint-count').textContent = '문제 ' + (hg.i+1) + ' / ' + hg.q.length; $('stars').textContent = hg.stars;
+  $('hint-top').className = hg.solved ? 'reveal' : 'mystery';
+  $('hint-top').innerHTML = hg.solved ? '<span class="em">'+s.e+'</span><span class="nm">'+s.jar+'번 '+s.n+'</span>' : '❓';
+  const colors = ['var(--sky)','var(--orange)','var(--red)'];
+  $('hints').innerHTML = s.h.map((t,i) => (i < hg.open || hg.solved)
+    ? '<div class="hint"><span class="n" style="background:'+colors[i]+'">'+(i+1)+'</span>'+t+'</div>'
+    : '<div class="hint locked"><span class="n" style="background:#CBB">'+(i+1)+'</span>힌트 '+(i+1)+'은 아직 비밀!</div>').join('');
+  $('hint-open').hidden = hg.solved || hg.open >= 3;
+  $('hint-ok').hidden = hg.solved; $('hint-show').hidden = hg.solved; $('hint-next').hidden = !hg.solved;
+  $('hint-next').textContent = hg.i === hg.q.length-1 ? '처음부터 다시' : '다음 향 →';
+}
+$('hint-open').onclick = () => { hg.open = Math.min(3, hg.open+1); $('hint-msg').textContent=''; renderHint(); };
+$('hint-ok').onclick = () => { const pts = 4 - hg.open; hg.stars += pts; hg.solved = true;
+  $('hint-msg').textContent = '힌트 ' + hg.open + '개만 보고 맞혔어요! ⭐ +' + pts; $('hint-msg').className = 'msg ok'; renderHint(); };
+$('hint-show').onclick = () => { hg.solved = true; $('hint-msg').textContent = '정답은 이 향이었어요! 통을 돌려 맡아 봐요.'; $('hint-msg').className = 'msg no'; renderHint(); };
+$('hint-next').onclick = () => { $('hint-msg').textContent=''; if (hg.i < hg.q.length-1){ hg.i++; hg.open=1; hg.solved=false; renderHint(); } else START.hint(); };
+
+/* 3. MEMORY */
+let mem = { cards:[], open:[], team:0, score:[0,0], lock:false };
+START.memory = () => {
+  mem = { cards: shuffle([...SCENTS, ...SCENTS]).map(s => ({ s, state:'down' })), open:[], team:0, score:[0,0], lock:false };
+  $('mem-msg').textContent = '🐰 토끼팀부터! 카드 두 장을 뒤집어요.'; $('mem-msg').className = 'msg'; renderMem();
+};
+function renderMem(){
+  [0,1].forEach(t => { $('ts'+t).textContent = mem.score[t]; $('tm'+t).classList.toggle('on', mem.team===t); });
+  const B = $('board'); B.innerHTML = '';
+  mem.cards.forEach((c,i) => { const b = document.createElement('button'); b.className = 'card' + (c.state==='open' ? ' open' : c.state==='done' ? ' done' : '');
+    b.setAttribute('aria-label', c.state==='down' ? (i+1)+'번 카드' : c.s.n);
+    b.innerHTML = c.state==='down' ? '<span class="q">?</span>' : '<span class="em">'+c.s.e+'</span><span class="nm">'+c.s.n+'</span>';
+    b.onclick = () => flip(i); B.appendChild(b); });
+}
+function flip(i){
+  const c = mem.cards[i]; if (mem.lock || c.state !== 'down') return;
+  c.state = 'open'; mem.open.push(i); renderMem();
+  if (mem.open.length < 2) return;
+  const [a,b] = mem.open.map(k => mem.cards[k]); mem.lock = true;
+  const name = ['🐰 토끼팀','🐻 곰팀'];
+  if (a.s.id === b.s.id){
+    a.state = b.state = 'done'; mem.score[mem.team]++; mem.open = []; mem.lock = false;
+    const left = mem.cards.filter(c => c.state!=='done').length;
+    if (!left){ const w = mem.score[0]===mem.score[1] ? '무승부! 둘 다 최고!' : name[mem.score[0]>mem.score[1]?0:1] + ' 승리! 🎉';
+      $('mem-msg').textContent = '모든 짝을 찾았어요! ' + w; }
+    else $('mem-msg').textContent = '짝꿍 찾기 성공! ' + a.s.e + ' ' + a.s.n + ' (' + a.s.jar + '번 통) · ' + name[mem.team] + ' 한 번 더!';
+    $('mem-msg').className = 'msg ok'; renderMem();
+  } else {
+    $('mem-msg').textContent = '아쉬워요! 다음은 ' + name[1-mem.team] + ' 차례'; $('mem-msg').className = 'msg no';
+    setTimeout(() => { a.state = b.state = 'down'; mem.open = []; mem.team = 1-mem.team; mem.lock = false; renderMem(); }, 1300);
+  }
+}
+$('mem-new').onclick = START.memory;
+
+/* 4. DROPS */
+let dr = { a:'peach', b:'rose', da:2, db:2, made:new Set() };
+START.drops = () => { dr = { a:'peach', b:'rose', da:2, db:2, made:new Set() }; renderDrops(); };
+function side(key){
+  const id = dr[key], d = dr['d'+key], s = S[id], other = dr[key==='a'?'b':'a'];
+  const el = $('side'+key.toUpperCase());
+  el.innerHTML = '<div class="pick">' + SCENTS.map(x => '<button data-id="'+x.id+'" class="'+(x.id===id?'sel':'')+'" '+(x.id===other?'disabled style="opacity:.25"':'')+' aria-label="'+x.n+'">'+x.e+'</button>').join('') + '</div>'
+    + '<span class="nm">'+s.e+' '+s.n+'</span>'
+    + '<div class="drops"><button class="step" data-d="-1" aria-label="한 방울 빼기">−</button><span class="n">'+d+'</span><button class="step" data-d="1" aria-label="한 방울 더하기">+</button></div>'
+    + '<div class="dd">'+'💧'.repeat(d)+'</div>';
+  el.querySelectorAll('[data-id]').forEach(b => b.onclick = () => { if (b.dataset.id !== other){ dr[key] = b.dataset.id; renderDrops(); } });
+  el.querySelectorAll('[data-d]').forEach(b => b.onclick = () => { dr['d'+key] = Math.max(0, Math.min(6, d + +b.dataset.d)); renderDrops(); });
+}
+const hex = h => { const n = parseInt(h.slice(1),16); return [n>>16&255, n>>8&255, n&255]; };
+function renderDrops(){
+  side('a'); side('b');
+  const A = S[dr.a], B = S[dr.b], tot = dr.da + dr.db;
+  const liq = $('liq'), h = Math.min(130, tot*11);
+  liq.setAttribute('y', 228-h); liq.setAttribute('height', h);
+  if (tot){ const ca = hex(A.c), cb = hex(B.c); liq.setAttribute('fill', 'rgb('+ca.map((v,i) => Math.round((v*dr.da + cb[i]*dr.db)/tot)).join(',')+')'); }
+  let r;
+  if (!tot) r = '아직 비어 있어요. 방울을 넣어 봐요!';
+  else if (!dr.db) r = A.e + ' ' + A.n + ' 향만 나요';
+  else if (!dr.da) r = B.e + ' ' + B.n + ' 향만 나요';
+  else if (dr.da === dr.db) r = A.n + ' 반, ' + B.n + ' 반! 사이좋은 향';
+  else { const big = dr.da > dr.db ? A : B, small = dr.da > dr.db ? B : A, gap = Math.abs(dr.da-dr.db);
+    r = (gap >= 3 ? big.n + ' 향이 아주 강하고, ' : big.n + ' 향이 조금 더 나고, ') + small.n + ' 향이 살짝!'; }
+  $('mix-result').textContent = r;
+  if (dr.da && dr.db) dr.made.add(canon());
+  $('made').textContent = dr.made.size;
+  $('made-note').textContent = dr.made.size >= 10 ? '와! 향 두 가지로 벌써 ' + dr.made.size + '가지예요. 향료가 많아지면? 셀 수 없이 많아져요 ♾️' : '방울 수를 바꿀 때마다 새 레시피가 생겨요!';
+}
+function canon(){ const p = [[dr.a,dr.da],[dr.b,dr.db]].sort((x,y) => x[0] < y[0] ? -1 : 1); return p.map(x => x.join(':')).join('+'); }
+$('drops-reset').onclick = START.drops;
+</script>
