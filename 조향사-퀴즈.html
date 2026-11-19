@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>꼬마 조향사 퀴즈</title>
+<!--
+  ★ 인터넷 없이 열리는 파일입니다. 더블클릭하면 크롬/엣지에서 열려요.
+  ★ 문제를 바꾸려면 메모장으로 열어 아래 QUESTIONS 부분만 고치면 됩니다.
+     type: 'ox'  → answer: 'O' 또는 'X'
+     type: 'pick'→ choices: [ [그림, 글자], ... ], answer: 정답 번호(1부터)
+     pic: 문제 위에 크게 보일 그림(이모지), 없으면 ''
+     why: 정답 공개 때 보여줄 설명
+-->
+<script>
+const QUESTIONS = [
+  { type:'ox',   pic:'👩‍🔬', q:'조향사는 여러 가지 향을 섞어서 새로운 향기를 만드는 사람이에요.', answer:'O',
+    why:'맞아요! 조향사는 "향기를 만드는 요리사"예요.' },
+  { type:'pick', pic:'',   q:'냄새를 맡는 우리 몸은 어디일까요?',
+    choices:[['👀','눈'],['👂','귀'],['👃','코'],['👅','혀']], answer:3,
+    why:'코로 냄새를 맡아요. 조향사에게 코는 제일 소중한 도구예요.' },
+  { type:'ox',   pic:'🧴', q:'향을 맡을 때는 병에 코를 바짝 대고 세게 맡아요.', answer:'X',
+    why:'코를 대지 않고, 손으로 살랑살랑 부채질해서 맡아요. (조향사 손 인사!)' },
+  { type:'pick', pic:'🍋', q:'레몬 향은 어떤 향기 가족일까요?',
+    choices:[['🍊','상큼 과일 가족'],['🌹','향긋한 꽃 가족'],['🌲','시원한 숲 가족'],['🍫','달콤 고소 가족']], answer:1,
+    why:'레몬, 오렌지, 딸기, 사과는 상큼한 과일 가족이에요.' },
+  { type:'pick', pic:'🌹', q:'장미 향은 어떤 향기 가족일까요?',
+    choices:[['🍊','상큼 과일 가족'],['🌹','향긋한 꽃 가족'],['🌲','시원한 숲 가족'],['🍫','달콤 고소 가족']], answer:2,
+    why:'장미, 라벤더, 재스민은 꽃 가족이에요.' },
+  { type:'ox',   pic:'🚫', q:'향수는 좋은 냄새가 나니까 먹어도 괜찮아요.', answer:'X',
+    why:'향수와 향료는 절대 먹으면 안 돼요! 눈에 들어가지 않게도 조심해요.' },
+  { type:'pick', pic:'🍦', q:'바닐라 향은 어디에서 많이 맡을 수 있을까요?',
+    choices:[['🍦','아이스크림'],['🌲','소나무'],['🐟','생선'],['🧦','양말']], answer:1,
+    why:'바닐라는 아이스크림, 과자, 케이크에서 나는 달콤한 향이에요.' },
+  { type:'pick', pic:'🌿', q:'민트 향을 맡으면 어떤 느낌이 들까요?',
+    choices:[['❄️','시원해요'],['🔥','뜨거워요'],['🍬','아주 달아요'],['🧂','짜요']], answer:1,
+    why:'민트는 코가 뻥 뚫리는 시원한 향이에요. 치약에도 들어 있어요.' },
+  { type:'ox',   pic:'🧪', q:'두 가지 향을 섞으면 새로운 향이 만들어져요.', answer:'O',
+    why:'맞아요! 오렌지 + 바닐라처럼 섞으면 전혀 새로운 향이 돼요.' },
+  { type:'pick', pic:'💧', q:'조향사가 향을 한 방울씩 넣을 때 쓰는 도구는?',
+    choices:[['🥄','숟가락'],['💧','스포이트'],['🔨','망치'],['✂️','가위']], answer:2,
+    why:'스포이트로 한 방울, 두 방울 세면서 넣어요. 방울 수가 바로 향수 레시피예요.' },
+  { type:'pick', pic:'😵', q:'냄새를 너무 많이 맡아서 코가 지쳤어요. 어떻게 할까요?',
+    choices:[['👕','내 옷소매 냄새 맡기'],['🧴','향을 더 많이 맡기'],['🏃','뛰어다니기'],['🙈','눈 감기']], answer:1,
+    why:'내 옷소매 냄새를 맡으면 코가 다시 새로워져요. "코 쉬는 시간"이에요.' },
+  { type:'pick', pic:'🌲', q:'다음 중 숲에서 나는 냄새가 아닌 것은?',
+    choices:[['🌲','소나무'],['🌿','풀잎'],['🍫','초콜릿'],['🌳','나무']], answer:3,
+    why:'초콜릿은 달콤 고소 가족이에요. 숲 가족은 나무와 풀 냄새예요.' },
+  { type:'ox',   pic:'🙋', q:'사람마다 좋아하는 향은 다를 수 있어요.', answer:'O',
+    why:'맞아요! 내가 좋아하는 향과 친구가 좋아하는 향이 달라도 괜찮아요.' },
+  { type:'pick', pic:'✨', q:'향수는 어디에 살짝 뿌리면 좋을까요?',
+    choices:[['✋','손목'],['👀','눈'],['👄','입 안'],['🍙','밥']], answer:1,
+    why:'손목이나 옷에 살짝! 얼굴과 눈에는 뿌리지 않아요.' },
+  { type:'pick', pic:'☕', q:'커피와 초콜릿 향은 어떤 향기 가족일까요?',
+    choices:[['🍊','상큼 과일 가족'],['🌹','향긋한 꽃 가족'],['🌲','시원한 숲 가족'],['🍫','달콤 고소 가족']], answer:4,
+    why:'커피, 초콜릿, 바닐라, 코코넛은 달콤 고소 가족이에요.' },
+];
+</script>
+<style>
+:root{
+  --bg:#EEF5F3; --paper:#fff; --ink:#1E3533; --muted:#5D7270; --line:#CADDD8;
+  --a:#3F7FD0; --b:#E0577B; --ok:#23915F; --no:#D64545; --sun:#F2AE2E;
+  --c1:#3F7FD0; --c2:#E0577B; --c3:#2F9468; --c4:#E39A1E;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);
+  font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
+  font-size:clamp(16px,1.6vw,26px);display:flex;flex-direction:column}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
+.screen{flex:1;display:flex;flex-direction:column;padding:2vh 3vw;gap:2vh;min-height:0}
+[hidden]{display:none!important}
+
+/* start */
+#start{align-items:center;justify-content:center;text-align:center}
+#start h1{font-size:clamp(40px,6vw,96px);margin:0}
+#start .sub{color:var(--muted);margin:0}
+.teams-in{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
+.teams-in label{display:flex;flex-direction:column;gap:6px;font-weight:700}
+.teams-in input{font:inherit;font-size:1.4em;padding:10px 16px;border-radius:14px;border:3px solid var(--line);width:9em;text-align:center}
+.big-btn{border:0;border-radius:20px;padding:.6em 1.6em;font-size:1.6em;font-weight:800;color:#fff;background:var(--a);box-shadow:0 6px 0 #2a5a96}
+.big-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #2a5a96}
+.keys{color:var(--muted);font-size:.85em}
+.keys kbd{background:var(--paper);border:2px solid var(--line);border-radius:6px;padding:0 .4em;font-family:inherit}
+
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.prog{font-weight:800;font-size:1.1em}
+.bar{flex:1;min-width:120px;height:14px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sun);transition:width .3s}
+.scores{display:flex;gap:12px}
+.score{display:flex;align-items:center;gap:10px;background:var(--paper);border:3px solid var(--line);border-radius:16px;padding:4px 12px;font-weight:800}
+.score .n{font-size:1.6em;min-width:1.4em;text-align:center;font-variant-numeric:tabular-nums}
+.score .t{color:var(--tc)}
+.mini{border:2px solid var(--line);background:var(--bg);border-radius:10px;width:1.8em;height:1.8em;font-weight:800}
+
+/* question */
+.qbox{flex:1;display:flex;flex-direction:column;justify-content:center;gap:2.5vh;min-height:0}
+.qhead{display:flex;align-items:center;justify-content:center;gap:2vw;text-align:center}
+.qpic{font-size:clamp(60px,10vh,140px);line-height:1}
+.qtype{display:inline-block;background:var(--ink);color:#fff;border-radius:99px;padding:2px 16px;font-size:.8em;font-weight:700;margin-bottom:8px}
+.qtext{font-size:clamp(28px,3.6vw,64px);font-weight:800;line-height:1.3;margin:0;max-width:24em;word-break:keep-all}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2vh 2vw}
+.choices.ox{grid-template-columns:repeat(2,minmax(0,1fr));max-width:900px;width:100%;margin:0 auto}
+.ch{position:relative;display:flex;align-items:center;gap:1vw;background:var(--paper);border:5px solid var(--cc);border-radius:24px;padding:1.6vh 1.6vw;text-align:left;font-size:clamp(22px,2.6vw,48px);font-weight:800;transition:transform .1s}
+.ch:hover{transform:scale(1.02)}
+.ch .no{flex:none;width:1.6em;height:1.6em;border-radius:50%;background:var(--cc);color:#fff;display:grid;place-items:center;font-size:.8em}
+.ch .em{font-size:1.4em;line-height:1}
+.ox .ch{justify-content:center;font-size:clamp(80px,14vh,180px);padding:2vh;line-height:1}
+.ch.right{background:#DDF3E7;border-color:var(--ok);animation:pop .45s}
+.ch.right::after{content:"정답!";position:absolute;top:-.7em;right:.6em;background:var(--ok);color:#fff;font-size:20px;padding:2px 12px;border-radius:99px}
+.ch.wrong{opacity:.35}
+.ch.picked.wrong{opacity:.6;border-color:var(--no);animation:shake .4s}
+.reveal{background:var(--paper);border-radius:20px;border:3px solid var(--ok);padding:1.4vh 2vw;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.reveal p{margin:0;font-size:1.15em;font-weight:700;flex:1;min-width:240px;word-break:keep-all}
+.give{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.give span{color:var(--muted);font-size:.9em}
+.give button{border:0;border-radius:14px;padding:.4em 1em;font-weight:800;color:#fff;background:var(--tc)}
+.give button.done{opacity:.4}
+.nav{display:flex;justify-content:space-between;gap:12px}
+.nav button{border:3px solid var(--line);background:var(--paper);border-radius:16px;padding:.4em 1.2em;font-weight:800;font-size:1.1em}
+.nav .next{background:var(--a);border-color:var(--a);color:#fff}
+
+/* end */
+#end{align-items:center;justify-content:center;text-align:center}
+#end h1{font-size:clamp(40px,6vw,96px);margin:0}
+.final{display:flex;gap:4vw;flex-wrap:wrap;justify-content:center}
+.final div{background:var(--paper);border:5px solid var(--tc);border-radius:28px;padding:2vh 4vw;font-weight:800;font-size:1.6em}
+.final b{display:block;font-size:2.4em;color:var(--tc)}
+@keyframes pop{50%{transform:scale(1.06)}}
+@keyframes shake{25%,75%{transform:translateX(-10px)}50%{transform:translateX(10px)}}
+@media (max-width:700px){.choices{grid-template-columns:1fr}.qhead{flex-direction:column}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<section class="screen" id="start">
+  <div style="font-size:clamp(60px,10vh,120px)">🧪👃✨</div>
+  <h1>꼬마 조향사 퀴즈</h1>
+  <p class="sub" id="count-info"></p>
+  <div class="teams-in">
+    <label style="color:var(--a)">첫째 팀<input id="name0" value="토끼팀"></label>
+    <label style="color:var(--b)">둘째 팀<input id="name1" value="곰팀"></label>
+  </div>
+  <button class="big-btn" id="go">퀴즈 시작!</button>
+  <p class="keys">선생님 단축키: <kbd>1</kbd>~<kbd>4</kbd> 답 고르기 · <kbd>→</kbd> 다음 · <kbd>←</kbd> 이전 · <kbd>F</kbd> 전체화면</p>
+</section>
+
+<section class="screen" id="quiz" hidden>
+  <div class="top">
+    <span class="prog" id="prog">1 / 15</span>
+    <div class="bar"><i id="barfill"></i></div>
+    <div class="scores">
+      <div class="score" style="--tc:var(--a)"><span class="t" id="tn0">토끼팀</span><button class="mini" data-adj="0,-1" aria-label="첫째 팀 1점 빼기">−</button><span class="n" id="s0">0</span><button class="mini" data-adj="0,1" aria-label="첫째 팀 1점 더하기">+</button></div>
+      <div class="score" style="--tc:var(--b)"><span class="t" id="tn1">곰팀</span><button class="mini" data-adj="1,-1" aria-label="둘째 팀 1점 빼기">−</button><span class="n" id="s1">0</span><button class="mini" data-adj="1,1" aria-label="둘째 팀 1점 더하기">+</button></div>
+    </div>
+  </div>
+  <div class="qbox">
+    <div class="qhead">
+      <div class="qpic" id="qpic"></div>
+      <div><span class="qtype" id="qtype"></span><p class="qtext" id="qtext"></p></div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <div class="reveal" id="reveal" hidden>
+      <p id="why"></p>
+      <div class="give"><span>맞힌 팀에 점수:</span>
+        <button style="--tc:var(--a)" data-give="0" id="g0">토끼팀 +1</button>
+        <button style="--tc:var(--b)" data-give="1" id="g1">곰팀 +1</button>
+      </div>
+    </div>
+  </div>
+  <div class="nav">
+    <button id="prev">← 이전</button>
+    <button id="show">정답 보기</button>
+    <button class="next" id="next">다음 →</button>
+  </div>
+</section>
+
+<section class="screen" id="end" hidden>
+  <div style="font-size:clamp(60px,10vh,120px)">🏆</div>
+  <h1 id="winner"></h1>
+  <div class="final">
+    <div style="--tc:var(--a)"><span id="fn0"></span><b id="f0">0</b></div>
+    <div style="--tc:var(--b)"><span id="fn1"></span><b id="f1">0</b></div>
+  </div>
+  <p class="sub" style="color:var(--muted)">모두 멋진 꼬마 조향사예요!</p>
+  <div class="nav" style="gap:20px">
+    <button id="back">← 마지막 문제로</button>
+    <button class="next" id="restart">처음부터 다시</button>
+  </div>
+</section>
+
+<script>
+const $ = id => document.getElementById(id);
+const COLORS = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)'];
+let idx = 0, score = [0,0], names = ['토끼팀','곰팀'];
+let state = QUESTIONS.map(() => ({ picked:null, shown:false, given:[false,false] }));
+
+$('count-info').textContent = '문제 ' + QUESTIONS.length + '개 · O/X 퀴즈와 그림 고르기 퀴즈';
+
+function screen(id){ ['start','quiz','end'].forEach(s => $(s).hidden = s !== id); }
+
+function render(){
+  const Q = QUESTIONS[idx], st = state[idx];
+  $('prog').textContent = (idx+1) + ' / ' + QUESTIONS.length;
+  $('barfill').style.width = ((idx+1)/QUESTIONS.length*100) + '%';
+  $('qpic').textContent = Q.pic || '';
+  $('qpic').hidden = !Q.pic;
+  $('qtype').textContent = Q.type === 'ox' ? 'O / X 퀴즈' : '골라 보세요';
+  $('qtext').textContent = Q.q;
+  const box = $('choices'); box.innerHTML = '';
+  box.className = 'choices' + (Q.type === 'ox' ? ' ox' : '');
+  const list = Q.type === 'ox' ? [['','⭕'],['','❌']] : Q.choices;
+  const correct = Q.type === 'ox' ? (Q.answer === 'O' ? 1 : 2) : Q.answer;
+  list.forEach((c, i) => {
+    const b = document.createElement('button');
+    b.className = 'ch';
+    b.style.setProperty('--cc', Q.type === 'ox' ? (i ? 'var(--no)' : 'var(--c1)') : COLORS[i]);
+    b.innerHTML = Q.type === 'ox'
+      ? '<span></span>'
+      : '<span class="no">' + (i+1) + '</span><span class="em"></span><span class="lb"></span>';
+    if (Q.type === 'ox') b.firstChild.textContent = c[1];
+    else { b.querySelector('.em').textContent = c[0]; b.querySelector('.lb').textContent = c[1]; }
+    if (st.shown){
+      if (i+1 === correct) b.classList.add('right'); else b.classList.add('wrong');
+      if (st.picked === i+1) b.classList.add('picked');
+    }
+    b.onclick = () => choose(i+1);
+    box.appendChild(b);
+  });
+  $('reveal').hidden = !st.shown;
+  $('why').textContent = Q.why || '';
+  [0,1].forEach(t => {
+    $('g'+t).textContent = names[t] + (st.given[t] ? ' 점수 받음 ✓' : ' +1');
+    $('g'+t).classList.toggle('done', st.given[t]);
+  });
+  $('show').hidden = st.shown;
+  $('prev').style.visibility = idx === 0 ? 'hidden' : 'visible';
+  $('next').textContent = idx === QUESTIONS.length-1 ? '결과 보기 🏆' : '다음 →';
+}
+function choose(n){
+  const st = state[idx];
+  if (st.shown) return;
+  st.picked = n; st.shown = true; render();
+}
+function scores(){ [0,1].forEach(t => { $('s'+t).textContent = score[t]; $('tn'+t).textContent = names[t]; }); }
+function next(){
+  if (idx < QUESTIONS.length-1){ idx++; render(); }
+  else finish();
+}
+function prev(){ if (idx > 0){ idx--; render(); } }
+function finish(){
+  screen('end');
+  [0,1].forEach(t => { $('fn'+t).textContent = names[t]; $('f'+t).textContent = score[t] + '점'; });
+  $('winner').textContent = score[0] === score[1] ? '무승부! 둘 다 최고!' : names[score[0] > score[1] ? 0 : 1] + ' 우승!';
+}
+
+$('go').onclick = () => {
+  names = [$('name0').value.trim() || '첫째 팀', $('name1').value.trim() || '둘째 팀'];
+  idx = 0; score = [0,0]; state = QUESTIONS.map(() => ({ picked:null, shown:false, given:[false,false] }));
+  scores(); screen('quiz'); render();
+};
+$('show').onclick = () => { state[idx].shown = true; render(); };
+$('next').onclick = next;
+$('prev').onclick = prev;
+$('back').onclick = () => { screen('quiz'); render(); };
+$('restart').onclick = () => screen('start');
+document.querySelectorAll('[data-give]').forEach(b => b.onclick = () => {
+  const t = +b.dataset.give, st = state[idx];
+  st.given[t] = !st.given[t]; score[t] += st.given[t] ? 1 : -1; scores(); render();
+});
+document.querySelectorAll('[data-adj]').forEach(b => b.onclick = () => {
+  const [t, d] = b.dataset.adj.split(',').map(Number);
+  score[t] = Math.max(0, score[t] + d); scores();
+});
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  const k = e.key.toLowerCase();
+  if (k === 'f'){
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(()=>{});
+    return;
+  }
+  if ($('quiz').hidden) return;
+  if (['1','2','3','4'].includes(k)){
+    const max = QUESTIONS[idx].type === 'ox' ? 2 : QUESTIONS[idx].choices.length;
+    if (+k <= max) choose(+k);
+  }
+  if (QUESTIONS[idx].type === 'ox' && k === 'o') choose(1);
+  if (QUESTIONS[idx].type === 'ox' && k === 'x') choose(2);
+  if (k === 'arrowright' || k === 'enter' || k === ' '){ e.preventDefault(); next(); }
+  if (k === 'arrowleft') prev();
+});
+</script>
+</body>
+</html>
