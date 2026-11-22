@@ -1,0 +1,419 @@
+<title>자신감 UP 자존감 UP</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@500;700;900&display=swap">
+<style>
+/* 태블릿용 자신감·자존감 활동: 색연필 띠 + 슬라이드의 5가지 방법을 색 막대로, 큰 터치 버튼 */
+:root{
+  --bg:#F6F8FB; --paper:#FFFFFF; --ink:#1F2430; --muted:#596070; --line:#DADFE8;
+  --sun:#FFC000; --sun-soft:#FFF3C4; --accent:#E0457B; --ok:#1E7B4F; --ok-soft:#E3F3EA; --bad:#B4232F; --bad-soft:#FBE7E9;
+  --m1:#2E9CC0; --m2:#14A88A; --m3:#2FB55A; --m4:#8DBE2B; --m5:#F08A2C;
+  --m1s:#E2F3F9; --m2s:#DDF5EF; --m3s:#E1F5E6; --m4s:#EEF6DD; --m5s:#FDEEDF;
+  --stage:#EAF2FB; --face:#FFD43B; --faceline:#7A5A00;
+  --display:"Jua","Noto Sans KR","Malgun Gothic",sans-serif;
+  --font:"Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161F; --paper:#1A2130; --ink:#EEF1F6; --muted:#AAB3C2; --line:#2C3648;
+  --sun:#F2B705; --sun-soft:#3A3218; --accent:#F27AA3; --ok:#5CC98E; --ok-soft:#173226; --bad:#F07A83; --bad-soft:#3A1C21;
+  --m1:#5BBCDD; --m2:#3CCBA9; --m3:#5CD07F; --m4:#AEDB4E; --m5:#F6A55B;
+  --m1s:#17303B; --m2s:#143530; --m3s:#17321F; --m4s:#28331A; --m5s:#3A2A19;
+  --stage:#1E2A3C; --face:#E9BE2A; --faceline:#3B2C00; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161F; --paper:#1A2130; --ink:#EEF1F6; --muted:#AAB3C2; --line:#2C3648;
+  --sun:#F2B705; --sun-soft:#3A3218; --accent:#F27AA3; --ok:#5CC98E; --ok-soft:#173226; --bad:#F07A83; --bad-soft:#3A1C21;
+  --m1:#5BBCDD; --m2:#3CCBA9; --m3:#5CD07F; --m4:#AEDB4E; --m5:#F6A55B;
+  --m1s:#17303B; --m2s:#143530; --m3s:#17321F; --m4s:#28331A; --m5s:#3A2A19;
+  --stage:#1E2A3C; --face:#E9BE2A; --faceline:#3B2C00; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:20px;line-height:1.5;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px;
+  -webkit-user-select:none;user-select:none}
+.pencils{height:16px;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px))) 16px;
+  background:repeating-linear-gradient(90deg,var(--m1) 0 28px,var(--sun) 28px 56px,var(--m3) 56px 84px,var(--accent) 84px 112px,var(--m5) 112px 140px,var(--m4) 140px 168px)}
+.wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between}
+h1{font-family:var(--display);font-weight:400;font-size:34px;margin:0;line-height:1.2;text-wrap:balance}
+h1 .a{color:var(--m1)} h1 .b{color:var(--m5)}
+.badge{font-size:16px;font-weight:700;padding:6px 14px;border-radius:999px;background:var(--sun-soft);color:var(--ink)}
+button,input{font-family:inherit}
+button{font-size:20px;font-weight:700;border-radius:14px;border:2px solid var(--line);background:var(--paper);color:var(--ink);padding:14px 18px;cursor:pointer;min-height:60px;touch-action:manipulation}
+button:focus-visible,input:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.4;cursor:default}
+.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ghost{background:transparent}
+button.sel{border-color:var(--ink);border-width:4px;background:var(--sun-soft)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.q{font-size:24px;font-weight:900}
+.sub{font-size:17px;color:var(--muted)}
+.big{font-family:var(--display);font-size:32px;line-height:1.35}
+.fb{font-size:22px;font-weight:900;min-height:34px}
+.fb.ok{color:var(--ok)}.fb.bad{color:var(--bad)}
+.progress{display:flex;gap:6px}
+.progress i{width:28px;height:10px;border-radius:5px;background:var(--line)}
+.progress i.on{background:var(--ink)}
+/* 첫 화면 그림 */
+.hero{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:20px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px}
+.hero svg{width:100%;height:auto;display:block}
+.defs{display:flex;flex-direction:column;gap:12px}
+.def{display:flex;gap:12px;align-items:flex-start}
+.dot{width:22px;height:22px;border-radius:50%;flex:none;margin-top:6px}
+@media (max-width:640px){.hero{grid-template-columns:1fr}.hero svg{max-width:280px;margin:0 auto}}
+/* 난이도/활동 타일 */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.tile{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:20px;min-height:170px}
+.tile .nm{font-family:var(--display);font-weight:400;font-size:30px}
+.tile .ds{font-size:17px;color:var(--muted);font-weight:500}
+.ways{display:flex;flex-direction:column;gap:12px}
+.way{display:grid;grid-template-columns:72px minmax(0,1fr) auto;align-items:center;gap:16px;text-align:left;padding:12px 18px 12px 12px;border:0;border-radius:16px;min-height:96px;background:var(--c2);color:var(--ink)}
+.way .ic{width:72px;height:72px;border-radius:14px;background:var(--c);display:flex;align-items:center;justify-content:center;font-size:40px}
+.way .nm{font-family:var(--display);font-size:28px;line-height:1.2}
+.way .ds{font-size:17px;color:var(--muted);font-weight:500}
+.part{font-size:15px;font-weight:700;color:var(--muted)}
+.donetag{background:var(--ok-soft);color:var(--ok);font-weight:900;padding:6px 14px;border-radius:999px;font-size:16px;white-space:nowrap}
+.cardbtn{background:var(--sun);border-color:var(--sun);color:#1F2430;font-size:22px}
+.namefield{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.namefield input{font-size:22px;font-weight:700;padding:12px 16px;border-radius:12px;border:2px solid var(--line);background:var(--paper);color:var(--ink);min-height:56px;width:min(100%,260px)}
+/* 활동 공통 */
+.mission{border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:6px;border:3px solid var(--c);background:var(--c2)}
+.mission .lab{font-size:16px;font-weight:900;color:var(--ink)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.choice{display:flex;align-items:center;gap:12px;text-align:left;min-height:84px;font-size:22px}
+.choice svg{width:52px;height:52px;flex:none}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.pick{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:130px;font-size:19px}
+.pick .em{font-size:52px;line-height:1.1}
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.sit{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.sit .em{font-size:84px;line-height:1}
+.sit .tx{font-size:28px;font-weight:900;flex:1 1 240px;min-width:0}
+.bubble{position:relative;background:var(--bad-soft);color:var(--bad);border-radius:18px;padding:14px 18px;font-size:24px;font-weight:900;align-self:flex-start}
+.goodbox{display:flex;align-items:center;gap:16px;background:var(--ok-soft);color:var(--ok);border-radius:18px;padding:16px 20px}
+.goodbox svg{width:80px;height:80px;flex:none}
+.goodbox .big{color:var(--ok)}
+.steps{display:flex;flex-wrap:wrap;gap:8px}
+.steps span{padding:6px 14px;border-radius:999px;background:var(--line);font-weight:700;font-size:17px}
+.steps span.cur{background:var(--accent);color:var(--paper)}
+.steps span.past{opacity:.55}
+/* 크게 외치기 */
+.shout{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;padding:24px 12px;border-radius:18px;background:var(--c2)}
+.shout .say{font-family:var(--display);line-height:1.25;color:var(--ink);text-wrap:balance;transition:font-size .3s}
+.vol{display:flex;gap:8px;align-items:flex-end;height:70px}
+.vol i{width:26px;border-radius:6px;background:var(--line)}
+.vol i.on{background:var(--c)}
+/* 상상하기 */
+.scene{border-radius:18px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--stage);border:3px solid var(--c)}
+.scene .place{font-size:18px;font-weight:700;color:var(--muted)}
+.scene .meem{font-size:96px;line-height:1}
+.scene .melab{font-weight:900;background:var(--accent);color:var(--paper);padding:2px 14px;border-radius:999px}
+.scene .aud{font-size:48px;letter-spacing:6px}
+.timer{font-family:var(--display);font-size:72px;line-height:1;font-variant-numeric:tabular-nums;color:var(--accent)}
+/* 참모습 / 퀴즈 */
+.qcard{border:3px dashed var(--c);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;background:var(--paper)}
+.hint{display:flex;gap:12px;align-items:center;min-height:64px;padding:10px 16px;border-radius:14px;background:var(--c2);font-size:22px;font-weight:700;text-align:left}
+.hint .n{width:36px;height:36px;border-radius:50%;background:var(--c);color:var(--paper);display:flex;align-items:center;justify-content:center;flex:none;font-weight:900}
+.write{display:flex;flex-wrap:wrap;gap:10px}
+.write input{flex:1 1 220px;min-width:0;font-size:22px;font-weight:700;padding:12px 16px;border-radius:12px;border:2px solid var(--line);background:var(--paper);color:var(--ink);min-height:60px}
+/* 동물·식물 발표문 */
+.speech{border:4px solid var(--c);border-radius:12px;padding:22px;font-size:26px;line-height:1.7;text-align:center;background:var(--paper)}
+.speech b{color:var(--accent)}
+.speech .em{font-size:72px;line-height:1.1;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips button{min-height:56px;border-radius:999px;padding:8px 18px;font-size:20px}
+.chips button .no{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--paper);font-size:16px;margin-right:6px}
+/* 마무리 */
+.stamp{align-self:center;width:170px;height:170px;border:6px solid var(--accent);border-radius:50%;color:var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--display);font-size:30px;line-height:1.2;text-align:center;transform:rotate(-10deg);animation:pop .4s}
+.stamp small{font-family:var(--font);font-size:16px;font-weight:700}
+.mycard{-webkit-user-select:text;user-select:text;border:4px solid var(--sun);border-radius:20px;background:var(--paper);overflow:hidden;display:flex;flex-direction:column}
+.mycard .top{background:var(--sun);color:#1F2430;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.mycard .top .nm{font-family:var(--display);font-size:32px}
+.mycard .body{padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+.mrow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;align-items:start;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.mrow:last-child{border-bottom:0}
+.mrow .k{font-weight:900;color:var(--ink);display:flex;gap:8px;align-items:center}
+.mrow .k i{width:14px;height:14px;border-radius:4px;flex:none}
+.mrow .v{font-size:21px;font-weight:700}
+.mrow .v.empty{color:var(--muted);font-weight:500}
+@media (max-width:560px){.mrow{grid-template-columns:1fr;gap:4px}}
+.settings{border-top:1px solid var(--line);padding-top:14px}
+.pop{animation:pop .35s}
+@keyframes pop{0%{transform:scale(.9) rotate(-10deg)}60%{transform:scale(1.06) rotate(-10deg)}100%{transform:rotate(-10deg)}}
+@keyframes up{0%{transform:scale(.92)}100%{transform:none}}
+.bounce{animation:up .35s}
+@media (prefers-reduced-motion:reduce){.stamp,.pop,.bounce{animation:none}.shout .say{transition:none}}
+</style>
+
+<div class="pencils" aria-hidden="true"></div>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ---------- 내용 ---------- */
+const WAYS=[
+  {k:'think', part:'1부 · 나쁜 감정 VS 좋은 감정', nm:'긍정적으로 생각하기', ds:'같은 일도 좋은 생각으로 바꿔 보기', em:'😊', c:'--m1', c2:'--m1s', say:'어떤 생각이 좋은 생각일까요? 골라 보세요.'},
+  {k:'shout', part:'1부 · 나쁜 감정 VS 좋은 감정', nm:'크게 크게', ds:'나를 응원하는 말을 점점 크게 외치기', em:'📣', c:'--m2', c2:'--m2s', say:'나를 응원하는 말을 크게 외쳐 봐요.'},
+  {k:'imagine', part:'2부 · 시각화 이미지', nm:'구체적으로 상상하기', ds:'잘하고 싶은 일을 해내는 내 모습 그리기', em:'🌟', c:'--m3', c2:'--m3s', say:'내가 잘하고 싶은 일을 해내는 모습을 상상해 봐요.'},
+  {k:'me', part:'3부 · 나의 참모습 & 이미지 게임', nm:'나의 참모습 알기', ds:'질문에 답하고 친구들과 「나는 누구일까요?」 퀴즈', em:'🪞', c:'--m4', c2:'--m4s', say:'질문에 답하면서 나의 참모습을 알아봐요.'},
+  {k:'animal', part:'4부 · 동물 & 식물로 나를 표현하기', nm:'나를 표현하기', ds:'나를 닮은 동물이나 식물을 골라 발표하기', em:'🦁', c:'--m5', c2:'--m5s', say:'나를 닮은 동물이나 식물을 골라 보세요.'}];
+const way=k=>WAYS.find(w=>w.k===k);
+
+const SIT=[
+  {em:'🥛',s:'컵에 물이 반 남았어요.',good:'물이 반이나 있어!',bad:['물이 반밖에 없네…','목이 말라서 짜증 나.','물이 적어서 마시기 싫어.']},
+  {em:'📝',s:'받아쓰기에서 70점을 받았어요.',good:'지난번보다 늘었어! 다음엔 더 잘할 거야.',bad:['나는 공부를 못해.','받아쓰기는 하기 싫어.','100점이 아니면 소용없어.']},
+  {em:'🎤',s:'발표하다가 말이 막혔어요.',good:'괜찮아, 천천히 다시 말하면 돼.',bad:['나는 발표를 못 해.','다시는 발표 안 할 거야.','친구들이 나를 비웃을 거야.']},
+  {em:'🧰',s:'처음 해 보는 일을 맡았어요.',good:'처음이라 배울 게 많아. 한번 해 볼래!',bad:['나는 못 할 것 같아.','다른 사람이 하면 좋겠어.','틀리면 어떡하지? 안 할래.']},
+  {em:'🌧️',s:'비가 와서 소풍이 미뤄졌어요.',good:'다음에 더 맑은 날 갈 수 있어!',bad:['오늘은 완전히 망했어.','소풍은 이제 안 갈래.','나는 늘 운이 없어.']},
+  {em:'🪢',s:'줄넘기를 10번밖에 못 했어요.',good:'어제보다 1번 더 했어! 내일은 더 할 수 있어.',bad:['나는 운동을 못해.','줄넘기는 재미없어.','다른 친구들보다 못하니까 그만할래.']}];
+
+const CHEERS=['나는 잘 해낼 거야!','나는 뭐든지 할 수 있어!','나는 언제나 나를 응원할 거야!','있는 그대로의 나를 사랑하고 존중해!'];
+const HOW=['멋지게','끝까지','즐겁게','씩씩하게'];
+const WHAT=['발표를','운동을','일을','공부를','요리를','노래를'];
+const VOL=[{nm:'작게',fs:24,bars:1},{nm:'보통으로',fs:40,bars:2},{nm:'크게 크게!',fs:64,bars:3}];
+
+const JOBS=[{v:'발표',e:'🎤'},{v:'노래',e:'🎵'},{v:'달리기',e:'🏃'},{v:'요리',e:'🍳'},{v:'그림 그리기',e:'🎨'},{v:'컴퓨터 일',e:'💻'},{v:'정리',e:'🗂️'}];
+const PLACES=[{v:'교실',e:'🏫'},{v:'무대',e:'🎭'},{v:'운동장',e:'⚽'},{v:'회사',e:'🏢'},{v:'우리 집',e:'🏠'}];
+const WHO=[{v:'친구들',e:'👫'},{v:'가족',e:'👨‍👩‍👧'},{v:'선생님',e:'🧑‍🏫'},{v:'회사 사람들',e:'🧑‍💼'}];
+const REACT=[{v:'박수를 쳐요',e:'👏'},{v:'엄지를 들어요',e:'👍'},{v:'환하게 웃어요',e:'😊'}];
+const MYLOOK=[{v:'웃는 얼굴로',e:'😄'},{v:'당당한 자세로',e:'🧍'},{v:'큰 목소리로',e:'🔊'}];
+const IMG_STEPS={
+  job:{q:'내가 잘하고 싶은 일은 무엇인가요?',opts:JOBS},
+  place:{q:'어디에서 하고 있나요?',opts:PLACES},
+  who:{q:'누가 보고 있나요?',opts:WHO},
+  react:{q:'사람들은 어떤 모습인가요?',opts:REACT},
+  look:{q:'나는 어떤 모습으로 하고 있나요?',opts:MYLOOK}};
+const IMG_BY_LV={1:['job','react'],2:['job','place','who','react'],3:['job','place','who','look','react']};
+
+const MEQ=[
+  {k:'like',q:'내가 제일 좋아하는 것은?',opts:[['🍜','맛있는 음식'],['🎵','노래'],['⚽','운동'],['🎮','게임'],['🐶','동물'],['🎨','그림']],hint:a=>`제가 제일 좋아하는 것은 ${iye(a)}.`},
+  {k:'habit',q:'고치고 싶은 나의 습관은?',opts:[['😴','늦잠 자기'],['📱','휴대폰 오래 보기'],['🥦','편식하기'],['🧦','정리 안 하기'],['🔈','작은 목소리'],['⏰','지각하기']],hint:a=>`고치고 싶은 습관은 ${iye(a)}.`},
+  {k:'money',q:'나에게 갑자기 100만 원이 생긴다면?',opts:[['🎁','가족에게 선물할래요'],['🐷','저금할래요'],['✈️','여행을 갈래요'],['🍰','맛있는 걸 먹을래요'],['🛍️','갖고 싶은 걸 살래요'],['💝','어려운 사람을 도울래요']],hint:a=>`100만 원이 생기면 ${a}${/[.!?]$/.test(a)?'':'.'}`},
+  {k:'good',q:'내가 잘하거나, 잘하고 싶은 것은?',opts:[['🎤','노래'],['🏃','운동'],['🧹','정리'],['🍳','요리'],['🎨','그림'],['💻','컴퓨터']],hint:a=>`제가 잘하거나 잘하고 싶은 것은 ${iye(a)}.`},
+  {k:'cool',q:'스스로가 가장 멋있다고 생각될 때는?',opts:[['🤝','친구를 도울 때'],['🏁','끝까지 해낼 때'],['🙇','인사를 잘할 때'],['🎤','발표할 때'],['✅','일을 다 마쳤을 때'],['😄','웃을 때']],hint:a=>`저는 ${a} 가장 멋있어요.`}];
+const MEQ_BY_LV={1:['like','good','cool'],2:['like','habit','money','good','cool'],3:['like','habit','money','good','cool']};
+
+const ANIMALS=[{v:'사자',e:'🦁',t:[0,1]},{v:'강아지',e:'🐶',t:[2,6]},{v:'고양이',e:'🐱',t:[4,9]},{v:'토끼',e:'🐰',t:[8,3]},{v:'거북이',e:'🐢',t:[3,4]},{v:'돌고래',e:'🐬',t:[3,10]},{v:'곰',e:'🐻',t:[7,11]},{v:'해바라기',e:'🌻',t:[3,8]},{v:'선인장',e:'🌵',t:[5,7]},{v:'나무',e:'🌳',t:[6,7]}];
+const TRAITS=[
+  {t:'용감해요',a:'용감하고',k:'용감하기'},{t:'씩씩해요',a:'씩씩하고',k:'씩씩하기'},{t:'친절해요',a:'친절하고',k:'친절하기'},
+  {t:'밝아요',a:'밝고',k:'밝기'},{t:'느긋해요',a:'느긋하고',k:'느긋하기'},{t:'참을성이 많아요',a:'참을성이 많고',k:'참을성이 많기'},
+  {t:'다정해요',a:'다정하고',k:'다정하기'},{t:'튼튼해요',a:'튼튼하고',k:'튼튼하기'},{t:'잘 웃어요',a:'잘 웃고',k:'잘 웃기'},
+  {t:'혼자 있는 걸 즐겨요',a:'혼자 있는 걸 즐기고',k:'혼자 있는 걸 즐기기'},{t:'친구와 함께가 좋아요',a:'친구와 함께하는 걸 좋아하고',k:'친구와 함께하는 걸 좋아하기'},{t:'잠이 많아요',a:'잠이 많고',k:'잠이 많기'}];
+const ORD=['첫째','둘째','셋째'];
+const PRAISE=['정말 멋져요!','최고예요!','자신감 UP!','잘했어요!','할 수 있어요!'];
+const LVNAME={1:'난이도 하 · 그림 보고 고르기',2:'난이도 중 · 글 읽고 고르기',3:'난이도 상 · 스스로 만들기'};
+
+/* ---------- 도우미 ---------- */
+const S={level:1,sound:true,name:'',screen:'level',done:{},card:{},k:null,t:null,score:0,total:0};
+try{const v=JSON.parse(localStorage.getItem('jasin-set')||'{}');if(v.level)S.level=v.level;if(v.sound===false)S.sound=false}catch(e){}
+function save(){try{localStorage.setItem('jasin-set',JSON.stringify({level:S.level,sound:S.sound}))}catch(e){}}
+function speak(t,rate){if(!S.sound)return;try{const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=rate||.9;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+let AC;
+function tone(f,d,type,at){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type||'sine';o.frequency.value=f;o.connect(g);g.connect(AC.destination);const t0=AC.currentTime+(at||0);g.gain.setValueAtTime(.15,t0);g.gain.exponentialRampToValueAtTime(.001,t0+d);o.start(t0);o.stop(t0+d)}catch(e){}}
+const sfx={tap:()=>tone(660,.06),ok:()=>{tone(660,.1);tone(880,.16,'sine',.1)},bad:()=>tone(200,.22,'square'),done:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.2,'sine',i*.12))};
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function jong(w){const c=w.charCodeAt(w.length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28>0}
+const eul=w=>w+(jong(w)?'을':'를');
+const iye=w=>w+(jong(w)?'이에요':'예요');
+const me=()=>S.name||'나';
+const cv=w=>`--c:var(${w.c});--c2:var(${w.c2})`;
+function face(good){return `<svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="23" fill="var(--face)" stroke="var(--faceline)" stroke-width="2"/><ellipse cx="18" cy="21" rx="3" ry="5" fill="var(--faceline)"/><ellipse cx="34" cy="21" rx="3" ry="5" fill="var(--faceline)"/>${good?'<path d="M14 31q12 12 24 0" fill="none" stroke="var(--faceline)" stroke-width="3" stroke-linecap="round"/>':'<path d="M15 39q11-10 22 0" fill="none" stroke="var(--faceline)" stroke-width="3" stroke-linecap="round"/>'}</svg>`}
+const HERO=`<svg viewBox="0 0 300 220" role="img" aria-label="자존감 안에 자신감이 들어 있는 그림"><circle cx="150" cy="110" r="104" fill="var(--accent)"/><circle cx="196" cy="128" r="58" fill="var(--sun)"/><text x="96" y="92" text-anchor="middle" font-family="Jua, Noto Sans KR, sans-serif" font-size="30" fill="var(--paper)">자존감</text><text x="196" y="138" text-anchor="middle" font-family="Jua, Noto Sans KR, sans-serif" font-size="28" fill="#1F2430">자신감</text></svg>`;
+
+/* ---------- 화면 ---------- */
+const app=document.getElementById('app');
+function render(){app.innerHTML=({level:levelScreen,home,think,shout,imagine,me:meScreen,animal,done,card})[S.screen]();bind()}
+function hdr(w){return `<header><h1>${w?esc(w.nm):'나의 자신감 카드'}</h1><div class="row"><span class="badge">${LVNAME[S.level]}</span><button class="ghost" data-go="home">처음 화면</button></div></header>`}
+function prog(){const t=S.t;let s='<div class="progress" aria-label="진행">';for(let i=0;i<t.n;i++)s+=`<i class="${i<t.i?'on':''}"></i>`;return s+'</div>'}
+const fb=()=>`<div class="fb ${S.t.res||''}" role="status">${esc(S.t.msg||'')}</div>`;
+function mission(w,text){return `<div class="mission" style="${cv(w)}"><span class="lab">${esc(w.part)}</span><div class="big">${text}</div></div>`}
+
+function levelScreen(){const D={1:['하','그림을 보고 골라요','얼굴 그림 단서, 선택지 2개'],2:['중','글을 읽고 골라요','글 단서, 선택지 3개'],3:['상','스스로 만들어요','나쁜 생각 바꾸기, 응원 문장 만들기, 직접 쓰기']};
+  return `<header><h1><span class="a">자신감 UP!</span> <span class="b">자존감 UP!</span></h1><span class="badge">I MY ME MINE · 언제나 나를 응원해!</span></header>
+<div class="hero">${HERO}<div class="defs"><div class="q">닮은 듯 다른 자존감과 자신감</div>
+<div class="def"><span class="dot" style="background:var(--accent)"></span><div><b>자존감</b><div class="sub">있는 그대로의 나를 소중하게 여기는 마음</div></div></div>
+<div class="def"><span class="dot" style="background:var(--sun)"></span><div><b>자신감</b><div class="sub">나는 할 수 있다고 믿는 마음</div></div></div></div></div>
+<p class="sub" style="margin:0">먼저 난이도를 고르세요. 선생님과 함께 골라도 좋아요.</p>
+<div class="tiles">${[1,2,3].map(l=>`<button class="tile" data-lv="${l}"><span class="nm" style="font-size:56px;line-height:1">${D[l][0]}</span><span class="nm">난이도 ${D[l][0]}</span><span class="q" style="font-size:21px">${D[l][1]}</span><span class="ds">${D[l][2]}</span></button>`).join('')}</div>`}
+
+function home(){const n=WAYS.filter(w=>S.done[w.k]).length;return `
+<header><h1><span class="a">자신감 UP</span> 시키는 방법!</h1><div class="row"><span class="badge">${LVNAME[S.level]}</span><button class="ghost" data-go="level">난이도 다시 고르기</button></div></header>
+<div class="panel"><div class="namefield"><label for="nm" class="q" style="font-size:21px">내 이름</label><input id="nm" maxlength="8" autocomplete="off" placeholder="이름 쓰기" value="${esc(S.name)}"><span class="sub">카드와 퀴즈에 나와요. 비워 두어도 돼요.</span></div></div>
+<p class="sub" style="margin:0">다섯 가지 방법을 하나씩 해 봐요. 마친 활동은 「나의 자신감 카드」에 모여요. (${n} / 5)</p>
+<div class="ways">${WAYS.map(w=>`<button class="way" data-start="${w.k}" style="${cv(w)}"><span class="ic" aria-hidden="true">${w.em}</span><span><span class="part">${esc(w.part)}</span><br><span class="nm">${esc(w.nm)}</span><br><span class="ds">${esc(w.ds)}</span></span>${S.done[w.k]?'<span class="donetag">완료</span>':'<span></span>'}</button>`).join('')}</div>
+${n?`<button class="cardbtn" data-go="card">나의 자신감 카드 보기 (${n} / 5)</button>`:''}
+<div class="panel settings"><div class="row"><button id="snd">${S.sound?'소리 켜짐':'소리 꺼짐'}</button><span class="sub">효과음과 읽어 주는 소리를 들려줍니다.</span>${n?'<button id="reset" class="ghost">처음부터 다시 하기</button>':''}</div></div>`}
+
+/* 활동 만들기 */
+function make(k){const L=S.level;
+  if(k==='think'){const items=shuffle(SIT).slice(0,4).map(s=>{const ch=L===1?[{t:s.good,g:1},{t:s.bad[0]}]:L===2?[{t:s.good,g:1},{t:s.bad[0]},{t:s.bad[1]}]:[{t:s.good,g:1},{t:s.bad[1]},{t:s.bad[2]}];return Object.assign({},s,{ch:shuffle(ch)})});
+    return {i:0,n:4,items,wrong:[],solved:false}}
+  if(k==='shout')return {i:0,n:3,stage:'pick',sent:null,how:null,what:null};
+  if(k==='imagine'){const steps=IMG_BY_LV[L];return {i:0,n:steps.length+1,steps,ans:{},jobs:L===1?shuffle(JOBS).slice(0,3):JOBS,count:null}}
+  if(k==='me'){const qs=MEQ_BY_LV[L].map(q=>MEQ.find(x=>x.k===q));return {i:0,n:qs.length+1,qs,ans:{},open:0,reveal:false,draft:''}}
+  if(k==='animal'){const need=L;return {i:0,n:3,need,pick:null,tr:[],pool:[]}}}
+
+function think(){const w=way('think'),t=S.t,s=t.items[t.i],L=S.level;
+  return `${hdr(w)}${prog()}
+${mission(w,L===3?'나쁜 생각을 좋은 생각으로 바꿔 보세요.':'어떤 생각이 좋은 생각일까요?')}
+<div class="panel" style="${cv(w)}"><div class="q">상황 ${t.i+1} / ${t.n}</div>
+<div class="sit"><span class="em" aria-hidden="true">${s.em}</span><span class="tx">${esc(s.s)}</span></div>
+${L===3?`<div class="bubble">나쁜 생각: 「${esc(s.bad[0])}」</div>`:''}
+${t.solved?`<div class="goodbox bounce">${face(true)}<div><div class="sub" style="color:inherit">좋은 생각</div><div class="big">「${esc(s.good)}」</div></div></div>`
+ :`<div class="choices">${s.ch.map((c,j)=>`<button class="choice ${t.wrong.includes(j)?'wrong':''}" data-ch="${j}" ${t.wrong.includes(j)?'disabled':''}>${L===1?face(!!c.g):''}<span>「${esc(c.t)}」</span></button>`).join('')}</div>`}
+${fb()}
+${t.solved?`<div class="row"><button class="primary" id="say">좋은 생각 따라 말하기</button><button id="next">${t.i+1<t.n?'다음 상황':'다 했어요'}</button></div>`:''}</div>`}
+
+function shout(){const w=way('shout'),t=S.t,L=S.level;
+  if(t.stage==='pick'){const list=L===1?CHEERS.slice(0,2):CHEERS;
+    return `${hdr(w)}${prog()}${mission(w,'나를 응원하는 말을 골라요.')}
+<div class="panel" style="${cv(w)}"><div class="choices">${list.map((c,j)=>`<button class="choice ${t.sent===c?'sel':''}" data-cheer="${j}">「${esc(c)}」</button>`).join('')}</div>
+${L===3?`<div class="q" style="font-size:21px">또는 내 문장 만들기: 「나는 <u>${t.how?esc(t.how):'　　'}</u> <u>${t.what?esc(t.what):'　　'}</u> 할 수 있어!」</div>
+<div class="chips">${HOW.map(h=>`<button data-how="${h}" class="${t.how===h?'sel':''}">${h}</button>`).join('')}</div>
+<div class="chips">${WHAT.map(h=>`<button data-what="${h}" class="${t.what===h?'sel':''}">${h}</button>`).join('')}</div>`:''}
+${fb()}<div class="row"><button class="primary" id="gosh" ${t.sent?'':'disabled'}>이 말로 외치기</button></div></div>`}
+  const v=VOL[t.i];
+  return `${hdr(w)}${prog()}${mission(w,`${t.i+1}번째: <b>${v.nm}</b> 말해 보세요.`)}
+<div class="panel" style="${cv(w)}"><div class="steps">${VOL.map((x,j)=>`<span class="${j===t.i?'cur':j<t.i?'past':''}">${j+1}. ${x.nm}</span>`).join('')}</div>
+<div class="shout"><div class="vol" aria-hidden="true">${[1,2,3].map(b=>`<i class="${b<=v.bars?'on':''}" style="height:${b*22}px"></i>`).join('')}</div>
+<div class="say" style="font-size:${v.fs}px">${esc(t.sent)}</div></div>
+${fb()}<div class="row"><button id="listen">들어 보기</button><button class="primary" id="said">${t.i<2?'말했어요':'크게 외쳤어요!'}</button></div></div>`}
+
+function imgSentence(a){const job=a.job?eul(a.job.v):'일을';
+  let s='나는 '+(a.place?a.place.v+'에서 ':'')+(a.who?a.who.v+' 앞에서 ':'')+(a.look?a.look.v+' ':'')+'멋지게 '+job+' 할 수 있어!';
+  if(a.react)s+=' '+(a.who?a.who.v+(jong(a.who.v)?'이':'가'):'사람들이')+' '+a.react.v+'.';
+  return s}
+function imagine(){const w=way('imagine'),t=S.t;
+  if(t.i<t.steps.length){const key=t.steps[t.i],st=IMG_STEPS[key],opts=key==='job'?t.jobs:st.opts;
+    return `${hdr(w)}${prog()}${mission(w,'잘하고 싶은 일을 해내는 내 모습을 상상해요.')}
+<div class="panel" style="${cv(w)}"><div class="q">${t.i+1}. ${esc(st.q)}</div>
+<div class="picks">${opts.map((o,j)=>`<button class="pick" data-img="${j}"><span class="em" aria-hidden="true">${o.e}</span><span>${esc(o.v)}</span></button>`).join('')}</div>${fb()}</div>`}
+  const a=t.ans,s=imgSentence(a);
+  return `${hdr(w)}${prog()}${mission(w,'내가 상상한 모습이에요.')}
+<div class="panel" style="${cv(w)}"><div class="scene" style="${cv(w)}"><span class="place">${a.place?a.place.e+' '+esc(a.place.v):'🌈 내가 바라는 곳'}</span>
+<span class="meem" aria-hidden="true">${a.job.e}</span><span class="melab">${esc(me())}</span>
+<span class="aud" aria-hidden="true">${(a.react?a.react.e:'👏').repeat(4)}</span></div>
+<div class="big" style="text-align:center">「${esc(s)}」</div>
+${t.count!==null?`<div class="row" style="justify-content:center;flex-direction:column"><div class="sub">눈을 감고 상상해 보세요</div><div class="timer" aria-live="polite">${t.count}</div></div>`:''}
+<div class="row" style="justify-content:center"><button id="readimg">읽어 주기</button><button id="eyes" ${t.count!==null&&t.count>0?'disabled':''}>눈 감고 10초 상상하기</button><button class="primary" id="imgdone">다 했어요</button></div></div>`}
+
+function meScreen(){const w=way('me'),t=S.t,L=S.level;
+  if(t.i<t.qs.length){const q=t.qs[t.i],opts=L===1?q.opts.slice(0,4):q.opts;
+    return `${hdr(w)}${prog()}${mission(w,'나의 참모습을 알아봐요.')}
+<div class="panel" style="${cv(w)}"><div class="q">${t.i+1}. ${esc(q.q)}</div>
+<div class="picks">${opts.map((o,j)=>`<button class="pick" data-me="${j}"><span class="em" aria-hidden="true">${o[0]}</span><span>${esc(o[1])}</span></button>`).join('')}</div>
+${L===3?`<div class="write"><label for="mew" class="sub" style="flex-basis:100%">내 생각이 없으면 직접 써도 돼요.</label><input id="mew" maxlength="20" autocomplete="off" placeholder="직접 쓰기" value="${esc(t.draft)}"><button id="mewok" class="primary">이걸로 할래요</button></div>`:''}
+${fb()}</div>`}
+  const hints=t.qs.map(q=>q.hint(t.ans[q.k]));
+  return `${hdr(w)}${prog()}${mission(w,'이미지 게임: 「나는 누구일까요?」')}
+<div class="panel" style="${cv(w)}"><div class="sub">친구들에게 힌트를 하나씩 열어 보여 주세요. 친구들이 누구인지 맞혀요.</div>
+<div class="qcard">${hints.map((h,j)=>j<t.open?`<div class="hint bounce"><span class="n">${j+1}</span><span>${esc(h)}</span></div>`:`<button class="hint" data-hint="${j}" ${j===t.open?'':'disabled'}><span class="n">${j+1}</span><span>힌트 ${j+1} 열기</span></button>`).join('')}
+${t.reveal?`<div class="big bounce" style="text-align:center">정답은 바로 「${esc(me())}」!</div>`:''}</div>
+<div class="row"><button id="readhint" ${t.open?'':'disabled'}>힌트 읽어 주기</button><button id="reveal" ${t.open>=hints.length&&!t.reveal?'':'disabled'}>정답 공개</button><button class="primary" id="medone" ${t.reveal?'':'disabled'}>다 했어요</button></div></div>`}
+
+function animalSpeech(t){const a=t.pick,tr=t.tr.map(i=>TRAITS[i]);let why;
+  if(tr.length===1)why=`그 이유는 ${tr[0].k} 때문이다.`;
+  else why='그 이유는 '+tr.map((x,j)=>`${ORD[j]}, ${j<tr.length-1?x.a:x.k}`).join('<br>')+'<br>때문이다.';
+  return {html:`<span class="em" aria-hidden="true">${a.e}</span>나는 <b>${esc(a.v)}</b>이다.<br><br>${why}<br><br>그래서 나는 <b>${esc(a.v)}</b>이다.`,
+    text:`나는 ${a.v}이다. ${why.replace(/<br>/g,' ')} 그래서 나는 ${a.v}이다.`}}
+function animal(){const w=way('animal'),t=S.t,L=S.level;
+  if(t.i===0)return `${hdr(w)}${prog()}${mission(w,'나를 닮은 동물이나 식물을 골라요.')}
+<div class="panel" style="${cv(w)}"><div class="picks">${(L===1?ANIMALS.slice(0,6):ANIMALS).map((a,j)=>`<button class="pick" data-an="${j}"><span class="em" aria-hidden="true">${a.e}</span><span>${esc(a.v)}</span></button>`).join('')}</div>${fb()}</div>`;
+  if(t.i===1){const left=t.need-t.tr.length;
+    return `${hdr(w)}${prog()}${mission(w,`왜 내가 ${esc(t.pick.v)}일까요? 이유를 <b>${t.need}개</b> 골라요.`)}
+<div class="panel" style="${cv(w)}"><div class="sit"><span class="em" aria-hidden="true">${t.pick.e}</span><span class="tx">나는 ${esc(t.pick.v)}이다.</span></div>
+<div class="chips">${t.pool.map(i=>{const o=t.tr.indexOf(i);return `<button data-tr="${i}" class="${o>=0?'sel':''}">${o>=0?`<span class="no">${o+1}</span>`:''}${esc(TRAITS[i].t)}</button>`}).join('')}</div>
+<div class="sub">${left>0?`${left}개 더 골라요. 다시 누르면 취소돼요.`:'다 골랐어요!'}</div>${fb()}
+<div class="row"><button class="ghost" id="anback">다시 고르기</button><button class="primary" id="anok" ${left===0?'':'disabled'}>발표문 만들기</button></div></div>`}
+  const sp=animalSpeech(t);
+  return `${hdr(w)}${prog()}${mission(w,'친구들 앞에서 발표해 보세요.')}
+<div class="panel" style="${cv(w)}"><div class="speech" style="${cv(w)}">${sp.html}</div>${fb()}
+<div class="row" style="justify-content:center"><button id="readan">읽어 주기</button><button class="primary" id="andone">발표했어요</button></div></div>`}
+
+function done(){const w=way(S.k);return `${hdr(w)}
+<div class="panel" style="align-items:center;text-align:center;${cv(w)}">
+<div class="q">「${esc(w.nm)}」 활동을 마쳤어요</div>
+${S.k==='think'?`<div class="sub">한 번에 고른 좋은 생각 ${S.score} / ${S.total}</div>`:''}
+${S.reported?`<div class="stamp">칭찬합시다!<small>${esc(S.praise)}</small></div>`:'<div class="sub">선생님께 말해 보세요.</div>'}
+<div class="row" style="justify-content:center"><button class="primary" id="report" ${S.reported?'disabled':''}>「다 했어요! 확인해 주세요.」</button>
+${WAYS.every(x=>S.done[x.k])?'<button class="cardbtn" data-go="card">나의 자신감 카드 보기</button>':''}<button data-go="home">다음 활동 고르기</button></div></div>`}
+
+function cardText(){const c=S.card,L=[];
+  L.push(`${me()}의 자신감 카드`);
+  if(c.think)L.push('좋은 생각: '+c.think);if(c.shout)L.push('응원하는 말: '+c.shout);if(c.imagine)L.push('상상한 내 모습: '+c.imagine);
+  if(c.me)L.push('나의 참모습: '+c.me.join(' '));if(c.animal)L.push('나를 표현하기: '+c.animal);return L.join('\n')}
+function card(){const c=S.card,all=WAYS.every(w=>S.done[w.k]);
+  const row=(k,label,v)=>{const w=way(k);return `<div class="mrow"><span class="k"><i style="background:var(${w.c})"></i>${label}</span><span class="v ${v?'':'empty'}">${v||'아직 안 했어요'}</span></div>`};
+  return `${hdr(null)}
+<div class="mycard"><div class="top"><span class="nm">${esc(me())}의 자신감 카드</span><span>나는 뭐든지 할 수 있어!</span></div>
+<div class="body">${row('think','긍정적으로 생각하기',c.think&&`「${esc(c.think)}」`)}${row('shout','크게 크게',c.shout&&`「${esc(c.shout)}」`)}${row('imagine','구체적으로 상상하기',c.imagine&&`「${esc(c.imagine)}」`)}
+${row('me','나의 참모습 알기',c.me&&c.me.map(esc).join('<br>'))}${row('animal','나를 표현하기',c.animal&&esc(c.animal))}</div></div>
+${all?`<div class="stamp">자신감 UP!<small>자존감 UP!</small></div>`:''}
+<div class="row"><button id="copycard">카드 내용 복사</button><button id="readcard">카드 읽어 주기</button><button data-go="home">처음 화면</button></div>
+<div class="fb" id="copymsg" role="status"></div>`}
+
+/* ---------- 진행 ---------- */
+function mark(ok){const t=S.t;if(!t.counted){S.total++;t.counted=true;if(ok)S.score++}}
+function say(msg,res){S.t.msg=msg;S.t.res=res;(res==='ok'?sfx.ok:sfx.bad)()}
+function finish(){S.done[S.k]=true;S.reported=false;S.screen='done';sfx.done();render()}
+function start(k){S.k=k;S.screen=k;S.score=0;S.total=0;S.t=make(k);S.t.msg='';S.t.res='';render();speak(way(k).say)}
+let TIMER=null;
+
+function bind(){const $=id=>document.getElementById(id),all=s=>app.querySelectorAll(s),t=S.t;
+  all('[data-go]').forEach(b=>b.onclick=()=>{try{speechSynthesis.cancel()}catch(e){};clearInterval(TIMER);S.screen=b.dataset.go;render();window.scrollTo(0,0)});
+  all('[data-start]').forEach(b=>b.onclick=()=>{start(b.dataset.start);window.scrollTo(0,0)});
+  all('[data-lv]').forEach(b=>b.onclick=()=>{S.level=+b.dataset.lv;S.screen='home';S.done={};S.card={};save();render()});
+  if($('nm'))$('nm').oninput=e=>{S.name=e.target.value.trim()};
+  if($('snd'))$('snd').onclick=()=>{S.sound=!S.sound;save();render()};
+  if($('reset'))$('reset').onclick=()=>{S.done={};S.card={};render()};
+  if($('report'))$('report').onclick=()=>{S.praise=PRAISE[Math.floor(Math.random()*PRAISE.length)];S.reported=true;speak('다 했어요! 칭찬합시다! '+S.praise);render()};
+  /* 긍정적으로 생각하기 */
+  all('[data-ch]').forEach(b=>b.onclick=()=>{const j=+b.dataset.ch,s=t.items[t.i],c=s.ch[j];
+    if(c.g){mark(true);t.solved=true;say('좋은 생각을 골랐어요!','ok');speak(s.good);S.card.think=s.good}
+    else{mark(false);t.wrong.push(j);say('그렇게 생각하면 마음이 어떨까요? 다시 골라 보세요.','bad')}render()});
+  if($('say'))$('say').onclick=()=>speak(t.items[t.i].good);
+  if($('next'))$('next').onclick=()=>{t.i++;t.counted=false;if(t.i>=t.n){finish();return}Object.assign(t,{wrong:[],solved:false,msg:'',res:''});render()};
+  /* 크게 크게 */
+  all('[data-cheer]').forEach(b=>b.onclick=()=>{const list=S.level===1?CHEERS.slice(0,2):CHEERS;t.sent=list[+b.dataset.cheer];t.how=t.what=null;t.msg='';sfx.tap();speak(t.sent);render()});
+  const built=()=>{if(t.how&&t.what){t.sent=`나는 ${t.how} ${t.what} 할 수 있어!`;speak(t.sent)}else t.sent=null};
+  all('[data-how]').forEach(b=>b.onclick=()=>{t.how=b.dataset.how;built();sfx.tap();render()});
+  all('[data-what]').forEach(b=>b.onclick=()=>{t.what=b.dataset.what;built();sfx.tap();render()});
+  if($('gosh'))$('gosh').onclick=()=>{if(!t.sent)return;t.stage='go';S.card.shout=t.sent;t.msg='';render()};
+  if($('listen'))$('listen').onclick=()=>speak(t.sent,[.8,.9,1][t.i]);
+  if($('said'))$('said').onclick=()=>{t.i++;if(t.i>=3){finish();return}say(t.i===1?'좋아요! 이번엔 조금 더 크게!':'더 크게! 가슴을 펴고 외쳐 봐요!','ok');render()};
+  /* 구체적으로 상상하기 */
+  all('[data-img]').forEach(b=>b.onclick=()=>{const key=t.steps[t.i],opts=key==='job'?t.jobs:IMG_STEPS[key].opts;t.ans[key]=opts[+b.dataset.img];sfx.tap();t.i++;
+    if(t.i>=t.steps.length){S.card.imagine=imgSentence(t.ans);speak(S.card.imagine)}render()});
+  if($('readimg'))$('readimg').onclick=()=>speak(imgSentence(t.ans));
+  if($('eyes'))$('eyes').onclick=()=>{clearInterval(TIMER);t.count=10;speak('눈을 감고 상상해 보세요.');render();
+    TIMER=setInterval(()=>{if(S.screen!=='imagine'||S.t!==t){clearInterval(TIMER);return}t.count--;if(t.count<=0){clearInterval(TIMER);t.count=0;sfx.done();speak('눈을 떠 보세요. '+imgSentence(t.ans))}else tone(520,.05);render()},1000)};
+  if($('imgdone'))$('imgdone').onclick=()=>{clearInterval(TIMER);t.i=t.n;finish()};
+  /* 나의 참모습 */
+  const meAnswer=v=>{const q=t.qs[t.i];t.ans[q.k]=v;t.draft='';t.msg='';sfx.tap();t.i++;
+    if(t.i>=t.qs.length)S.card.me=t.qs.map(x=>x.hint(t.ans[x.k]));render()};
+  all('[data-me]').forEach(b=>b.onclick=()=>meAnswer(t.qs[t.i].opts[+b.dataset.me][1]));
+  if($('mew'))$('mew').oninput=e=>{t.draft=e.target.value};
+  if($('mewok'))$('mewok').onclick=()=>{const v=(t.draft||'').trim();if(!v){say('빈 칸이에요. 써 보거나 그림을 골라 주세요.','bad');render();return}meAnswer(v)};
+  all('[data-hint]').forEach(b=>b.onclick=()=>{t.open++;const q=t.qs[t.open-1];speak(q.hint(t.ans[q.k]));sfx.tap();render()});
+  if($('readhint'))$('readhint').onclick=()=>{const q=t.qs[t.open-1];speak(q.hint(t.ans[q.k]))};
+  if($('reveal'))$('reveal').onclick=()=>{t.reveal=true;sfx.ok();speak('정답은 바로 '+me()+'!');render()};
+  if($('medone'))$('medone').onclick=()=>{t.i=t.n;finish()};
+  /* 나를 표현하기 */
+  all('[data-an]').forEach(b=>b.onclick=()=>{const a=ANIMALS[+b.dataset.an];t.pick=a;t.tr=[];
+    const others=shuffle(TRAITS.map((_,i)=>i).filter(i=>!a.t.includes(i)));
+    t.pool=S.level===1?shuffle(a.t.concat(others.slice(0,2))):S.level===2?shuffle(a.t.concat(others.slice(0,6))):TRAITS.map((_,i)=>i);
+    t.i=1;t.msg='';sfx.tap();speak('나는 '+a.v+'이다.');render()});
+  all('[data-tr]').forEach(b=>b.onclick=()=>{const i=+b.dataset.tr,o=t.tr.indexOf(i);
+    if(o>=0)t.tr.splice(o,1);else if(t.tr.length<t.need)t.tr.push(i);else{say(`이유는 ${t.need}개만 골라요. 고른 것을 눌러서 취소할 수 있어요.`,'bad');render();return}
+    t.msg='';sfx.tap();render()});
+  if($('anback'))$('anback').onclick=()=>{t.i=0;t.pick=null;t.tr=[];t.msg='';render()};
+  if($('anok'))$('anok').onclick=()=>{t.i=2;const sp=animalSpeech(t);S.card.animal=sp.text;speak(sp.text,.85);render()};
+  if($('readan'))$('readan').onclick=()=>speak(animalSpeech(t).text,.85);
+  if($('andone'))$('andone').onclick=()=>{t.i=3;finish()};
+  /* 카드 */
+  if($('readcard'))$('readcard').onclick=()=>speak(cardText().replace(/\n/g,'. '));
+  if($('copycard'))$('copycard').onclick=()=>{const m=$('copymsg'),txt=cardText();
+    try{navigator.clipboard.writeText(txt).then(()=>{m.textContent='복사했어요. 원하는 곳에 붙여 넣으세요.';m.className='fb ok'},()=>{m.textContent='복사가 안 돼요. 카드를 길게 눌러 직접 복사해 주세요.';m.className='fb bad'})}
+    catch(e){m.textContent='복사가 안 돼요. 카드를 길게 눌러 직접 복사해 주세요.';m.className='fb bad'}};
+}
+render();
+</script>
