@@ -233,6 +233,7 @@ const I={
  hand:`<path d="M4 30l14-8 14 8 14-8 14 8v10l-16 12H22L4 40z" fill="var(--skin)" stroke="var(--wood-dark)" stroke-width="2"/><path d="M24 34l10 8M30 30l10 8" stroke="var(--wood-dark)" stroke-width="2"/>`,
  flag:`<path d="M14 6v52" stroke="var(--navy)" stroke-width="4"/><path d="M16 8h36l-8 10 8 10H16z" fill="var(--accent)"/>`,
  bow:`<g transform="translate(24 60)"><rect x="-7" y="-22" width="6" height="22" fill="var(--pants)"/><rect x="1" y="-22" width="6" height="22" fill="var(--pants)"/><path d="M-8 -20l20-18 9 9-19 13z" fill="var(--d2)"/><circle cx="25" cy="-28" r="8" fill="var(--skin)"/></g>`,
+ dance:`<g transform="translate(32 62)"><rect x="-9" y="-20" width="7" height="20" fill="var(--pants)" transform="rotate(12 -5 -10)"/><rect x="2" y="-20" width="7" height="20" fill="var(--pants)" transform="rotate(-12 5 -10)"/><rect x="-11" y="-42" width="22" height="24" rx="7" fill="var(--d2)"/><path d="M-9 -38l-14-14M9 -38l14-14" stroke="var(--d2)" stroke-width="5" stroke-linecap="round"/><circle cy="-50" r="9" fill="var(--skin)"/></g><path d="M50 10v12" stroke="var(--accent)" stroke-width="3"/><circle cx="47" cy="23" r="4" fill="var(--accent)"/>`,
  check:`<rect x="8" y="8" width="48" height="48" rx="10" fill="var(--ok)"/><path d="M18 33l9 9 19-20" fill="none" stroke="var(--paper)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`,
  pen:`<path d="M10 54l6-16 28-28 10 10-28 28z" fill="var(--sun)"/><path d="M10 54l6-16 10 10z" fill="var(--wood)"/><path d="M40 14l10 10" stroke="var(--d3)" stroke-width="5"/>`};
 const icon=n=>`<svg viewBox="0 0 64 64" aria-hidden="true">${I[n]||I.pen}</svg>`;
@@ -240,11 +241,12 @@ const icon=n=>`<svg viewBox="0 0 64 64" aria-hidden="true">${I[n]||I.pen}</svg>`
 /* 상황 그림 */
 const SITPIC={
  cup:`<rect y="80" width="120" height="10" fill="var(--wood)"/><path d="M38 12h44l-6 68H44z" fill="var(--paper)" stroke="var(--navy)" stroke-width="3"/><path d="M41 46h38l-3 32H44z" fill="var(--water)"/><path d="M41 46h38" stroke="var(--d1)" stroke-width="3"/>`,
- test:`<rect x="30" y="6" width="60" height="78" rx="3" fill="var(--paper)" stroke="var(--navy)" stroke-width="3"/><path d="M40 54h40M40 64h40M40 74h28" stroke="var(--line)" stroke-width="4"/><circle cx="60" cy="28" r="17" fill="none" stroke="var(--d3)" stroke-width="3"/><text x="60" y="35" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="900" fill="var(--d3)">70</text>`,
- speech:`<rect x="30" y="52" width="48" height="34" fill="var(--wood)"/><rect x="30" y="52" width="48" height="6" fill="var(--wood-dark)"/>${person(54,60,.45,'var(--d1)',{face:'sad'})}<path d="M76 8h40v24H88l-6 8v-8h-6z" fill="var(--paper)" stroke="var(--navy)" stroke-width="2"/><g fill="var(--navy)"><circle cx="88" cy="20" r="2.5"/><circle cx="96" cy="20" r="2.5"/><circle cx="104" cy="20" r="2.5"/></g>`,
- rain:`<g fill="var(--metal)"><circle cx="34" cy="28" r="14"/><circle cx="52" cy="20" r="16"/><circle cx="68" cy="30" r="12"/><rect x="22" y="28" width="56" height="14" rx="7"/></g><path d="M32 50l-4 10M48 50l-4 10M64 50l-4 10M40 66l-4 10M56 66l-4 10" stroke="var(--d1)" stroke-width="4" stroke-linecap="round"/><rect x="84" y="40" width="30" height="34" rx="3" fill="var(--paper)" stroke="var(--navy)" stroke-width="2"/><rect x="84" y="40" width="30" height="8" fill="var(--d3)"/><path d="M92 54l14 14M106 54l-14 14" stroke="var(--d3)" stroke-width="3"/>`,
- rope:`<rect y="84" width="120" height="6" fill="var(--grass)"/><path d="M38 52Q60 108 82 52" fill="none" stroke="var(--accent)" stroke-width="3"/>${person(60,84,.6,'var(--d2)',{arm:'down',face:'sad'})}<rect x="88" y="6" width="28" height="20" rx="4" fill="var(--paper)" stroke="var(--navy)" stroke-width="2"/><text x="102" y="21" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="900" fill="var(--navy)">10번</text>`,
- box:`<rect y="80" width="120" height="10" fill="var(--wood)"/><rect x="30" y="38" width="60" height="42" fill="var(--wood)"/><path d="M30 38l10-14h40l10 14z" fill="var(--wood-dark)"/><text x="60" y="72" text-anchor="middle" font-family="sans-serif" font-size="30" font-weight="900" fill="#FFF">?</text><path d="M98 10l4 8 8 2-8 3-4 8-3-8-8-3 8-2z" fill="var(--sun)"/>`};
+ test:`<rect x="30" y="6" width="60" height="78" rx="3" fill="var(--paper)" stroke="var(--navy)" stroke-width="3"/><path d="M40 66h40M40 76h28" stroke="var(--line)" stroke-width="4"/><circle cx="60" cy="28" r="17" fill="none" stroke="var(--d3)" stroke-width="3"/><text x="60" y="35" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="900" fill="var(--d3)">62</text><text x="60" y="58" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="900" fill="var(--navy)">수학</text>`,
+ speech:`${person(54,68,.45,'var(--d1)',{face:'sad'})}<rect x="30" y="52" width="48" height="34" fill="var(--wood)"/><rect x="30" y="52" width="48" height="6" fill="var(--wood-dark)"/><path d="M76 8h40v24H88l-6 8v-8h-6z" fill="var(--paper)" stroke="var(--navy)" stroke-width="2"/><g fill="var(--navy)"><circle cx="88" cy="20" r="2.5"/><circle cx="96" cy="20" r="2.5"/><circle cx="104" cy="20" r="2.5"/></g>`,
+ audition:`<rect x="14" y="4" width="84" height="76" rx="3" fill="var(--wood)"/><rect x="22" y="12" width="68" height="60" fill="var(--paper)"/><text x="56" y="27" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="900" fill="var(--navy)">합격자 명단</text><path d="M32 38h48M32 48h48M32 58h48" stroke="var(--line)" stroke-width="4"/><circle cx="100" cy="72" r="13" fill="var(--paper)" stroke="var(--d3)" stroke-width="3"/><path d="M94 66l12 12M106 66l-12 12" stroke="var(--d3)" stroke-width="3"/>`,
+ chat:`<rect x="34" y="4" width="46" height="84" rx="7" fill="var(--navy)"/><rect x="38" y="12" width="38" height="66" fill="var(--screen)"/><rect x="52" y="20" width="20" height="10" rx="5" fill="var(--sun)"/><rect x="46" y="36" width="26" height="10" rx="5" fill="var(--sun)"/><rect x="58" y="52" width="14" height="10" rx="5" fill="var(--sun)"/><path d="M86 16h28v22H98l-6 7v-7h-6z" fill="var(--paper)" stroke="var(--navy)" stroke-width="2"/><g fill="var(--metal)"><circle cx="93" cy="27" r="2.3"/><circle cx="100" cy="27" r="2.3"/><circle cx="107" cy="27" r="2.3"/></g>`,
+ baton:`<rect y="68" width="120" height="22" fill="var(--d3)" opacity=".45"/><path d="M0 75h120M0 83h120" stroke="#FFF" stroke-width="1.5"/>${person(34,80,.5,'var(--d1)',{face:'sad'})}${person(88,80,.5,'var(--d2)',{face:'open'})}<rect x="56" y="70" width="16" height="5" rx="2" fill="#FFC000" transform="rotate(25 64 72)"/><path d="M52 60l-4-6M60 58v-7M68 60l4-6" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>`,
+ leader:`<rect y="84" width="120" height="6" fill="var(--wood)"/>${person(46,86,.62,'var(--d1)',{face:'smile',arm:'down'})}<rect x="31" y="50" width="10" height="7" fill="#FFC000"/><rect x="70" y="14" width="46" height="30" rx="4" fill="var(--paper)" stroke="var(--navy)" stroke-width="2"/><text x="93" y="34" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="900" fill="var(--navy)">모둠장</text>`};
 const sitSVG=k=>`<svg viewBox="0 0 120 90" aria-hidden="true">${SITPIC[k]}</svg>`;
 
 /* 동물·식물 */
@@ -270,9 +272,9 @@ function placeBG(p){
   return `<rect width="480" height="300" fill="var(--stagebg)"/><path d="M240 0L150 250h180z" fill="var(--spot)" opacity=".75"/><rect y="236" width="480" height="64" fill="var(--wood)"/><rect y="236" width="480" height="8" fill="var(--wood-dark)"/><path d="M0 0h110q-20 120 10 236H0z" fill="var(--curtain)"/><path d="M480 0H370q20 120-10 236h120z" fill="var(--curtain)"/><rect width="480" height="24" fill="var(--curtain)"/><path d="M0 24q30 20 60 0t60 0 60 0 60 0 60 0 60 0 60 0 60 0" fill="var(--curtain)"/>`}
 function propFor(j){
   if(j==='요리')return {pre:'',post:`<rect x="186" y="206" width="108" height="40" fill="var(--paper)" stroke="var(--line)" stroke-width="2"/><g transform="translate(214 172) scale(.9)">${I.pan}</g>`,o:{hat:true,arm:'down'}};
-  if(j==='컴퓨터 일')return {pre:'',post:`<rect x="176" y="210" width="128" height="10" fill="var(--wood)"/><rect x="190" y="220" width="8" height="30" fill="var(--wood-dark)"/><rect x="282" y="220" width="8" height="30" fill="var(--wood-dark)"/><g transform="translate(212 162) scale(.9)">${I.laptop}</g>`,o:{arm:'down'}};
+  if(j==='코딩')return {pre:'',post:`<rect x="176" y="210" width="128" height="10" fill="var(--wood)"/><rect x="190" y="220" width="8" height="30" fill="var(--wood-dark)"/><rect x="282" y="220" width="8" height="30" fill="var(--wood-dark)"/><g transform="translate(212 162) scale(.9)">${I.laptop}</g>`,o:{arm:'down'}};
   if(j==='그림 그리기')return {pre:`<path d="M318 250l26-120 26 120M344 130v120" stroke="var(--wood-dark)" stroke-width="5" fill="none"/><rect x="310" y="120" width="68" height="76" fill="#FFF" stroke="var(--wood)" stroke-width="4"/><circle cx="332" cy="146" r="12" fill="var(--d3)"/><path d="M316 186l20-22 16 14 10-10 14 18z" fill="var(--d2)"/><circle cx="362" cy="140" r="8" fill="#FFC000"/>`,post:'',o:{arm:'point'}};
-  if(j==='정리')return {pre:`<rect x="304" y="120" width="96" height="128" fill="var(--wood)"/><rect x="312" y="128" width="80" height="54" fill="var(--wood-dark)"/><rect x="312" y="188" width="80" height="54" fill="var(--wood-dark)"/><g><rect x="318" y="136" width="14" height="46" fill="var(--d1)"/><rect x="334" y="136" width="14" height="46" fill="var(--d2)"/><rect x="350" y="136" width="14" height="46" fill="var(--d3)"/><rect x="366" y="136" width="14" height="46" fill="var(--d4)"/></g>`,post:'',o:{arm:'point'}};
+  if(j==='춤')return {pre:`<g transform="translate(150 90) scale(.6)">${I.note}</g><g transform="translate(292 70) scale(.7)">${I.note}</g><path d="M176 236q20-8 40 0M264 236q20-8 40 0" fill="none" stroke="var(--paper)" stroke-width="4" stroke-linecap="round" opacity=".8"/>`,post:'',o:{arm:'up',shine:true}};
   if(j==='달리기')return {pre:`<path d="M150 200h40M140 214h46M156 186h30" stroke="var(--paper)" stroke-width="5" stroke-linecap="round" opacity=".8"/>`,post:`<path d="M150 190q90 14 180 0" fill="none" stroke="var(--accent)" stroke-width="6"/>`,o:{arm:'up'}};
   if(j==='노래')return {pre:`<g transform="translate(286 70) scale(.8)">${I.note}</g><g transform="translate(150 96) scale(.6)">${I.note}</g>`,post:'',o:{arm:'mic'}};
   return {pre:'',post:'',o:{arm:'mic'}}}
@@ -291,8 +293,8 @@ function stageSVG(a){const job=a.job?a.job.v:'발표',pr=propFor(job),o=Object.a
 <rect x="210" y="256" width="60" height="22" rx="11" fill="var(--accent)"/><text x="240" y="272" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="14" font-weight="900" fill="#FFF">${esc(me()).slice(0,5)}</text>${audience(a.who&&a.who.v,a.react&&a.react.v)}</svg>`}
 
 /* 거울 (참모습) */
-function mirrorSVG(stickers){const pos=[[30,40],[170,40],[20,150],[180,150],[100,214]];
-  return `<svg viewBox="0 0 220 260" aria-hidden="true"><rect x="40" y="16" width="140" height="196" rx="70" fill="var(--wood)"/><rect x="52" y="28" width="116" height="172" rx="58" fill="var(--sky)"/><path d="M70 60l30-20M76 80l40-28" stroke="#FFF" stroke-width="5" opacity=".6" stroke-linecap="round"/>${person(110,196,.95,'var(--accent)',{face:'big'})}<rect x="96" y="212" width="28" height="30" fill="var(--wood-dark)"/>
+function mirrorSVG(stickers){const pos=[[30,40],[190,40],[20,150],[200,150],[100,226],[24,96]];
+  return `<svg viewBox="-6 0 232 260" aria-hidden="true"><rect x="40" y="16" width="140" height="196" rx="70" fill="var(--wood)"/><rect x="52" y="28" width="116" height="172" rx="58" fill="var(--sky)"/><path d="M70 60l30-20M76 80l40-28" stroke="#FFF" stroke-width="5" opacity=".6" stroke-linecap="round"/>${person(110,196,.95,'var(--accent)',{face:'big'})}<rect x="96" y="212" width="28" height="30" fill="var(--wood-dark)"/>
 ${stickers.map((n,i)=>`<g transform="translate(${pos[i][0]-22} ${pos[i][1]-22})"><circle cx="22" cy="22" r="24" fill="var(--paper)" stroke="var(--d4)" stroke-width="3"/><svg x="4" y="4" width="36" height="36" viewBox="0 0 64 64">${I[n]||I.pen}</svg></g>`).join('')}</svg>`}
 
 /* 홈 화면 장면 */
@@ -316,16 +318,17 @@ const ICON={
 /* ================= 내용 ================= */
 const SIT=[
   {p:'cup',s:'컵에 물이 반 남았어요.',good:'물이 반이나 있어!',bad:['물이 반밖에 없네…','목이 말라서 짜증 나.','물이 적어서 마시기 싫어.']},
-  {p:'test',s:'받아쓰기에서 70점을 받았어요.',good:'지난번보다 늘었어! 다음엔 더 잘할 거야.',bad:['나는 공부를 못해.','받아쓰기는 하기 싫어.','100점이 아니면 소용없어.']},
-  {p:'speech',s:'발표하다가 말이 막혔어요.',good:'괜찮아, 천천히 다시 말하면 돼.',bad:['나는 발표를 못 해.','다시는 발표 안 할 거야.','친구들이 나를 비웃을 거야.']},
-  {p:'box',s:'처음 해 보는 일을 맡았어요.',good:'처음이라 배울 게 많아. 한번 해 볼래!',bad:['나는 못 할 것 같아.','다른 사람이 하면 좋겠어.','틀리면 어떡하지? 안 할래.']},
-  {p:'rain',s:'비가 와서 소풍이 미뤄졌어요.',good:'다음에 더 맑은 날 갈 수 있어!',bad:['오늘은 완전히 망했어.','소풍은 이제 안 갈래.','나는 늘 운이 없어.']},
-  {p:'rope',s:'줄넘기를 10번밖에 못 했어요.',good:'어제보다 1번 더 했어! 내일은 더 할 수 있어.',bad:['나는 운동을 못해.','줄넘기는 재미없어.','친구들보다 못하니까 그만할래.']}];
-const CHEERS=['나는 잘 해낼 거야!','나는 뭐든지 할 수 있어!','나는 언제나 나를 응원할 거야!','있는 그대로의 나를 사랑하고 존중해!'];
+  {p:'test',s:'중간고사 수학 점수가 생각보다 낮게 나왔어요.',good:'틀린 문제를 다시 풀어 보면 기말고사엔 더 오를 거야.',bad:['나는 수학 머리가 없어.','어차피 공부해도 안 돼.','다른 애들은 다 잘 봤을 텐데 창피해.']},
+  {p:'speech',s:'수행평가 발표 중에 말이 막혔어요.',good:'괜찮아, 숨 한 번 쉬고 다시 말하면 돼.',bad:['나는 발표 체질이 아니야.','다시는 발표 안 할 거야.','다들 속으로 비웃었을 거야.']},
+  {p:'audition',s:'동아리 오디션에서 떨어졌어요.',good:'무엇을 더 연습할지 알게 됐어. 다음에 다시 도전할래.',bad:['나는 재능이 없어.','이제 아무 데도 지원 안 할래.','붙은 애들만 운이 좋았던 거야.']},
+  {p:'chat',s:'단톡방에 말을 했는데 아무도 답이 없어요.',good:'다들 바쁜가 봐. 나중에 다시 이야기해 보자.',bad:['애들이 나를 무시하는 게 분명해.','나는 친구들 사이에서 인기가 없어.','단톡방을 나가 버릴래.']},
+  {p:'baton',s:'체육대회 계주에서 바통을 놓쳤어요.',good:'실수할 수도 있지. 다음엔 바통 넘기기를 연습하자.',bad:['나 때문에 우리 반이 졌어.','다시는 계주에 안 나갈래.','친구들이 나를 원망할 거야.']},
+  {p:'leader',s:'처음으로 모둠장을 맡게 됐어요.',good:'떨리지만 좋은 경험이 될 거야. 한번 해 볼게!',bad:['내가 잘못하면 다 망할 거야.','다른 사람이 하면 좋겠어.','나는 리더 같은 건 못 해.']}];
+const CHEERS=['나는 잘 해낼 거야!','나는 뭐든지 할 수 있어!','나는 언제나 나를 응원할 거야!','있는 그대로의 나를 사랑하고 존중해!','실수해도 괜찮아, 나는 배우는 중이야!','남이 아니라 어제의 나와 비교할 거야!'];
 const HOW=['멋지게','끝까지','즐겁게','씩씩하게'];
-const WHAT=['발표를','운동을','일을','공부를','요리를','노래를'];
+const WHAT=['발표를','시험 준비를','운동을','동아리 활동을','새로운 도전을','친구를 돕는 일을'];
 const VOL=[{nm:'작게',fs:24,bars:1,arm:'down',face:'smile',waves:1},{nm:'보통',fs:38,bars:3,arm:'mic',face:'open',waves:2},{nm:'크게 크게!',fs:56,bars:5,arm:'up',face:'open',waves:3}];
-const JOBS=[{v:'발표',i:'mic'},{v:'노래',i:'note'},{v:'달리기',i:'shoe'},{v:'요리',i:'pan'},{v:'그림 그리기',i:'palette'},{v:'컴퓨터 일',i:'laptop'},{v:'정리',i:'folder'}];
+const JOBS=[{v:'발표',i:'mic'},{v:'노래',i:'note'},{v:'달리기',i:'shoe'},{v:'요리',i:'pan'},{v:'그림 그리기',i:'palette'},{v:'코딩',i:'laptop'},{v:'춤',i:'dance',d:'춤을 출'}];
 const PLACES=[{v:'교실',i:'school'},{v:'무대',i:'stage'},{v:'운동장',i:'goal'},{v:'회사',i:'building'},{v:'우리 집',i:'house'}];
 const WHO=[{v:'친구들',i:'kids'},{v:'가족',i:'family'},{v:'선생님',i:'teacher'},{v:'회사 사람들',i:'office'}];
 const REACT=[{v:'박수를 쳐요',i:'clap'},{v:'엄지를 들어요',i:'thumb'},{v:'환하게 웃어요',i:'smile'}];
@@ -333,15 +336,16 @@ const LOOK=[{v:'웃는 얼굴로',i:'smile'},{v:'당당한 자세로',i:'stand'}
 const IMG_STEPS={job:{nm:'잘하고 싶은 일',q:'내가 잘하고 싶은 일은 무엇인가요?',opts:JOBS},place:{nm:'장소',q:'어디에서 하고 있나요?',opts:PLACES},who:{nm:'보는 사람',q:'누가 보고 있나요?',opts:WHO},look:{nm:'나의 모습',q:'나는 어떤 모습으로 하고 있나요?',opts:LOOK},react:{nm:'사람들 반응',q:'사람들은 어떤 모습인가요?',opts:REACT}};
 const IMG_BY_LV={1:['job','react'],2:['job','place','who','react'],3:['job','place','who','look','react']};
 const MEQ=[
-  {k:'like',q:'내가 제일 좋아하는 것은?',opts:[['bowl','맛있는 음식'],['note','노래'],['ball','운동'],['gamepad','게임'],['dog','동물'],['palette','그림']],hint:a=>`제가 제일 좋아하는 것은 ${iye(a)}.`},
-  {k:'habit',q:'고치고 싶은 나의 습관은?',opts:[['bed','늦잠 자기'],['phone','휴대폰 오래 보기'],['broccoli','편식하기'],['sock','정리 안 하기'],['small','작은 목소리'],['clock','지각하기']],hint:a=>`고치고 싶은 습관은 ${iye(a)}.`},
+  {k:'like',q:'내가 제일 좋아하는 것은?',opts:[['bowl','맛있는 음식'],['note','음악'],['ball','운동'],['gamepad','게임'],['dog','반려동물'],['palette','그림']],hint:a=>`제가 제일 좋아하는 것은 ${iye(a)}.`},
+  {k:'habit',q:'고치고 싶은 나의 습관은?',opts:[['bed','늦잠 자기'],['phone','휴대폰 오래 보기'],['pen','숙제 미루기'],['sock','정리 안 하기'],['small','작은 목소리'],['clock','지각하기']],hint:a=>`고치고 싶은 습관은 ${iye(a)}.`},
   {k:'money',q:'나에게 갑자기 100만 원이 생긴다면?',opts:[['gift','가족에게 선물할래요'],['piggy','저금할래요'],['plane','여행을 갈래요'],['cake','맛있는 걸 먹을래요'],['bag','갖고 싶은 걸 살래요'],['heart','어려운 사람을 도울래요']],hint:a=>`100만 원이 생기면 ${a}${/[.!?]$/.test(a)?'':'.'}`},
-  {k:'good',q:'내가 잘하거나, 잘하고 싶은 것은?',opts:[['mic','노래'],['shoe','운동'],['broom','정리'],['pan','요리'],['palette','그림'],['laptop','컴퓨터']],hint:a=>`제가 잘하거나 잘하고 싶은 것은 ${iye(a)}.`},
-  {k:'cool',q:'스스로가 가장 멋있다고 생각될 때는?',opts:[['hand','친구를 도울 때'],['flag','끝까지 해낼 때'],['bow','인사를 잘할 때'],['mic','발표할 때'],['check','일을 다 마쳤을 때'],['smile','웃을 때']],hint:a=>`저는 ${a} 가장 멋있어요.`}];
-const MEQ_BY_LV={1:['like','good','cool'],2:['like','habit','money','good','cool'],3:['like','habit','money','good','cool']};
-const ANIMALS=[{k:'lion',v:'사자',t:[0,1]},{k:'dog',v:'강아지',t:[2,6]},{k:'cat',v:'고양이',t:[4,9]},{k:'rabbit',v:'토끼',t:[8,3]},{k:'turtle',v:'거북이',t:[5,4]},{k:'dolphin',v:'돌고래',t:[3,10]},{k:'bear',v:'곰',t:[7,11]},{k:'sunflower',v:'해바라기',t:[3,8]},{k:'cactus',v:'선인장',t:[5,7]},{k:'tree',v:'나무',t:[6,7]}];
-const TRAITS=[{t:'용감해요',a:'용감하고',k:'용감하기'},{t:'씩씩해요',a:'씩씩하고',k:'씩씩하기'},{t:'친절해요',a:'친절하고',k:'친절하기'},{t:'밝아요',a:'밝고',k:'밝기'},{t:'느긋해요',a:'느긋하고',k:'느긋하기'},{t:'참을성이 많아요',a:'참을성이 많고',k:'참을성이 많기'},
-  {t:'다정해요',a:'다정하고',k:'다정하기'},{t:'튼튼해요',a:'튼튼하고',k:'튼튼하기'},{t:'잘 웃어요',a:'잘 웃고',k:'잘 웃기'},{t:'혼자 있는 걸 즐겨요',a:'혼자 있는 걸 즐기고',k:'혼자 있는 걸 즐기기'},{t:'친구와 함께가 좋아요',a:'친구와 함께하는 걸 좋아하고',k:'친구와 함께하는 걸 좋아하기'},{t:'잠이 많아요',a:'잠이 많고',k:'잠이 많기'}];
+  {k:'good',q:'내가 잘하거나, 잘하고 싶은 것은?',opts:[['mic','노래'],['shoe','운동'],['broom','정리'],['pan','요리'],['palette','그림'],['laptop','코딩']],hint:a=>`제가 잘하거나 잘하고 싶은 것은 ${iye(a)}.`},
+  {k:'cool',q:'스스로가 가장 멋있다고 생각될 때는?',opts:[['hand','친구를 도울 때'],['flag','끝까지 해낼 때'],['bow','인사를 잘할 때'],['mic','발표할 때'],['check','일을 다 마쳤을 때'],['smile','웃을 때']],hint:a=>`저는 ${a} 가장 멋있어요.`},
+  {k:'dream',q:'내가 되고 싶은 사람(꿈)은?',opts:[['pan','요리사'],['palette','디자이너'],['shoe','운동선수'],['laptop','개발자'],['mic','가수'],['teacher','선생님']],hint:a=>`제 꿈은 ${iye(a)}.`}];
+const MEQ_BY_LV={1:['like','good','cool'],2:['like','habit','money','good','cool','dream'],3:['like','habit','money','good','cool','dream']};
+const ANIMALS=[{k:'lion',v:'사자',t:[0,1]},{k:'dog',v:'강아지',t:[2,6]},{k:'cat',v:'고양이',t:[4,9]},{k:'rabbit',v:'토끼',t:[8,3]},{k:'turtle',v:'거북이',t:[5,4]},{k:'dolphin',v:'돌고래',t:[11,10]},{k:'bear',v:'곰',t:[7,4]},{k:'sunflower',v:'해바라기',t:[3,5]},{k:'cactus',v:'선인장',t:[5,7]},{k:'tree',v:'나무',t:[6,7]}];
+const TRAITS=[{t:'용감해요',a:'용감하고',k:'용감하기'},{t:'리더십이 있어요',a:'리더십이 있고',k:'리더십이 있기'},{t:'친절해요',a:'친절하고',k:'친절하기'},{t:'밝아요',a:'밝고',k:'밝기'},{t:'느긋해요',a:'느긋하고',k:'느긋하기'},{t:'끈기가 있어요',a:'끈기가 있고',k:'끈기가 있기'},
+  {t:'배려심이 깊어요',a:'배려심이 깊고',k:'배려심이 깊기'},{t:'책임감이 강해요',a:'책임감이 강하고',k:'책임감이 강하기'},{t:'유머 감각이 있어요',a:'유머 감각이 있고',k:'유머 감각이 있기'},{t:'혼자 있는 걸 즐겨요',a:'혼자 있는 걸 즐기고',k:'혼자 있는 걸 즐기기'},{t:'친구와 함께하는 걸 좋아해요',a:'친구와 함께하는 걸 좋아하고',k:'친구와 함께하는 걸 좋아하기'},{t:'호기심이 많아요',a:'호기심이 많고',k:'호기심이 많기'}];
 const ORD=['첫째','둘째','셋째'];
 const TASKS={
   think:{nm:'좋은 생각 고르기',ds:'같은 일도 좋은 생각으로 바꿔 보기',say:'어떤 생각이 좋은 생각일까요? 골라 보세요.'},
@@ -381,12 +385,12 @@ const order=html=>`<div class="panel"><div class="order"><div class="q">활동 �
 const NOW=x=>S.level<3&&x?'now':'';
 
 /* ================= 화면 ================= */
-function levelScreen(){const D={1:['하','그림을 보고 따라 해요','얼굴 그림 단서, 선택지 2개, 반짝이는 단추 따라 누르기'],2:['중','글을 읽고 골라요','글 단서, 선택지 3개'],3:['상','스스로 만들어요','나쁜 생각 바꾸기, 응원 문장 만들기, 답 직접 쓰기']};
-  return `<header><h1>자신감 UP! <span class="y">자존감 UP!</span></h1><span class="badge">I MY ME MINE</span></header>
+function levelScreen(){const D={1:['하','그림을 보고 해요','얼굴 그림 단서, 선택지 2개, 반짝이는 단추 안내'],2:['중','글을 읽고 골라요','글 단서, 선택지 3개, 진로 질문 추가'],3:['상','스스로 판단해요','나쁜 생각 바꾸기, 응원 문장 만들기, 답 직접 쓰기, 이유 3개']};
+  return `<header><h1>자신감 UP! <span class="y">자존감 UP!</span></h1><span class="badge">I MY ME MINE · 중학생 활동</span></header>
 ${SCENE}
 <div class="panel"><div class="q">닮은 듯 다른 자존감과 자신감</div><div class="row" style="align-items:flex-start">
-<div class="tx" style="flex:1 1 260px"><b style="color:var(--d3)">자존감</b><span class="sub">있는 그대로의 나를 소중하게 여기는 마음</span></div>
-<div class="tx" style="flex:1 1 260px"><b style="color:var(--d4)">자신감</b><span class="sub">나는 할 수 있다고 믿는 마음</span></div></div></div>
+<div class="tx" style="flex:1 1 260px"><b style="color:var(--d3)">자존감</b><span class="sub">있는 그대로의 나를 가치 있게 여기는 마음<br>「나는 소중한 사람이야」</span></div>
+<div class="tx" style="flex:1 1 260px"><b style="color:var(--d4)">자신감</b><span class="sub">어떤 일을 해낼 수 있다고 믿는 마음<br>「나는 할 수 있어」</span></div></div></div>
 <p class="sub" style="margin:0">먼저 난이도를 고르세요. 선생님과 함께 골라도 좋아요.</p>
 <div class="tiles">${[1,2,3].map(l=>`<button class="tile" data-lv="${l}"><span class="nm" style="font-size:56px;line-height:1">${D[l][0]}</span><span class="nm">난이도 ${D[l][0]}</span><span class="q">${D[l][1]}</span><span class="ds">${D[l][2]}</span></button>`).join('')}</div>`}
 
@@ -413,7 +417,7 @@ function think(){const t=S.t,s=t.items[t.i],L=S.level;const st=!t.solved?0:!t.sa
   const mood=t.solved?'happy':t.wrong.length?'sad':'worry';
   const cloud=t.solved?`<div class="cloud ok pop">「${esc(s.good)}」</div>`:L===3?`<div class="cloud bad">「${esc(s.bad[0])}」</div>`:t.wrong.length?`<div class="cloud bad">「${esc(s.ch[t.wrong[t.wrong.length-1]].t)}」</div>`:`<div class="cloud">어떤 생각을 할까?</div>`;
   return `${hdr(TASKS.think.nm)}${prog()}
-${order(L===3?'나쁜 생각이 떠올랐어요. <b>좋은 생각</b>으로 바꿔 주세요.':'같은 일이라도 <b>좋은 생각</b>을 하면 마음이 밝아져요.')}
+${order(L===3?'나쁜 생각이 떠올랐어요. <b>좋은 생각</b>으로 바꿔 주세요.':'같은 일이라도 <b>어떻게 생각하느냐</b>에 따라 기분과 행동이 달라져요.')}
 <div class="panel">${stepsBar(['좋은 생각 고르기','따라 말하기','다음 상황'],st)}<div class="todo">지금 할 일: ${todo}</div>
 <div class="think"><div class="pic">${sitSVG(s.p)}</div><div class="tx" style="gap:10px"><span class="sub">상황 ${t.i+1} / ${t.n}</span><span class="sitx">${esc(s.s)}</span></div></div>
 <div class="mind">${face(mood)}${cloud}</div>
@@ -442,7 +446,7 @@ ${fb()}<div class="row"><button class="primary ${NOW(!!t.sent)}" id="gosh" ${t.s
 ${fb()}<div class="row"><button id="listen" class="${NOW(!t.heard)}"><span class="stepno">1</span> 들어 보기</button><button class="primary ${NOW(t.heard)}" id="said"><span class="stepno">2</span> ${r<2?'말했어요':'크게 외쳤어요!'}</button></div></div>`}
 
 /* 활동 3 */
-function imgSentence(a){let s='나는 '+(a.place?a.place.v+'에서 ':'')+(a.who?a.who.v+' 앞에서 ':'')+(a.look?a.look.v+' ':'')+'멋지게 '+eul(a.job?a.job.v:'일')+' 할 수 있어!';
+function imgSentence(a){let s='나는 '+(a.place?a.place.v+'에서 ':'')+(a.who?a.who.v+' 앞에서 ':'')+(a.look?a.look.v+' ':'')+'멋지게 '+(a.job&&a.job.d?a.job.d:eul(a.job?a.job.v:'일')+' 할')+' 수 있어!';
   if(a.react)s+=' '+(a.who?iga(a.who.v):'사람들이')+' '+a.react.v+'.';return s}
 function imagine(){const t=S.t,names=t.steps.map(k=>IMG_STEPS[k].nm).concat(['눈 감고 상상하기']);
   if(t.i<t.steps.length){const key=t.steps[t.i],st=IMG_STEPS[key],opts=key==='job'?t.jobs:st.opts;
