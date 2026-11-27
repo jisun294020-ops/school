@@ -45,7 +45,7 @@ button.okbtn{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
 .tile .nm{font-size:25px;font-weight:900;color:var(--navy)}
 .tile .ds{font-size:17px;color:var(--muted);font-weight:500}
 .tile svg{width:120px;height:90px}
-.areas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+.areas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
 .area{display:flex;flex-direction:column;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;min-width:0}
 .area .tiles{grid-template-columns:1fr;gap:12px}
 .area .tile{background:var(--bg);flex-direction:row;align-items:center;gap:12px;min-height:116px;padding:14px}
@@ -180,6 +180,42 @@ button.okbtn{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
 .stamp small{font-size:16px}
 .settings{border-top:1px solid var(--line);padding-top:14px}
 @media (prefers-reduced-motion:reduce){.outtray .sheet,.pop{animation:none}}
+/* 전화 받기 */
+.phonebtn{align-self:center;width:min(100%,440px);background:transparent;border:0;padding:0;border-radius:18px}
+.phonesvg{align-self:center;width:min(100%,440px)}
+.phonebtn svg,.phonesvg svg{display:block;width:100%;height:auto}
+.talk{display:flex;flex-direction:column;gap:10px;background:var(--bg);border-radius:14px;padding:14px}
+.bub{max-width:85%;padding:12px 16px;border-radius:16px;font-size:20px;font-weight:700;display:flex;gap:10px;align-items:center}
+.bub svg{width:40px;height:40px;flex:none;border-radius:8px}
+.bub.them{background:var(--navy-soft);color:var(--navy);align-self:flex-start}
+.bub.me{background:var(--ok-soft);color:var(--ok);align-self:flex-end}
+.memo{background:var(--note);border:2px solid var(--wood-dark);border-top-width:14px;border-radius:8px;padding:14px 20px;box-shadow:5px 5px 0 var(--line);display:flex;flex-direction:column;gap:4px;width:min(100%,560px);align-self:center}
+.memo .mt{font-weight:900;font-size:22px;color:var(--navy)}
+.mr{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;border-bottom:2px dashed var(--wood-dark);padding:8px 0;font-size:20px;align-items:center}
+.mr b{color:var(--navy)}
+.mr .blank{color:var(--muted);font-weight:500}
+.mr .val{font-weight:900}
+/* 비품 챙기기 */
+.shelf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;background:var(--wood);border-radius:14px;padding:14px;border:4px solid var(--wood-dark)}
+.shelf button{display:flex;flex-direction:column;align-items:center;gap:4px;min-height:140px;padding:10px;background:var(--paper)}
+.shelf svg{width:64px;height:64px}
+.shelf .left{font-size:15px;color:var(--muted);font-weight:500}
+.shelf button.out{background:var(--bad-soft);border-color:var(--bad)}
+.shelf button.out .left{color:var(--bad);font-weight:900}
+@media (max-width:560px){.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.basket{display:flex;flex-direction:column;gap:10px;border:3px dashed var(--metal);border-radius:14px;padding:14px;background:var(--paper)}
+.basket .bh{display:flex;align-items:center;gap:12px;font-weight:900;color:var(--navy)}
+.basket .bh svg{width:72px;height:52px}
+.brow{display:grid;grid-template-columns:48px minmax(0,1fr) auto auto;gap:12px;align-items:center;font-size:20px;font-weight:700}
+.brow svg{width:44px;height:44px}
+.brow .n{font-size:30px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--navy)}
+.brow button{min-width:64px;min-height:52px;font-size:26px;padding:4px 10px}
+.olist{display:flex;flex-wrap:wrap;gap:12px}
+.oitem{display:flex;align-items:center;gap:8px;background:var(--paper);border:2px solid var(--wood-dark);border-radius:10px;padding:6px 14px;font-size:22px;font-weight:700}
+.oitem svg{width:40px;height:40px}
+.oitem b{color:var(--accent);font-size:28px}
+.reqform{background:var(--paper);border:2px solid var(--navy);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px}
+
 </style>
 </head>
 <body>
@@ -216,12 +252,15 @@ const TASKS={
   shred:{nm:'문서 파쇄·보관',ds:'버릴 문서는 파쇄하고, 둘 문서는 서류철에 정리하기',say:'문서를 파쇄기나 서류철에 넣어 주세요.'},
   mail:{nm:'우편물 나누기',ds:'받는 사람을 보고 부서 칸에 넣기',say:'우편물을 알맞은 부서 칸에 넣어 주세요.'},
   pc:{nm:'컴퓨터 작업',ds:'컴퓨터를 켜서 파일을 찾고 정리하기',say:'업무 지시를 보고 컴퓨터 작업을 해 주세요.'},
-  data:{nm:'명함 입력',ds:'명함을 보고 주소록에 입력하기',say:'명함을 보고 주소록에 입력해 주세요.'}};
+  data:{nm:'명함 입력',ds:'명함을 보고 주소록에 입력하기',say:'명함을 보고 주소록에 입력해 주세요.'},
+  phone:{nm:'전화 받기',ds:'전화를 받고 메모를 남겨 전달하기',say:'전화가 왔어요. 전화를 받고 메모를 남겨 주세요.'},
+  supply:{nm:'비품 챙기기',ds:'요청한 사무용품을 수량에 맞게 챙기기',say:'비품 요청서를 보고 물품을 챙겨 주세요.'}};
 
 const AREAS=[
   {nm:'문서 업무',ds:'문서를 복사하고 정리하는 일',ks:['copy','shred']},
-  {nm:'우편 업무',ds:'우편물을 받아 나누는 일',ks:['mail']},
-  {nm:'전산 업무',ds:'컴퓨터로 파일을 다루고 자료를 입력하는 일',ks:['pc','data']}];
+  {nm:'우편·전화 업무',ds:'우편물을 나누고 전화를 받는 일',ks:['mail','phone']},
+  {nm:'전산 업무',ds:'컴퓨터로 파일을 다루고 자료를 입력하는 일',ks:['pc','data']},
+  {nm:'비품 업무',ds:'사무용품을 챙기고 관리하는 일',ks:['supply']}];
 
 const S={level:1,sound:true,screen:'level',done:{},score:0,total:0,k:null,t:null};
 try{const v=JSON.parse(localStorage.getItem('samu-set')||'{}');if(v.level)S.level=v.level;if(v.sound===false)S.sound=false}catch(e){}
@@ -270,7 +309,7 @@ const BINDER=`<svg viewBox="0 0 120 90" aria-hidden="true"><rect x="0" y="80" wi
 const LVNAME={1:'난이도 하 · 그림 보고 따라 하기',2:'난이도 중 · 도움받아 수행',3:'난이도 상 · 혼자 수행'};
 
 const app=document.getElementById('app');
-function render(){app.innerHTML=({level:levelScreen,home,copy,shred,mail,pc,data,done})[S.screen]();bind()}
+function render(){app.innerHTML=({level:levelScreen,home,copy,shred,mail,pc,data,phone,supply,done})[S.screen]();bind();bindMore()}
 function hdr(title){return `<header><h1>${title}</h1><div class="row"><span class="badge">${LVNAME[S.level]}</span><button class="ghost" data-go="home">처음 화면</button></div></header>`}
 function prog(){const t=S.t;let s='<div class="progress" aria-label="진행">';for(let i=0;i<t.items.length;i++)s+=`<i class="${i<t.i?'on':''}"></i>`;return s+'</div>'}
 const fb=()=>`<div class="fb ${S.t.res||''}">${S.t.msg||''}</div>`;
@@ -284,7 +323,7 @@ ${SCENE}
 function home(){const ks=Object.keys(TASKS),all=ks.every(k=>S.done[k]);return `
 <header><h1>사무 업무 연습</h1><div class="row"><span class="badge">${LVNAME[S.level]}</span><button class="ghost" data-go="level">난이도 다시 고르기</button></div></header>
 ${SCENE}
-<p class="sub" style="margin:0">오늘 할 업무를 고르세요. 다섯 가지를 모두 마치면 퇴근 도장을 받아요.</p>
+<p class="sub" style="margin:0">오늘 할 업무를 고르세요. 일곱 가지를 모두 마치면 퇴근 도장을 받아요.</p>
 <div class="areas">${AREAS.map(a=>`<section class="area"><div><div class="q">${a.nm}</div><div class="sub">${a.ds}</div></div><div class="tiles">${a.ks.map(k=>`<button class="tile" data-start="${k}">${ICON[k]}<span class="tx"><span class="nm">${TASKS[k].nm}</span><span class="ds">${TASKS[k].ds}</span>${S.done[k]?'<span class="donetag">완료</span>':''}</span></button>`).join('')}</div></section>`).join('')}</div>
 ${all?`<div class="panel" style="align-items:center;text-align:center"><div class="q">오늘 업무를 모두 마쳤어요</div><div class="stamp">퇴근<small>수고했어요</small></div><button id="reset">처음부터 다시 하기</button></div>`:''}
 <div class="panel settings"><div class="row"><button id="snd">${S.sound?'소리 켜짐':'소리 꺼짐'}</button><span class="hint">효과음과 안내 음성을 들려줍니다.</span></div></div>`}
@@ -298,6 +337,8 @@ function make(k){
   if(k==='pc'){const nf=S.level===1?2:S.level===2?3:4,fs=shuffle(PCF).slice(0,nf),F=fs[0],X=shuffle(F.files.slice())[0];
     const loose=shuffle(fs).slice(0,S.level===1?2:3).map(f=>({nm:shuffle(f.files.filter(x=>x!==X))[0],cat:f.id}));
     return {i:0,items:['컴퓨터 켜기','파일 찾아 인쇄','파일 정리','컴퓨터 끄기'],fs,F,X,loose,view:'desk',sel:null,pick:null,menu:false,flist:[]}}
+  if(k==='phone'){const items=shuffle(CALLERS).slice(0,3).map(c=>({c,s:STAFF[rnd(0,STAFF.length-1)]}));return Object.assign({i:0,items},phoneRound(items[0]))}
+  if(k==='supply')return Object.assign({i:0,items:[0,1]},supplyRound());
   const items=shuffle(PEOPLE).slice(0,3);return Object.assign({i:0,items},dataRound(items[0]))}
 function dataRound(p){const n=S.level===1?2:3,others=PEOPLE.filter(x=>x!==p);
   return {names:S.level===3?shuffle([p.n].concat(p.sim)):shuffle([p.n].concat(shuffle(others.map(x=>x.n)).slice(0,n-1))),
@@ -472,6 +513,138 @@ function bind(){const $=id=>document.getElementById(id),all=s=>app.querySelector
     const okN=t.name===p.n,okO=S.level!==3||t.org===p.o,okT=t.d===tg,ok=okN&&okO&&okT;mark(ok);
     if(!ok){if(!okN)t.name=null;if(!okO)t.org=null;if(!okT)t.d='';say((!okN?'이름':!okO?'회사':'전화번호')+'을 다시 확인해 보세요.','bad');render();return}
     sfx.ok();if(advance())return;Object.assign(t,dataRound(t.items[t.i]),{msg:'주소록에 저장했어요!',res:'ok'});render()};
+}
+/* ================= 업무 6: 전화 받기 ================= */
+const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const _jong=w=>{const c=w.charCodeAt(w.length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28>0};
+const eun=w=>w+(_jong(w)?'은':'는'), iga=w=>w+(_jong(w)?'이':'가'), eul=w=>w+(_jong(w)?'을':'를');
+const CALLERS=[
+  {o:'다움문구',n:'김하늘',t:'23456789',msg:'주문하신 복사 용지가 내일 오전에 도착해요.',sum:'복사 용지 내일 오전 도착'},
+  {o:'다움물산',n:'이준서',t:'34561278',msg:'다음 주 회의를 화요일 오후 2시로 바꾸고 싶어요.',sum:'회의를 화요일 오후 2시로 변경'},
+  {o:'다움복지관',n:'박소연',t:'45679012',msg:'봉사 활동 신청서를 금요일까지 보내 주세요.',sum:'봉사 활동 신청서 금요일까지'},
+  {o:'용인시청',n:'최민재',t:'56783401',msg:'행사 안내문 50장을 보내 주실 수 있는지 궁금해요.',sum:'행사 안내문 50장 요청'}];
+const GREET=['네, 다움중학교 행정실입니다.','여보세요? 누구세요?','네.'];
+const fromOf=c=>c.o+' '+c.n;
+function phoneRound(it){const L=S.level,n=L===1?2:3,others=STAFF.filter(x=>x!==it.s),oc=CALLERS.filter(x=>x!==it.c);
+  return {st:0,gw:[],memo:{to:null,from:null,what:null,d:''},msg:'',res:'',
+    greet:shuffle(GREET.slice(0,L===1?2:3).map((g,j)=>j)),
+    to:shuffle([it.s.n].concat(shuffle(others.map(x=>x.n)).slice(0,n-1))),
+    from:shuffle([fromOf(it.c)].concat(shuffle(oc.map(fromOf)).slice(0,n-1))),
+    what:shuffle([it.c.sum].concat(shuffle(oc.map(x=>x.sum)).slice(0,n-1)))}}
+const callerA=it=>`안녕하세요, ${it.c.o} ${it.c.n}입니다. ${it.s.n} 선생님 계신가요?`;
+const meA=()=>'지금 자리에 안 계세요. 메모 남겨 드릴까요?';
+const callerB=it=>`네, ${it.c.msg} 제 번호는 ${telFmt(it.c.t)}입니다.`;
+const phoneTel=it=>S.level===3?it.c.t:it.c.t.slice(4);
+function phoneSVG(st){const up=st>0;return `<svg viewBox="0 0 300 170" role="img" aria-label="${up?'수화기를 든 전화기':'울리는 전화기'}">
+<rect y="150" width="300" height="20" fill="var(--wood)"/><rect x="70" y="80" width="170" height="72" rx="12" fill="var(--metal)"/>
+<rect x="150" y="90" width="76" height="22" rx="4" fill="var(--screen)"/><text x="188" y="106" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="900" fill="var(--navy)">${up?'통화 중':'02-123-4567'}</text>
+<g fill="var(--paper)">${[0,1,2].map(r=>[0,1,2].map(c=>`<circle cx="${165+c*22}" cy="${124+r*9}" r="3.2"/>`).join('')).join('')}</g>
+<rect x="80" y="${up?82:62}" width="62" height="12" rx="6" fill="var(--panelbg)"/>
+${up?`<g transform="rotate(-28 60 50)"><rect x="16" y="22" width="96" height="26" rx="12" fill="var(--navy)"/><rect x="10" y="14" width="30" height="40" rx="12" fill="var(--navy)"/><rect x="88" y="14" width="30" height="40" rx="12" fill="var(--navy)"/></g><path d="M110 70q20 10 40 12" fill="none" stroke="var(--panelbg)" stroke-width="4"/>`
+:`<g><rect x="70" y="58" width="104" height="26" rx="12" fill="var(--navy)"/><rect x="64" y="50" width="30" height="40" rx="12" fill="var(--navy)"/><rect x="150" y="50" width="30" height="40" rx="12" fill="var(--navy)"/></g>
+<path d="M48 40l-14-10M44 60H26M48 80l-14 10M262 40l14-10M266 60h18M262 80l14 10" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>
+<text x="150" y="30" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="900" fill="var(--accent)">따르릉!</text>`}</svg>`}
+function phone(){const t=S.t,it=t.items[t.i],L=S.level,st=t.st,m=t.memo,tg=phoneTel(it);
+  const todo=['울리는 전화기를 눌러 수화기를 드세요','알맞은 인사말을 고르세요','전화 내용을 듣고 메모를 채운 뒤 「메모 저장」을 누르세요',L<3?`메모를 ${dept(it.s.d).name} 칸에 넣으세요`:'직원 안내표에서 부서를 찾아 메모를 넣으세요'][st];
+  const now=x=>L<3&&x?'now':'';
+  const row=(lab,v)=>`<div class="mr"><b>${lab}</b>${v?`<span class="val">${esc(v)}</span>`:'<span class="blank">비어 있음</span>'}</div>`;
+  const shownTel=L===3?'010-'+pad(m.d.slice(0,4),4)+'-'+pad(m.d.slice(4),4):'010-'+it.c.t.slice(0,4)+'-'+pad(m.d,4);
+  const memo=`<div class="memo"><span class="mt">전화 메모</span>${row('받는 분',m.to&&m.to+' 선생님')}${L>=2?row('보낸 분',m.from):''}${row('용건',m.what)}${row('연락처',m.d?shownTel:'')}</div>`;
+  const talk=`<div class="talk"><div class="bub them">${AVATAR}<span>${L===3?'(목소리를 잘 들어 보세요)':esc(callerA(it))}</span></div><div class="bub me">${esc(meA())}</div><div class="bub them">${AVATAR}<span>${L===3?'(목소리를 잘 들어 보세요)':esc(callerB(it))}</span></div></div>`;
+  let body='';
+  if(st===0)body=`<button id="pickup" class="phonebtn ${now(true)}" aria-label="수화기 들기">${phoneSVG(0)}</button>`;
+  else if(st===1)body=`<div class="phonesvg">${phoneSVG(1)}</div><div class="q">전화를 받을 때 뭐라고 할까요?</div><div class="choices">${t.greet.map(j=>`<button class="${t.gw.includes(j)?'okbtn':''} ${L===1&&j===0?now(true):''}" data-greet="${j}" ${t.gw.includes(j)?'disabled':''}>「${GREET[j]}」</button>`).join('')}</div>`;
+  else if(st===2){const nextKey=L===1?tg[m.d.length]:null;
+    body=`${talk}<div class="row"><button id="relisten"><span class="stepno">1</span> 전화 내용 다시 듣기</button></div>${memo}
+<div class="field"><span class="fl">받는 분</span><div class="choices">${t.to.map(n=>`<button data-mto="${n}" class="${m.to===n?'sel':''}">${n} 선생님</button>`).join('')}</div></div>
+${L>=2?`<div class="field"><span class="fl">보낸 분</span><div class="choices">${t.from.map(n=>`<button data-mfrom="${n}" class="${m.from===n?'sel':''}">${n}</button>`).join('')}</div></div>`:''}
+<div class="field"><span class="fl">용건</span><div class="choices">${t.what.map(n=>`<button data-mwhat="${n}" class="${m.what===n?'sel':''}">${n}</button>`).join('')}</div></div>
+<div class="field"><span class="fl">연락처${L===3?'':' (뒤 4자리)'}</span><div class="telbox">${shownTel}</div>
+<div class="keypad">${'123456789'.split('').map(k=>`<button data-pkey="${k}" class="${nextKey===k?'hintkey':''}">${k}</button>`).join('')}<button data-pkey="del">지우기</button><button data-pkey="0" class="${nextKey==='0'?'hintkey':''}">0</button><span></span></div></div>
+<div class="row"><button class="primary" id="memosave"><span class="stepno">2</span> 메모 저장</button></div>`}
+  else body=`${memo}<div class="bins">${DEPTS.map(x=>`<button class="bin ${L===1&&x.id===it.s.d?now(true):''}" data-pbin="${x.id}" style="border-color:var(${x.color})">${TRAY}${L===1?markSVG(x):''}<span>${x.name}</span></button>`).join('')}</div>
+${L===3?`<div class="panel" style="padding:14px"><div class="q">직원 안내표</div><div class="dir">${STAFF.map(x=>`<div>${x.n} — ${dept(x.d).name}</div>`).join('')}</div></div>`:''}`;
+  return `${hdr('전화 받기')}${prog()}
+<div class="panel"><div class="order"><div class="q">업무 지시</div><div class="big">전화를 받고, <b>전화 메모</b>를 남겨서 받는 분께 전달해 주세요.</div>${L===1?'<div class="sub">받는 분, 용건, 전화번호를 메모해요.</div>':''}</div></div>
+<div class="panel"><div class="steps">${['수화기 들기','인사하기','메모 쓰기','메모 전달'].map((n,i)=>`<span class="${i===st?'cur':i<st?'past':''}">${i+1}. ${n}</span>`).join('')}</div><div class="todo">지금 할 일: ${todo}</div>
+<div class="q">전화 ${t.i+1} / ${t.items.length}</div>${body}${fb()}</div>`}
+
+/* ================= 업무 7: 비품 챙기기 ================= */
+const ITEMS=[{k:'pen',nm:'볼펜',u:'자루'},{k:'memo',nm:'메모지',u:'권'},{k:'clip',nm:'클립',u:'통'},{k:'glue',nm:'풀',u:'개'},{k:'tape',nm:'테이프',u:'개'},{k:'scis',nm:'가위',u:'개'}];
+const item=k=>ITEMS.find(x=>x.k===k);
+const ITEMSVG={
+ pen:`<path d="M14 52L44 10l8 6-30 42z" fill="var(--d1)"/><path d="M14 52l8 6-10 4z" fill="var(--paper)" stroke="var(--navy)" stroke-width="2"/><path d="M44 10l8 6 4-6-8-6z" fill="var(--navy)"/><path d="M40 18l-14 20" stroke="var(--paper)" stroke-width="2"/>`,
+ memo:`<rect x="12" y="16" width="40" height="40" rx="3" fill="var(--d4)"/><rect x="10" y="10" width="40" height="40" rx="3" fill="var(--note)" stroke="var(--wood-dark)" stroke-width="2"/><path d="M18 22h24M18 30h24M18 38h16" stroke="var(--wood-dark)" stroke-width="2"/>`,
+ clip:`<rect x="8" y="20" width="48" height="34" rx="4" fill="var(--d2)"/><rect x="8" y="14" width="48" height="10" rx="3" fill="var(--navy)"/><path d="M24 30v14a5 5 0 0 0 10 0V28a3 3 0 0 0-6 0v14" fill="none" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/>`,
+ glue:`<rect x="22" y="22" width="20" height="34" rx="4" fill="var(--d3)"/><rect x="22" y="26" width="20" height="10" fill="var(--paper)"/><rect x="24" y="8" width="16" height="16" rx="3" fill="var(--paper)" stroke="var(--navy)" stroke-width="2"/>`,
+ tape:`<circle cx="32" cy="34" r="22" fill="var(--sky)" stroke="var(--metal)" stroke-width="3"/><circle cx="32" cy="34" r="10" fill="var(--paper)" stroke="var(--metal)" stroke-width="3"/><path d="M50 46l10 10h-14z" fill="var(--sky)" stroke="var(--metal)" stroke-width="2"/>`,
+ scis:`<circle cx="18" cy="46" r="9" fill="none" stroke="var(--accent)" stroke-width="5"/><circle cx="40" cy="50" r="9" fill="none" stroke="var(--accent)" stroke-width="5"/><path d="M24 40L50 8M34 44L46 10" stroke="var(--metal)" stroke-width="5" stroke-linecap="round"/>`};
+const itemSVG=k=>`<svg viewBox="0 0 64 64" aria-hidden="true">${ITEMSVG[k]}</svg>`;
+const BASKET=`<svg viewBox="0 0 72 52" aria-hidden="true"><path d="M20 18q16-20 32 0" fill="none" stroke="var(--wood-dark)" stroke-width="4"/><path d="M4 18h64l-8 32H12z" fill="var(--wood)"/><path d="M16 24v20M28 24v20M40 24v20M52 24v20" stroke="var(--wood-dark)" stroke-width="2"/></svg>`;
+ICON.supply=`<svg viewBox="0 0 120 90" aria-hidden="true"><rect x="0" y="80" width="120" height="8" fill="var(--floor)"/><rect x="14" y="6" width="92" height="74" fill="var(--wood)"/><rect x="20" y="12" width="80" height="28" fill="var(--wood-dark)"/><rect x="20" y="46" width="80" height="28" fill="var(--wood-dark)"/><svg x="22" y="12" width="26" height="26" viewBox="0 0 64 64">${ITEMSVG.memo}</svg><svg x="52" y="12" width="26" height="26" viewBox="0 0 64 64">${ITEMSVG.clip}</svg><svg x="74" y="46" width="26" height="26" viewBox="0 0 64 64">${ITEMSVG.tape}</svg><svg x="24" y="46" width="26" height="26" viewBox="0 0 64 64">${ITEMSVG.pen}</svg></svg>`;
+function supplyRound(){const L=S.level,n=L===1?2:3,r=L===1?[1,3]:L===2?[2,5]:[2,6];
+  const order=shuffle(ITEMS.map(x=>x.k)).slice(0,n).map(k=>({k,q:rnd(r[0],r[1])}));
+  const stock={};ITEMS.forEach(x=>stock[x.k]=rnd(7,12));let short=null;
+  if(L===3){short=order[rnd(0,n-1)].k;stock[short]=0}
+  return {order,stock,short,bag:{},req:null,reqOpen:false,okd:false,msg:'',res:''}}
+function supply(){const t=S.t,L=S.level,bagN=Object.values(t.bag).reduce((a,b)=>a+b,0);
+  const st=t.okd?3:(bagN||t.req)?2:1;
+  const need=t.order.find(o=>o.k!==t.short&&(t.bag[o.k]||0)<o.q);
+  const todo=['',L<3&&need?`${item(need.k).nm}을(를) 눌러 바구니에 담으세요`.replace('을(를)',_jong(item(need.k).nm)?'을':'를'):'요청서의 물품을 수량에 맞게 바구니에 담으세요','수량을 다시 확인하고 「다 챙겼어요」를 누르세요','「비품 전달하기」를 누르세요'][st];
+  const now=x=>L<3&&x?'now':'';
+  return `${hdr('비품 챙기기')}${prog()}
+<div class="panel"><div class="order"><div class="q">비품 요청서 ${t.i+1} / ${t.items.length}</div><div class="big">회의 준비물을 챙겨 주세요.</div>
+<div class="olist">${t.order.map(o=>{const it=item(o.k);return `<span class="oitem">${L===1?itemSVG(o.k):''}${it.nm} <b>${o.q}</b>${it.u}</span>`}).join('')}</div>
+${L===3?'<div class="sub">규칙: 창고에 재고가 없는 물품은 담지 말고 「부족 물품 신청서」를 써요.</div>':''}</div></div>
+<div class="panel"><div class="steps">${['요청서 보기','물품 담기','수량 확인','비품 전달'].map((n,i)=>`<span class="${i===st?'cur':i<st?'past':''}">${i+1}. ${n}</span>`).join('')}</div><div class="todo">지금 할 일: ${todo}</div>
+<div class="q">비품 창고</div>
+<div class="shelf">${ITEMS.map(x=>{const left=t.stock[x.k]-(t.bag[x.k]||0);return `<button data-item="${x.k}" class="${t.stock[x.k]===0?'out':''} ${L===1&&need&&need.k===x.k&&!t.okd?now(true):''}" ${t.okd?'disabled':''}>${itemSVG(x.k)}<span>${x.nm}</span><span class="left">${t.stock[x.k]===0?'재고 없음':'남은 수량 '+left+x.u}</span></button>`}).join('')}</div>
+<div class="basket"><div class="bh">${BASKET}<span>내 바구니</span></div>
+${bagN?Object.keys(t.bag).map(k=>{const x=item(k);return `<div class="brow">${itemSVG(k)}<span>${x.nm}</span><span class="n">${t.bag[k]}${x.u}</span><button data-minus="${k}" aria-label="${x.nm} 하나 빼기" ${t.okd?'disabled':''}>−</button></div>`}).join(''):'<div class="sub">아직 담은 물품이 없어요.</div>'}</div>
+${L===3?`<div class="reqform"><div class="row"><button id="reqbtn" ${t.okd?'disabled':''}>부족 물품 신청서 쓰기</button><span class="sub">${t.req?`신청 물품: <b>${item(t.req).nm}</b> · 사유: 재고 없음`:'아직 쓰지 않았어요.'}</span></div>
+${t.reqOpen?`<div class="choices">${ITEMS.map(x=>`<button data-req="${x.k}" class="${t.req===x.k?'sel':''}">${x.nm}</button>`).join('')}</div>`:''}</div>`:''}
+${fb()}
+<div class="row">${t.okd?`<button class="primary ${now(true)}" id="supnext">비품 전달하기</button>`:`<button class="primary ${now(!need&&bagN>0)}" id="supcheck"><span class="stepno">3</span> 다 챙겼어요</button>`}</div></div>`}
+
+function bindMore(){const $=id=>document.getElementById(id),all=s=>app.querySelectorAll(s),t=S.t;if(!t)return;
+  /* 전화 */
+  if(S.screen==='phone'){const it=t.items[t.i],m=t.memo;
+    if($('pickup'))$('pickup').onclick=()=>{t.st=1;t.msg='';sfx.ok();render()};
+    all('[data-greet]').forEach(b=>b.onclick=()=>{const j=+b.dataset.greet;
+      if(j===0){t.st=2;say('친절하게 인사했어요!','ok');speak(callerA(it)+' '+callerB(it))}
+      else{mark(false);t.gw.push(j);say('전화를 받을 때는 학교와 부서 이름을 먼저 말해요. 다시 확인해 보세요.','bad')}render()});
+    if($('relisten'))$('relisten').onclick=()=>speak(callerA(it)+' '+callerB(it));
+    all('[data-mto]').forEach(b=>b.onclick=()=>{m.to=b.dataset.mto;t.msg='';sfx.tap();render()});
+    all('[data-mfrom]').forEach(b=>b.onclick=()=>{m.from=b.dataset.mfrom;t.msg='';sfx.tap();render()});
+    all('[data-mwhat]').forEach(b=>b.onclick=()=>{m.what=b.dataset.mwhat;t.msg='';sfx.tap();render()});
+    all('[data-pkey]').forEach(b=>b.onclick=()=>{const k=b.dataset.pkey,need=phoneTel(it).length;if(k==='del')m.d=m.d.slice(0,-1);else if(m.d.length<need)m.d+=k;t.msg='';sfx.tap();render()});
+    if($('memosave'))$('memosave').onclick=()=>{const L=S.level,tg=phoneTel(it);
+      if(!m.to||!m.what||(L>=2&&!m.from)||m.d.length<tg.length){say('빈 칸이 있어요. 메모를 모두 채워 주세요.','bad');render();return}
+      const bad=[];if(m.to!==it.s.n){bad.push('받는 분');m.to=null}if(L>=2&&m.from!==fromOf(it.c)){bad.push('보낸 분');m.from=null}if(m.what!==it.c.sum){bad.push('용건');m.what=null}if(m.d!==tg){bad.push('연락처');m.d=''}
+      if(bad.length){mark(false);say(bad.join(', ')+'을 다시 확인해 보세요. 「다시 듣기」를 눌러도 돼요.','bad');render();return}
+      t.st=3;say('메모를 정확하게 썼어요!','ok');render()};
+    all('[data-pbin]').forEach(b=>b.onclick=()=>{const ok=b.dataset.pbin===it.s.d;mark(ok);
+      if(!ok){say('다른 부서예요. 받는 분이 어느 부서인지 다시 확인해 보세요.','bad');render();return}
+      say('메모를 전달했어요!','ok');if(!advance()){Object.assign(t,phoneRound(t.items[t.i]));render()}});
+  }
+  /* 비품 */
+  if(S.screen==='supply'){
+    all('[data-item]').forEach(b=>b.onclick=()=>{const k=b.dataset.item,x=item(k);
+      if(t.stock[k]-(t.bag[k]||0)<=0){say(t.stock[k]===0?eun(x.nm)+' 재고가 없어요. 부족 물품 신청서를 써 주세요.':eun(x.nm)+' 더 남아 있지 않아요.','bad');render();return}
+      t.bag[k]=(t.bag[k]||0)+1;t.msg='';sfx.tap();render()});
+    all('[data-minus]').forEach(b=>b.onclick=()=>{const k=b.dataset.minus;t.bag[k]--;if(t.bag[k]<=0)delete t.bag[k];t.msg='';sfx.tap();render()});
+    if($('reqbtn'))$('reqbtn').onclick=()=>{t.reqOpen=!t.reqOpen;sfx.tap();render()};
+    all('[data-req]').forEach(b=>b.onclick=()=>{t.req=b.dataset.req;t.reqOpen=false;sfx.tap();render()});
+    if($('supcheck'))$('supcheck').onclick=()=>{let err=null;
+      for(const o of t.order){const x=item(o.k),have=t.bag[o.k]||0;
+        if(o.k===t.short){if(t.req!==o.k){err=eun(x.nm)+' 재고가 없어요. 부족 물품 신청서에 써 주세요.';break}}
+        else if(have!==o.q){err=`${iga(x.nm)} ${o.q}${x.u} 필요한데 지금 ${have}${x.u}${_jong(x.u)?"이에요":"예요"}.`;break}}
+      if(!err){const extra=Object.keys(t.bag).find(k=>!t.order.some(o=>o.k===k));if(extra)err=eun(item(extra).nm)+' 요청서에 없는 물품이에요. 빼 주세요.'}
+      if(!err&&t.req&&t.req!==t.short)err='신청서에 쓴 물품을 다시 확인해 보세요. 재고가 없는 물품만 신청해요.';
+      if(err){mark(false);say(err,'bad');render();return}
+      mark(true);t.okd=true;say('요청한 비품을 모두 챙겼어요!','ok');render()};
+    if($('supnext'))$('supnext').onclick=()=>{if(!advance()){Object.assign(t,supplyRound());render()}};
+  }
 }
 render();
 </script>
