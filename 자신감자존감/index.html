@@ -40,6 +40,7 @@ button{font-size:20px;font-weight:700;border-radius:14px;border:2px solid var(--
 button:focus-visible,input:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
 button:active{transform:scale(.98)}
 button:disabled{opacity:.45;cursor:default}
+button.sel:disabled{opacity:1}
 .primary{background:var(--navy);color:var(--paper);border-color:var(--navy)}
 .ghost{background:transparent}
 button.sel{border-color:var(--navy);border-width:4px;background:var(--navy-soft);color:var(--navy)}
@@ -234,6 +235,10 @@ const I={
  flag:`<path d="M14 6v52" stroke="var(--navy)" stroke-width="4"/><path d="M16 8h36l-8 10 8 10H16z" fill="var(--accent)"/>`,
  bow:`<g transform="translate(24 60)"><rect x="-7" y="-22" width="6" height="22" fill="var(--pants)"/><rect x="1" y="-22" width="6" height="22" fill="var(--pants)"/><path d="M-8 -20l20-18 9 9-19 13z" fill="var(--d2)"/><circle cx="25" cy="-28" r="8" fill="var(--skin)"/></g>`,
  dance:`<g transform="translate(32 62)"><rect x="-9" y="-20" width="7" height="20" fill="var(--pants)" transform="rotate(12 -5 -10)"/><rect x="2" y="-20" width="7" height="20" fill="var(--pants)" transform="rotate(-12 5 -10)"/><rect x="-11" y="-42" width="22" height="24" rx="7" fill="var(--d2)"/><path d="M-9 -38l-14-14M9 -38l14-14" stroke="var(--d2)" stroke-width="5" stroke-linecap="round"/><circle cy="-50" r="9" fill="var(--skin)"/></g><path d="M50 10v12" stroke="var(--accent)" stroke-width="3"/><circle cx="47" cy="23" r="4" fill="var(--accent)"/>`,
+ shake:`<rect x="20" y="22" width="24" height="30" rx="7" fill="var(--skin)" stroke="var(--wood-dark)" stroke-width="2"/><g fill="var(--skin)" stroke="var(--wood-dark)" stroke-width="2"><rect x="20" y="8" width="6" height="18" rx="3"/><rect x="27" y="5" width="6" height="20" rx="3"/><rect x="34" y="7" width="6" height="18" rx="3"/></g><path d="M12 18q-4 6 0 12M52 18q4 6 0 12M6 14q-6 10 0 20M58 14q6 10 0 20" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>`,
+ breath:`<circle cx="22" cy="32" r="16" fill="var(--face)" stroke="var(--faceline)" stroke-width="2"/><circle cx="17" cy="28" r="2" fill="var(--faceline)"/><circle cx="27" cy="28" r="2" fill="var(--faceline)"/><circle cx="31" cy="38" r="3" fill="var(--faceline)"/><path d="M38 34h18M40 26q10-4 16 2M40 42q10 4 16-2" fill="none" stroke="var(--d1)" stroke-width="3" stroke-linecap="round"/>`,
+ oops:`<rect x="14" y="6" width="36" height="50" rx="3" fill="var(--paper)" stroke="var(--navy)" stroke-width="3"/><path d="M20 16h24M20 24h24" stroke="var(--line)" stroke-width="3"/><path d="M24 32l16 16M40 32L24 48" stroke="var(--d3)" stroke-width="5" stroke-linecap="round"/>`,
+ qmark:`<path d="M10 30a14 14 0 0 1 10-20 18 18 0 0 1 30 2 13 13 0 0 1 6 24H14a10 10 0 0 1-4-6z" fill="var(--paper)" stroke="var(--navy)" stroke-width="3"/><text x="33" y="38" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="900" fill="var(--accent)">?</text><circle cx="16" cy="50" r="4" fill="var(--paper)" stroke="var(--navy)" stroke-width="2"/><circle cx="8" cy="58" r="2.5" fill="var(--paper)" stroke="var(--navy)" stroke-width="2"/>`,
  check:`<rect x="8" y="8" width="48" height="48" rx="10" fill="var(--ok)"/><path d="M18 33l9 9 19-20" fill="none" stroke="var(--paper)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`,
  pen:`<path d="M10 54l6-16 28-28 10 10-28 28z" fill="var(--sun)"/><path d="M10 54l6-16 10 10z" fill="var(--wood)"/><path d="M40 14l10 10" stroke="var(--d3)" stroke-width="5"/>`};
 const icon=n=>`<svg viewBox="0 0 64 64" aria-hidden="true">${I[n]||I.pen}</svg>`;
@@ -290,7 +295,7 @@ function stageSVG(a){const job=a.job?a.job.v:'발표',pr=propFor(job),o=Object.a
   if(a.look){if(a.look.v==='웃는 얼굴로')o.face='big';if(a.look.v==='큰 목소리로'){o.voice=true;o.face='open'}if(a.look.v==='당당한 자세로'){o.shine=true;if(o.arm==='down')o.arm='hips'}}
   if(a.react)o.face=o.face==='smile'?'big':o.face;
   return `<svg viewBox="0 0 480 300" role="img" aria-label="내가 상상한 모습">${placeBG(a.place&&a.place.v)}${pr.pre}${person(240,250,1.35,'var(--accent)',o)}${pr.post}
-<rect x="210" y="256" width="60" height="22" rx="11" fill="var(--accent)"/><text x="240" y="272" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="14" font-weight="900" fill="#FFF">${esc(me()).slice(0,5)}</text>${audience(a.who&&a.who.v,a.react&&a.react.v)}</svg>`}
+<rect x="210" y="256" width="60" height="22" rx="11" fill="var(--accent)"/><text x="240" y="272" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="14" font-weight="900" fill="#FFF">${esc(me()).slice(0,5)}</text>${audience(a.who&&a.who.v,a.react&&a.react.v)}${a.obst?`<rect x="12" y="30" width="220" height="${a.cope?62:38}" rx="14" fill="var(--paper)" stroke="var(--navy)" stroke-width="3"/><text x="26" y="55" font-family="Noto Sans KR,sans-serif" font-size="15" font-weight="900" fill="var(--d3)">${esc(a.obst.v)}</text>${a.cope?`<text x="26" y="80" font-family="Noto Sans KR,sans-serif" font-size="15" font-weight="900" fill="var(--ok)">→ ${esc(a.cope.v)}</text>`:''}`:''}</svg>`}
 
 /* 거울 (참모습) */
 function mirrorSVG(stickers){const pos=[[30,40],[190,40],[20,150],[200,150],[100,226],[24,96]];
@@ -324,6 +329,16 @@ const SIT=[
   {p:'chat',s:'단톡방에 말을 했는데 아무도 답이 없어요.',good:'다들 바쁜가 봐. 나중에 다시 이야기해 보자.',bad:['애들이 나를 무시하는 게 분명해.','나는 친구들 사이에서 인기가 없어.','단톡방을 나가 버릴래.']},
   {p:'baton',s:'체육대회 계주에서 바통을 놓쳤어요.',good:'실수할 수도 있지. 다음엔 바통 넘기기를 연습하자.',bad:['나 때문에 우리 반이 졌어.','다시는 계주에 안 나갈래.','친구들이 나를 원망할 거야.']},
   {p:'leader',s:'처음으로 모둠장을 맡게 됐어요.',good:'떨리지만 좋은 경험이 될 거야. 한번 해 볼게!',bad:['내가 잘못하면 다 망할 거야.','다른 사람이 하면 좋겠어.','나는 리더 같은 건 못 해.']}];
+const TRAPTYPE={all:{nm:'다 아니면 꽝 생각',ds:'조금 안 된 일을 전부 망했다고 여겨요'},over:{nm:'늘·절대 생각',ds:'한두 번 있었던 일을 「항상, 절대」로 부풀려요'},mind:{nm:'마음 읽기 생각',ds:'물어보지 않고 남의 속마음을 단정해요'},label:{nm:'딱지 붙이기 생각',ds:'한 번의 일로 「나는 ~한 사람」이라고 정해요'},fortune:{nm:'나쁜 예언 생각',ds:'아직 일어나지 않은 나쁜 일을 확신해요'}};
+const TRAPDATA={cup:['물이 반밖에 없으니 오늘은 다 망했어.','all','물 같은 건 없어도 아무 상관없어.'],
+  test:['나는 원래 수학 못하는 사람이야.','label','시험 점수는 아무 의미 없어. 신경 안 써.'],
+  speech:['다들 속으로 나를 비웃었을 거야.','mind','나는 원래 완벽하니까 실수한 게 아니야.'],
+  audition:['나는 앞으로도 절대 붙지 못할 거야.','fortune','그 동아리는 원래 별로였어.'],
+  chat:['애들은 항상 내 말만 무시해.','over','친구 같은 건 필요 없어.'],
+  baton:['계주를 망쳤으니 내 체육대회는 완전히 끝났어.','all','바통을 놓친 건 바람 때문이지 내 탓이 아니야.'],
+  leader:['내가 모둠장을 하면 분명히 다 엉망이 될 거야.','fortune','모둠장은 시키기만 하면 되니까 쉬워.']};
+SIT.forEach(x=>{const d=TRAPDATA[x.p];x.trap={t:d[0],k:d[1]};x.fake=d[2]});
+const WEAK=[{t:'걱정이 많아요',k:'걱정이 많기도 하다',r:'그만큼 미리 준비를 잘한다'},{t:'덜렁거려요',k:'가끔 덜렁거리기도 하다',r:'그만큼 겁내지 않고 새 일에 뛰어든다'},{t:'부끄러움이 많아요',k:'부끄러움이 많기도 하다',r:'그만큼 다른 사람 말을 잘 들어 준다'},{t:'고집이 세요',k:'고집이 세기도 하다',r:'그만큼 한번 정한 일은 끝까지 한다'},{t:'행동이 느려요',k:'행동이 느릴 때도 있다',r:'그만큼 꼼꼼하고 신중하다'}];
 const CHEERS=['나는 잘 해낼 거야!','나는 뭐든지 할 수 있어!','나는 언제나 나를 응원할 거야!','있는 그대로의 나를 사랑하고 존중해!','실수해도 괜찮아, 나는 배우는 중이야!','남이 아니라 어제의 나와 비교할 거야!'];
 const HOW=['멋지게','끝까지','즐겁게','씩씩하게'];
 const WHAT=['발표를','시험 준비를','운동을','동아리 활동을','새로운 도전을','친구를 돕는 일을'];
@@ -333,8 +348,10 @@ const PLACES=[{v:'교실',i:'school'},{v:'무대',i:'stage'},{v:'운동장',i:'g
 const WHO=[{v:'친구들',i:'kids'},{v:'가족',i:'family'},{v:'선생님',i:'teacher'},{v:'회사 사람들',i:'office'}];
 const REACT=[{v:'박수를 쳐요',i:'clap'},{v:'엄지를 들어요',i:'thumb'},{v:'환하게 웃어요',i:'smile'}];
 const LOOK=[{v:'웃는 얼굴로',i:'smile'},{v:'당당한 자세로',i:'stand'},{v:'큰 목소리로',i:'speaker'}];
-const IMG_STEPS={job:{nm:'잘하고 싶은 일',q:'내가 잘하고 싶은 일은 무엇인가요?',opts:JOBS},place:{nm:'장소',q:'어디에서 하고 있나요?',opts:PLACES},who:{nm:'보는 사람',q:'누가 보고 있나요?',opts:WHO},look:{nm:'나의 모습',q:'나는 어떤 모습으로 하고 있나요?',opts:LOOK},react:{nm:'사람들 반응',q:'사람들은 어떤 모습인가요?',opts:REACT}};
-const IMG_BY_LV={1:['job','react'],2:['job','place','who','react'],3:['job','place','who','look','react']};
+const OBST=[{v:'긴장돼서 손이 떨려요',w:'긴장돼서 손이 떨리면',i:'shake'},{v:'중간에 실수를 해요',w:'중간에 실수를 하면',i:'oops'},{v:'시간이 모자라요',w:'시간이 모자라면',i:'clock'},{v:'할 말이 생각 안 나요',w:'할 말이 생각나지 않으면',i:'qmark'}];
+const COPE=[{v:'심호흡을 세 번 해요',w:'심호흡을 세 번 하고',i:'breath'},{v:'천천히 다시 해요',w:'천천히 처음부터 다시 하고',i:'flag'},{v:'준비한 메모를 봐요',w:'준비한 메모를 보고',i:'pen'},{v:'도움을 요청해요',w:'주변에 도움을 요청하고',i:'hand'}];
+const IMG_STEPS={obst:{nm:'어려운 순간',q:'하다가 어떤 어려움이 생길 수 있을까요?',opts:OBST},cope:{nm:'이겨 내는 방법',q:'그때 나는 어떻게 할까요?',opts:COPE},job:{nm:'잘하고 싶은 일',q:'내가 잘하고 싶은 일은 무엇인가요?',opts:JOBS},place:{nm:'장소',q:'어디에서 하고 있나요?',opts:PLACES},who:{nm:'보는 사람',q:'누가 보고 있나요?',opts:WHO},look:{nm:'나의 모습',q:'나는 어떤 모습으로 하고 있나요?',opts:LOOK},react:{nm:'사람들 반응',q:'사람들은 어떤 모습인가요?',opts:REACT}};
+const IMG_BY_LV={1:['job','react'],2:['job','place','who','react'],3:['job','place','who','look','react'],4:['job','place','who','obst','cope','react']};
 const MEQ=[
   {k:'like',q:'내가 제일 좋아하는 것은?',opts:[['bowl','맛있는 음식'],['note','음악'],['ball','운동'],['gamepad','게임'],['dog','반려동물'],['palette','그림']],hint:a=>`제가 제일 좋아하는 것은 ${iye(a)}.`},
   {k:'habit',q:'고치고 싶은 나의 습관은?',opts:[['bed','늦잠 자기'],['phone','휴대폰 오래 보기'],['pen','숙제 미루기'],['sock','정리 안 하기'],['small','작은 목소리'],['clock','지각하기']],hint:a=>`고치고 싶은 습관은 ${iye(a)}.`},
@@ -342,7 +359,7 @@ const MEQ=[
   {k:'good',q:'내가 잘하거나, 잘하고 싶은 것은?',opts:[['mic','노래'],['shoe','운동'],['broom','정리'],['pan','요리'],['palette','그림'],['laptop','코딩']],hint:a=>`제가 잘하거나 잘하고 싶은 것은 ${iye(a)}.`},
   {k:'cool',q:'스스로가 가장 멋있다고 생각될 때는?',opts:[['hand','친구를 도울 때'],['flag','끝까지 해낼 때'],['bow','인사를 잘할 때'],['mic','발표할 때'],['check','일을 다 마쳤을 때'],['smile','웃을 때']],hint:a=>`저는 ${a} 가장 멋있어요.`},
   {k:'dream',q:'내가 되고 싶은 사람(꿈)은?',opts:[['pan','요리사'],['palette','디자이너'],['shoe','운동선수'],['laptop','개발자'],['mic','가수'],['teacher','선생님']],hint:a=>`제 꿈은 ${iye(a)}.`}];
-const MEQ_BY_LV={1:['like','good','cool'],2:['like','habit','money','good','cool','dream'],3:['like','habit','money','good','cool','dream']};
+const MEQ_BY_LV={1:['like','good','cool'],2:['like','habit','money','good','cool','dream'],3:['like','habit','money','good','cool','dream'],4:['like','habit','money','good','cool','dream']};
 const ANIMALS=[{k:'lion',v:'사자',t:[0,1]},{k:'dog',v:'강아지',t:[2,6]},{k:'cat',v:'고양이',t:[4,9]},{k:'rabbit',v:'토끼',t:[8,3]},{k:'turtle',v:'거북이',t:[5,4]},{k:'dolphin',v:'돌고래',t:[11,10]},{k:'bear',v:'곰',t:[7,4]},{k:'sunflower',v:'해바라기',t:[3,5]},{k:'cactus',v:'선인장',t:[5,7]},{k:'tree',v:'나무',t:[6,7]}];
 const TRAITS=[{t:'용감해요',a:'용감하고',k:'용감하기'},{t:'리더십이 있어요',a:'리더십이 있고',k:'리더십이 있기'},{t:'친절해요',a:'친절하고',k:'친절하기'},{t:'밝아요',a:'밝고',k:'밝기'},{t:'느긋해요',a:'느긋하고',k:'느긋하기'},{t:'끈기가 있어요',a:'끈기가 있고',k:'끈기가 있기'},
   {t:'배려심이 깊어요',a:'배려심이 깊고',k:'배려심이 깊기'},{t:'책임감이 강해요',a:'책임감이 강하고',k:'책임감이 강하기'},{t:'유머 감각이 있어요',a:'유머 감각이 있고',k:'유머 감각이 있기'},{t:'혼자 있는 걸 즐겨요',a:'혼자 있는 걸 즐기고',k:'혼자 있는 걸 즐기기'},{t:'친구와 함께하는 걸 좋아해요',a:'친구와 함께하는 걸 좋아하고',k:'친구와 함께하는 걸 좋아하기'},{t:'호기심이 많아요',a:'호기심이 많고',k:'호기심이 많기'}];
@@ -358,7 +375,7 @@ const AREAS=[
   {nm:'2부 · 시각화 이미지',ds:'구체적으로 상상해서 자신감 UP',c:'--d2',ks:['imagine']},
   {nm:'3부 · 나의 참모습 & 이미지 게임',ds:'나를 잘 알면 자신감 UP',c:'--d3',ks:['me']},
   {nm:'4부 · 나를 표현하기',ds:'친구들 앞에서 나를 소개해요',c:'--d4',ks:['animal']}];
-const LVNAME={1:'난이도 하 · 그림 보고 따라 하기',2:'난이도 중 · 글 읽고 고르기',3:'난이도 상 · 스스로 만들기'};
+const LVNAME={1:'난이도 하 · 그림 보고 따라 하기',2:'난이도 중 · 글 읽고 고르기',3:'난이도 상 · 스스로 만들기',4:'난이도 심화 · 깊이 생각하기'};
 const PRAISE=['정말 멋져요','최고예요','자신감 UP','잘했어요','할 수 있어요'];
 
 /* ================= 상태·도우미 ================= */
@@ -385,14 +402,14 @@ const order=html=>`<div class="panel"><div class="order"><div class="q">활동 �
 const NOW=x=>S.level<3&&x?'now':'';
 
 /* ================= 화면 ================= */
-function levelScreen(){const D={1:['하','그림을 보고 해요','얼굴 그림 단서, 선택지 2개, 반짝이는 단추 안내'],2:['중','글을 읽고 골라요','글 단서, 선택지 3개, 진로 질문 추가'],3:['상','스스로 판단해요','나쁜 생각 바꾸기, 응원 문장 만들기, 답 직접 쓰기, 이유 3개']};
+function levelScreen(){const D={1:['하','그림을 보고 해요','얼굴 그림 단서, 선택지 2개, 반짝이는 단추 안내'],2:['중','글을 읽고 골라요','글 단서, 선택지 3개, 진로 질문 추가'],4:['심화','깊이 생각해요','생각 함정 찾기, 어려움 대비 계획, 응원 문장 직접 쓰기, 아쉬운 점을 장점으로'],3:['상','스스로 판단해요','나쁜 생각 바꾸기, 응원 문장 만들기, 답 직접 쓰기, 이유 3개']};
   return `<header><h1>자신감 UP! <span class="y">자존감 UP!</span></h1><span class="badge">I MY ME MINE · 중학생 활동</span></header>
 ${SCENE}
 <div class="panel"><div class="q">닮은 듯 다른 자존감과 자신감</div><div class="row" style="align-items:flex-start">
 <div class="tx" style="flex:1 1 260px"><b style="color:var(--d3)">자존감</b><span class="sub">있는 그대로의 나를 가치 있게 여기는 마음<br>「나는 소중한 사람이야」</span></div>
 <div class="tx" style="flex:1 1 260px"><b style="color:var(--d4)">자신감</b><span class="sub">어떤 일을 해낼 수 있다고 믿는 마음<br>「나는 할 수 있어」</span></div></div></div>
 <p class="sub" style="margin:0">먼저 난이도를 고르세요. 선생님과 함께 골라도 좋아요.</p>
-<div class="tiles">${[1,2,3].map(l=>`<button class="tile" data-lv="${l}"><span class="nm" style="font-size:56px;line-height:1">${D[l][0]}</span><span class="nm">난이도 ${D[l][0]}</span><span class="q">${D[l][1]}</span><span class="ds">${D[l][2]}</span></button>`).join('')}</div>`}
+<div class="tiles">${[1,2,3,4].map(l=>`<button class="tile" data-lv="${l}"><span class="nm" style="font-size:56px;line-height:1">${D[l][0]}</span><span class="nm">난이도 ${D[l][0]}</span><span class="q">${D[l][1]}</span><span class="ds">${D[l][2]}</span></button>`).join('')}</div>`}
 
 function home(){const ks=Object.keys(TASKS),n=ks.filter(k=>S.done[k]).length,all=n===ks.length;return `
 <header><h1>자신감 UP! <span class="y">자존감 UP!</span></h1><div class="row"><span class="badge">${LVNAME[S.level]}</span><button class="ghost" data-go="level">난이도 다시 고르기</button></div></header>
@@ -404,27 +421,32 @@ ${n?`<div class="panel" style="align-items:center;text-align:center"><div class=
 <div class="panel settings"><div class="row"><button id="snd">${S.sound?'소리 켜짐':'소리 꺼짐'}</button><span class="sub">효과음과 읽어 주는 소리를 들려줍니다.</span></div></div>`}
 
 function make(k){const L=S.level;
-  if(k==='think'){const items=shuffle(SIT).slice(0,4).map(s=>{const ch=L===1?[{t:s.good,g:1},{t:s.bad[0]}]:L===2?[{t:s.good,g:1},{t:s.bad[0]},{t:s.bad[1]}]:[{t:s.good,g:1},{t:s.bad[1]},{t:s.bad[2]}];return Object.assign({},s,{ch:shuffle(ch)})});
-    return {i:0,n:4,items,wrong:[],solved:false,said:false,mood:30}}
+  if(k==='think'){const items=shuffle(SIT).slice(0,4).map(s=>{const ch=L===1?[{t:s.good,g:1},{t:s.bad[0]}]:L===2?[{t:s.good,g:1},{t:s.bad[0]},{t:s.bad[1]}]:[{t:s.good,g:1},{t:s.bad[1]},{t:s.bad[2]}];if(L===4)ch.splice(1,2,{t:s.fake,f:1},{t:s.bad[1]});
+      const others=shuffle(Object.keys(TRAPTYPE).filter(k=>k!==s.trap.k)).slice(0,3);return Object.assign({},s,{ch:shuffle(ch),traps:shuffle([s.trap.k].concat(others))})});
+    return {i:0,n:4,items,wrong:[],twrong:[],trapOK:false,solved:false,said:false}}
   if(k==='shout')return {i:0,n:4,stage:0,sent:null,how:null,what:null,heard:false};
   if(k==='imagine'){const steps=IMG_BY_LV[L];return {i:0,n:steps.length+1,steps,ans:{},jobs:L===1?shuffle(JOBS).slice(0,3):JOBS,count:null,imagined:false}}
   if(k==='me'){const qs=MEQ_BY_LV[L].map(q=>MEQ.find(x=>x.k===q));return {i:0,n:qs.length+1,qs,ans:{},icons:[],open:0,reveal:false,draft:''}}
-  return {i:0,n:3,need:L,pick:null,tr:[],pool:[],read:false}}
+  return {i:0,n:L===4?4:3,need:Math.min(L,3),pick:null,tr:[],pool:[],read:false,wk:null,rf:[],rwrong:[],weakOK:false}}
 
 /* 활동 1 */
-function think(){const t=S.t,s=t.items[t.i],L=S.level;const st=!t.solved?0:!t.said?1:2;
-  const todo=[L===3?'나쁜 생각을 바꿀 좋은 생각을 고르세요':'좋은 생각을 고르세요','「따라 말하기」를 누르고 소리 내어 말해 보세요','「다음」을 누르세요'][st];
-  const mood=t.solved?'happy':t.wrong.length?'sad':'worry';
-  const cloud=t.solved?`<div class="cloud ok pop">「${esc(s.good)}」</div>`:L===3?`<div class="cloud bad">「${esc(s.bad[0])}」</div>`:t.wrong.length?`<div class="cloud bad">「${esc(s.ch[t.wrong[t.wrong.length-1]].t)}」</div>`:`<div class="cloud">어떤 생각을 할까?</div>`;
+function think(){const t=S.t,s=t.items[t.i],L=S.level,L4=L===4,trapStep=L4&&!t.trapOK;
+  const names=(L4?['생각 함정 찾기']:[]).concat(['좋은 생각 고르기','따라 말하기','다음 상황']);
+  const raw=trapStep?0:!t.solved?1:!t.said?2:3,st=raw-(L4?0:1);
+  const todo=['나쁜 생각이 어떤 「생각 함정」인지 고르세요',L4?'사실은 인정하면서 다음 방법을 찾는 생각을 고르세요':L>=3?'나쁜 생각을 바꿀 좋은 생각을 고르세요':'좋은 생각을 고르세요','「따라 말하기」를 누르고 소리 내어 말해 보세요','「다음」을 누르세요'][raw];
+  const badT=L4?s.trap.t:s.bad[0],mood=t.solved?'happy':(t.wrong.length||t.twrong.length)?'sad':'worry';
+  const cloud=t.solved?`<div class="cloud ok pop">「${esc(s.good)}」</div>`:L>=3?`<div class="cloud bad">「${esc(badT)}」</div>`:t.wrong.length?`<div class="cloud bad">「${esc(s.ch[t.wrong[t.wrong.length-1]].t)}」</div>`:`<div class="cloud">어떤 생각을 할까?</div>`;
+  const body=trapStep?`<div class="q">이 생각에 숨은 함정은?</div><div class="choices">${s.traps.map((k,j)=>`<button class="choice ${t.twrong.includes(j)?'wrong':''}" data-trap="${j}" ${t.twrong.includes(j)?'disabled':''}><span><b>${TRAPTYPE[k].nm}</b><br><span class="sub" style="color:inherit">${TRAPTYPE[k].ds}</span></span></button>`).join('')}</div>`
+    :t.solved?'':`${L4?`<div class="row"><span class="badge">생각 함정: ${TRAPTYPE[s.trap.k].nm}</span></div>`:''}<div class="choices">${s.ch.map((c,j)=>`<button class="choice ${t.wrong.includes(j)?'wrong':''}" data-ch="${j}" ${t.wrong.includes(j)?'disabled':''}>${L===1?smallFace(!!c.g):''}<span>「${esc(c.t)}」</span></button>`).join('')}</div>`;
   return `${hdr(TASKS.think.nm)}${prog()}
-${order(L===3?'나쁜 생각이 떠올랐어요. <b>좋은 생각</b>으로 바꿔 주세요.':'같은 일이라도 <b>어떻게 생각하느냐</b>에 따라 기분과 행동이 달라져요.')}
-<div class="panel">${stepsBar(['좋은 생각 고르기','따라 말하기','다음 상황'],st)}<div class="todo">지금 할 일: ${todo}</div>
+${order(L4?'나쁜 생각 속에 숨은 <b>생각 함정</b>을 찾고, <b>현실적인 좋은 생각</b>으로 바꿔요.':L>=3?'나쁜 생각이 떠올랐어요. <b>좋은 생각</b>으로 바꿔 주세요.':'같은 일이라도 <b>어떻게 생각하느냐</b>에 따라 기분과 행동이 달라져요.')}
+<div class="panel">${stepsBar(names,st)}<div class="todo">지금 할 일: ${todo}</div>
 <div class="think"><div class="pic">${sitSVG(s.p)}</div><div class="tx" style="gap:10px"><span class="sub">상황 ${t.i+1} / ${t.n}</span><span class="sitx">${esc(s.s)}</span></div></div>
 <div class="mind">${face(mood)}${cloud}</div>
-<div class="meter"><span>마음 날씨</span><span class="bar"><i style="width:${t.solved?100:t.wrong.length?12:40}%"></i></span><span>${t.solved?'맑음':t.wrong.length?'비':'흐림'}</span></div>
-${t.solved?'':`<div class="choices">${s.ch.map((c,j)=>`<button class="choice ${t.wrong.includes(j)?'wrong':''}" data-ch="${j}" ${t.wrong.includes(j)?'disabled':''}>${L===1?smallFace(!!c.g):''}<span>「${esc(c.t)}」</span></button>`).join('')}</div>`}
+<div class="meter"><span>마음 날씨</span><span class="bar"><i style="width:${t.solved?100:t.trapOK?60:(t.wrong.length||t.twrong.length)?12:40}%"></i></span><span>${t.solved?'맑음':t.trapOK?'갬':(t.wrong.length||t.twrong.length)?'비':'흐림'}</span></div>
+${body}
 ${fb()}
-${t.solved?`<div class="row"><button id="say" class="${NOW(st===1)}"><span class="stepno">2</span> 따라 말하기</button><button class="primary ${NOW(st===2)}" id="next" ${t.said||S.level===3?'':'disabled'}>${t.i+1<t.n?'다음 상황':'다 했어요'}</button></div>`:''}</div>`}
+${t.solved?`<div class="row"><button id="say" class="${NOW(raw===2)}"><span class="stepno">${L4?3:2}</span> 따라 말하기</button><button class="primary ${NOW(raw===3)}" id="next" ${t.said||S.level>=3?'':'disabled'}>${t.i+1<t.n?'다음 상황':'다 했어요'}</button></div>`:''}</div>`}
 
 /* 활동 2 */
 function shoutSVG(v){return `<svg class="who" viewBox="0 0 260 220" aria-hidden="true"><rect y="196" width="260" height="24" fill="var(--floor)"/>${person(110,200,1.35,'var(--accent)',{arm:v.arm,face:v.face,shine:v.waves===3})}
@@ -432,9 +454,11 @@ ${Array.from({length:v.waves},(_,i)=>`<path d="M${170+i*18} ${70-i*14}q${16+i*8}
 <rect x="80" y="204" width="60" height="16" rx="8" fill="var(--accent)"/><text x="110" y="216" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="11" font-weight="900" fill="#FFF">${esc(me()).slice(0,5)}</text></svg>`}
 function shout(){const t=S.t,L=S.level;
   if(t.stage===0){const list=L===1?CHEERS.slice(0,2):CHEERS;
-    return `${hdr(TASKS.shout.nm)}${prog()}${order('나를 응원하는 말을 골라서 <b>작게 → 보통 → 크게</b> 세 번 외쳐요.')}
-<div class="panel">${stepsBar(['문장 고르기','작게','보통','크게 크게'],0)}<div class="todo">지금 할 일: ${t.sent?'「이 말로 외치기」를 누르세요':'나를 응원하는 말을 고르세요'}</div>
-<div class="choices">${list.map((c,j)=>`<button class="choice ${t.sent===c?'sel':''} ${NOW(!t.sent&&L===1&&j===0)}" data-cheer="${j}">${icon('heart')}<span>「${esc(c)}」</span></button>`).join('')}</div>
+    return `${hdr(TASKS.shout.nm)}${prog()}${order(L===4?'규칙에 맞게 <b>나만의 응원 문장</b>을 쓰고, <b>작게 → 보통 → 크게</b> 세 번 외쳐요.':'나를 응원하는 말을 골라서 <b>작게 → 보통 → 크게</b> 세 번 외쳐요.')}
+<div class="panel">${stepsBar(['문장 고르기','작게','보통','크게 크게'],0)}<div class="todo">지금 할 일: ${t.sent?'「이 말로 외치기」를 누르세요':L===4?'규칙에 맞게 응원 문장을 쓰고 「문장 확인」을 누르세요':'나를 응원하는 말을 고르세요'}</div>
+${L===4?`<div class="builder"><label for="cw" class="q">나만의 응원 문장 쓰기</label><div class="sub">규칙: ① 「나는」으로 시작해요 ② 「못·안·없·않」처럼 부정하는 말은 빼요 ③ 8~30자로 써요</div>
+<div class="write"><input id="cw" maxlength="30" autocomplete="off" placeholder="예: 나는 어제보다 한 걸음 더 성장할 거야!" value="${esc(t.draft||'')}"><button id="cwok">문장 확인</button></div>
+${t.sent?`<div class="cloud ok">「${esc(t.sent)}」</div>`:''}</div>`:`<div class="choices">${list.map((c,j)=>`<button class="choice ${t.sent===c?'sel':''} ${NOW(!t.sent&&L===1&&j===0)}" data-cheer="${j}">${icon('heart')}<span>「${esc(c)}」</span></button>`).join('')}</div>`}
 ${L===3?`<div class="builder"><div class="q">또는 내 문장 만들기: 「나는 <u>${t.how?esc(t.how):'　　　'}</u> <u>${t.what?esc(t.what):'　　　'}</u> 할 수 있어!」</div>
 <div class="chips">${HOW.map(h=>`<button data-how="${h}" class="${t.how===h?'sel':''}">${h}</button>`).join('')}</div>
 <div class="chips">${WHAT.map(h=>`<button data-what="${h}" class="${t.what===h?'sel':''}">${h}</button>`).join('')}</div></div>`:''}
@@ -447,10 +471,11 @@ ${fb()}<div class="row"><button id="listen" class="${NOW(!t.heard)}"><span class
 
 /* 활동 3 */
 function imgSentence(a){let s='나는 '+(a.place?a.place.v+'에서 ':'')+(a.who?a.who.v+' 앞에서 ':'')+(a.look?a.look.v+' ':'')+'멋지게 '+(a.job&&a.job.d?a.job.d:eul(a.job?a.job.v:'일')+' 할')+' 수 있어!';
-  if(a.react)s+=' '+(a.who?iga(a.who.v):'사람들이')+' '+a.react.v+'.';return s}
+  if(a.react)s+=' '+(a.who?iga(a.who.v):'사람들이')+' '+a.react.v+'.';
+  if(a.obst&&a.cope)s+=` 만약 ${a.obst.w} ${a.cope.w} 끝까지 해낼 거야.`;return s}
 function imagine(){const t=S.t,names=t.steps.map(k=>IMG_STEPS[k].nm).concat(['눈 감고 상상하기']);
   if(t.i<t.steps.length){const key=t.steps[t.i],st=IMG_STEPS[key],opts=key==='job'?t.jobs:st.opts;
-    return `${hdr(TASKS.imagine.nm)}${prog()}${order('내가 잘하고 싶은 일을 <b>멋지게 해내는 모습</b>을 하나씩 그려요.')}
+    return `${hdr(TASKS.imagine.nm)}${prog()}${order(S.level===4?'잘하고 싶은 일을 해내는 모습과 함께, <b>어려운 순간을 이겨 내는 방법</b>까지 미리 그려요.':'내가 잘하고 싶은 일을 <b>멋지게 해내는 모습</b>을 하나씩 그려요.')}
 <div class="panel">${stepsBar(names,t.i)}<div class="todo">지금 할 일: ${esc(st.q)}</div>
 <div class="stage">${stageSVG(t.ans)}</div>
 <div class="picks">${opts.map((o,j)=>`<button class="pick" data-img="${j}">${icon(o.i)}<span>${esc(o.v)}</span></button>`).join('')}</div>${fb()}</div>`}
@@ -459,7 +484,7 @@ function imagine(){const t=S.t,names=t.steps.map(k=>IMG_STEPS[k].nm).concat(['�
 <div class="panel">${stepsBar(names,t.steps.length)}<div class="todo">지금 할 일: ${!t.imagined?(running?'눈을 감고 그 모습을 떠올리세요':'「눈 감고 10초 상상하기」를 누르세요'):'「다 했어요」를 누르세요'}</div>
 <div class="stage">${stageSVG(t.ans)}</div><div class="dream">「${esc(s)}」</div>
 ${t.count!==null?`<div class="timer" aria-live="polite">${t.count>0?t.count:'눈을 떠요!'}</div>`:''}
-<div class="row" style="justify-content:center"><button id="readimg">읽어 주기</button><button id="eyes" class="${NOW(!t.imagined&&!running)}" ${running?'disabled':''}>눈 감고 10초 상상하기</button><button class="primary ${NOW(t.imagined)}" id="imgdone" ${t.imagined||S.level===3?'':'disabled'}>다 했어요</button></div></div>`}
+<div class="row" style="justify-content:center"><button id="readimg">읽어 주기</button><button id="eyes" class="${NOW(!t.imagined&&!running)}" ${running?'disabled':''}>눈 감고 10초 상상하기</button><button class="primary ${NOW(t.imagined)}" id="imgdone" ${t.imagined||S.level>=3?'':'disabled'}>다 했어요</button></div></div>`}
 
 /* 활동 4 */
 function meScreen(){const t=S.t,L=S.level,names=t.qs.map((_,i)=>'질문 '+(i+1)).concat(['이미지 게임']);
@@ -467,8 +492,8 @@ function meScreen(){const t=S.t,L=S.level,names=t.qs.map((_,i)=>'질문 '+(i+1))
     return `${hdr(TASKS.me.nm)}${prog()}${order('질문에 답하면 거울에 <b>나의 참모습 스티커</b>가 붙어요.')}
 <div class="panel">${stepsBar(names,t.i)}<div class="todo">지금 할 일: ${esc(q.q)}</div>
 <div class="mirrorwrap">${mirrorSVG(t.icons)}<div class="tx" style="gap:8px"><span class="sub">질문 ${t.i+1} / ${t.qs.length}</span><span class="sitx">${esc(q.q)}</span></div></div>
-<div class="picks">${opts.map((o,j)=>`<button class="pick" data-me="${j}">${icon(o[0])}<span>${esc(o[1])}</span></button>`).join('')}</div>
-${L===3?`<div class="write"><label for="mew" class="sub" style="flex-basis:100%">고를 것이 없으면 직접 써도 돼요.</label><input id="mew" maxlength="20" autocomplete="off" placeholder="직접 쓰기" value="${esc(t.draft)}"><button id="mewok" class="primary">이걸로 할래요</button></div>`:''}
+${L===4?'':`<div class="picks">${opts.map((o,j)=>`<button class="pick" data-me="${j}">${icon(o[0])}<span>${esc(o[1])}</span></button>`).join('')}</div>`}
+${L>=3?`<div class="write"><label for="mew" class="sub" style="flex-basis:100%">${L===4?'내 생각을 직접 써 주세요. 예: '+q.opts.slice(0,3).map(o=>o[1]).join(', '):'고를 것이 없으면 직접 써도 돼요.'}</label><input id="mew" maxlength="20" autocomplete="off" placeholder="직접 쓰기" value="${esc(t.draft)}"><button id="mewok" class="primary">이걸로 할래요</button></div>`:''}
 ${fb()}</div>`}
   const hints=t.qs.map(q=>q.hint(t.ans[q.k])),all=t.open>=hints.length;
   return `${hdr(TASKS.me.nm)}${prog()}${order('이미지 게임: 「<b>나는 누구일까요?</b>」 카드를 하나씩 뒤집어 친구들에게 보여 주세요.')}
@@ -481,9 +506,10 @@ ${t.reveal?`<div class="answer pop">정답은 바로 「${esc(me())}」!</div>`:
 function animalSpeech(t){const a=t.pick,tr=t.tr.map(i=>TRAITS[i]);let why;
   if(tr.length===1)why=`그 이유는 ${tr[0].k} 때문이다.`;
   else why='그 이유는 '+tr.map((x,j)=>`${ORD[j]}, ${j<tr.length-1?x.a:x.k}`).join('<br>')+'<br>때문이다.';
-  return {html:`나는 <b>${esc(a.v)}</b>이다.<br><br>${why}<br><br>그래서 나는 <b>${esc(a.v)}</b>이다.`,text:`나는 ${a.v}이다. ${why.replace(/<br>/g,' ')} 그래서 나는 ${a.v}이다.`}}
+  const W=t.weakOK?WEAK[t.wk]:null,wh=W?`<br><br>물론 나는 ${W.k}.<br>하지만 <b>${W.r}</b>.`:'',wt=W?` 물론 나는 ${W.k}. 하지만 ${W.r}.`:'';
+  return {html:`나는 <b>${esc(a.v)}</b>이다.<br><br>${why}${wh}<br><br>그래서 나는 <b>${esc(a.v)}</b>이다.`,text:`나는 ${a.v}이다. ${why.replace(/<br>/g,' ')}${wt} 그래서 나는 ${a.v}이다.`}}
 function podiumSVG(k){return `<svg viewBox="0 0 220 240" aria-hidden="true"><rect width="220" height="240" fill="var(--wall)"/><rect y="214" width="220" height="26" fill="var(--floor)"/><rect x="40" y="16" width="140" height="96" rx="6" fill="var(--paper)" stroke="var(--line)" stroke-width="3"/><svg x="70" y="20" width="80" height="80" viewBox="0 0 100 100">${AN[k]}</svg><path d="M110 112v20" stroke="var(--metal)" stroke-width="3"/>${person(110,214,.95,'var(--accent)',{arm:'mic',face:'open'})}<path d="M70 160h80l-8 56H78z" fill="var(--wood)"/><rect x="66" y="152" width="88" height="12" rx="3" fill="var(--wood-dark)"/></svg>`}
-function animal(){const t=S.t,L=S.level,names=['동물·식물 고르기','이유 고르기','발표하기'];
+function animal(){const t=S.t,L=S.level,names=L===4?['동물·식물 고르기','이유 고르기','아쉬운 점 바꾸기','발표하기']:['동물·식물 고르기','이유 고르기','발표하기'];
   if(t.i===0)return `${hdr(TASKS.animal.nm)}${prog()}${order('「나는 <b>사자</b>이다. 그 이유는…」처럼 나를 닮은 동물이나 식물로 나를 소개해요.')}
 <div class="panel">${stepsBar(names,0)}<div class="todo">지금 할 일: 나를 닮은 동물이나 식물을 고르세요</div>
 <div class="picks">${(L===1?ANIMALS.slice(0,6):ANIMALS).map((a,j)=>`<button class="pick an" data-an="${j}">${anSVG(a.k)}<span>${esc(a.v)}</span></button>`).join('')}</div>${fb()}</div>`;
@@ -493,9 +519,15 @@ function animal(){const t=S.t,L=S.level,names=['동물·식물 고르기','이�
 <div class="think"><div class="pic">${anSVG(t.pick.k)}</div><div class="tx"><span class="sitx">나는 ${esc(t.pick.v)}이다.</span><span class="sub">고른 이유를 다시 누르면 취소돼요.</span></div></div>
 <div class="chips">${t.pool.map(i=>{const o=t.tr.indexOf(i);return `<button data-tr="${i}" class="${o>=0?'sel':''} ${NOW(L===1&&left>0&&t.pick.t.includes(i))}">${o>=0?`<span class="no">${o+1}</span>`:''}${esc(TRAITS[i].t)}</button>`}).join('')}</div>${fb()}
 <div class="row"><button class="ghost" id="anback">다시 고르기</button><button class="primary ${NOW(left===0)}" id="anok" ${left===0?'':'disabled'}>발표문 만들기</button></div></div>`}
+  if(t.i===2&&L===4){const W=t.wk!==null?WEAK[t.wk]:null;
+    return `${hdr(TASKS.animal.nm)}${prog()}${order('누구에게나 <b>아쉬운 점</b>이 있어요. 아쉬운 점을 <b>장점으로 바꿔 보는 연습</b>을 해요.')}
+<div class="panel">${stepsBar(names,2)}<div class="todo">지금 할 일: ${!W?'나의 아쉬운 점을 하나 고르세요':!t.weakOK?'이 아쉬운 점과 이어지는 장점을 고르세요':'「발표문 만들기」를 누르세요'}</div>
+<div class="chips">${WEAK.map((w,j)=>`<button data-wk="${j}" class="${t.wk===j?'sel':''}">${esc(w.t)}</button>`).join('')}</div>
+${W?`<div class="q">「${esc(W.t)}」를 다르게 보면?</div><div class="choices">${t.rf.map((j,n)=>`<button class="choice ${t.rwrong.includes(n)?'wrong':''} ${t.weakOK&&j===t.wk?'sel':''}" data-rf="${n}" ${t.rwrong.includes(n)||t.weakOK?'disabled':''}>${icon('heart')}<span>${esc(WEAK[j].r)}</span></button>`).join('')}</div>`:''}
+${fb()}<div class="row"><button class="primary" id="anok2" ${t.weakOK?'':'disabled'}>발표문 만들기</button></div></div>`}
   const sp=animalSpeech(t);
   return `${hdr(TASKS.animal.nm)}${prog()}${order('발표 원고를 보고 친구들 앞에서 <b>크고 또박또박</b> 발표해요.')}
-<div class="panel">${stepsBar(names,2)}<div class="todo">지금 할 일: ${!t.read&&L<3?'「읽어 주기」로 먼저 들어 보세요':'발표하고 「발표했어요」를 누르세요'}</div>
+<div class="panel">${stepsBar(names,names.length-1)}<div class="todo">지금 할 일: ${!t.read&&L<3?'「읽어 주기」로 먼저 들어 보세요':'발표하고 「발표했어요」를 누르세요'}</div>
 <div class="present">${podiumSVG(t.pick.k)}<div class="script">${sp.html}</div></div>${fb()}
 <div class="row"><button id="readan" class="${NOW(!t.read)}"><span class="stepno">1</span> 읽어 주기</button><button class="primary ${NOW(t.read)}" id="andone"><span class="stepno">2</span> 발표했어요</button></div></div>`}
 
@@ -535,16 +567,25 @@ function bind(){const $=id=>document.getElementById(id),all=s=>app.querySelector
   if($('reset'))$('reset').onclick=()=>{S.done={};S.card={};render()};
   if($('report'))$('report').onclick=()=>{S.praise=PRAISE[Math.floor(Math.random()*PRAISE.length)];S.reported=true;speak('다 했습니다. 확인해 주세요. 칭찬합시다!');render()};
   /* 좋은 생각 */
+  all('[data-trap]').forEach(b=>b.onclick=()=>{const j=+b.dataset.trap,s=t.items[t.i];
+    if(s.traps[j]===s.trap.k){t.trapOK=true;say(`맞아요, 「${TRAPTYPE[s.trap.k].nm}」이에요. 이제 좋은 생각으로 바꿔 보세요.`,'ok')}
+    else{mark(false);t.twrong.push(j);say('다른 함정이에요. 나쁜 생각의 말투를 다시 확인해 보세요.','bad')}render()});
   all('[data-ch]').forEach(b=>b.onclick=()=>{const j=+b.dataset.ch,s=t.items[t.i];
     if(s.ch[j].g){mark(true);t.solved=true;S.card.think=s.good;say('좋은 생각을 골랐어요! 마음이 맑아졌어요.','ok');speak(s.good)}
-    else{mark(false);t.wrong.push(j);say('그렇게 생각하면 마음이 어떨까요? 다시 골라 보세요.','bad')}render()});
+    else{mark(false);t.wrong.push(j);say(s.ch[j].f?'문제를 모른 척하는 생각이에요. 사실은 인정하고 다음 방법을 찾는 생각을 골라 보세요.':'그렇게 생각하면 마음이 어떨까요? 다시 골라 보세요.','bad')}render()});
   if($('say'))$('say').onclick=()=>{speak(t.items[t.i].good);t.said=true;t.msg='소리 내어 따라 말해 보세요.';t.res='ok';render()};
-  if($('next'))$('next').onclick=()=>{t.i++;t.counted=false;if(t.i>=t.n){finish();return}Object.assign(t,{wrong:[],solved:false,said:false,msg:'',res:''});render()};
+  if($('next'))$('next').onclick=()=>{t.i++;t.counted=false;if(t.i>=t.n){finish();return}Object.assign(t,{wrong:[],twrong:[],trapOK:false,solved:false,said:false,msg:'',res:''});render()};
   /* 크게 크게 */
   all('[data-cheer]').forEach(b=>b.onclick=()=>{const list=S.level===1?CHEERS.slice(0,2):CHEERS;t.sent=list[+b.dataset.cheer];t.how=t.what=null;t.msg='';sfx.tap();speak(t.sent);render()});
   const built=()=>{if(t.how&&t.what){t.sent=`나는 ${t.how} ${t.what} 할 수 있어!`;speak(t.sent)}else t.sent=null};
   all('[data-how]').forEach(b=>b.onclick=()=>{t.how=b.dataset.how;built();sfx.tap();render()});
   all('[data-what]').forEach(b=>b.onclick=()=>{t.what=b.dataset.what;built();sfx.tap();render()});
+  if($('cw'))$('cw').oninput=e=>{t.draft=e.target.value};
+  if($('cwok'))$('cwok').onclick=()=>{let v=(t.draft||'').trim().replace(/\s+/g,' ');
+    if(!v.startsWith('나는'))say('「나는」으로 시작해 주세요.','bad');
+    else if(/못|않|없|안 |안$|안[.!?]/.test(v))say('부정하는 말(못·안·없·않)이 들어 있어요. 할 수 있는 쪽으로 바꿔 보세요.','bad');
+    else if(v.length<8)say('조금 더 길게, 무엇을 할지 써 보세요.','bad');
+    else{if(!/[.!?]$/.test(v))v+='!';t.sent=v;say('좋은 응원 문장이에요!','ok');speak(v)}render()};
   if($('gosh'))$('gosh').onclick=()=>{if(!t.sent)return;S.card.shout=t.sent;t.stage=1;t.i=1;t.heard=false;t.msg='';render()};
   if($('listen'))$('listen').onclick=()=>{speak(t.sent,[.8,.9,1][t.stage-1]);t.heard=true;render()};
   if($('said'))$('said').onclick=()=>{if(t.stage>=3){t.i=4;finish();return}t.stage++;t.i=t.stage;t.heard=false;say(t.stage===2?'좋아요! 이번엔 보통 목소리로!':'이번엔 가슴을 펴고 크게 크게!','ok');render()};
@@ -575,9 +616,12 @@ function bind(){const $=id=>document.getElementById(id),all=s=>app.querySelector
     if(o>=0)t.tr.splice(o,1);else if(t.tr.length<t.need)t.tr.push(i);else{say(`이유는 ${t.need}개만 골라요. 고른 것을 다시 누르면 취소돼요.`,'bad');render();return}
     t.msg='';sfx.tap();render()});
   if($('anback'))$('anback').onclick=()=>{t.i=0;t.pick=null;t.tr=[];t.msg='';render()};
-  if($('anok'))$('anok').onclick=()=>{t.i=2;t.read=false;const sp=animalSpeech(t);S.card.animal={k:t.pick.k,text:sp.text};render()};
+  all('[data-wk]').forEach(b=>b.onclick=()=>{const j=+b.dataset.wk;t.wk=j;t.weakOK=false;t.rwrong=[];t.counted=false;t.rf=shuffle([j].concat(shuffle(WEAK.map((_,i)=>i).filter(i=>i!==j)).slice(0,2)));t.msg='';sfx.tap();render()});
+  all('[data-rf]').forEach(b=>b.onclick=()=>{const n=+b.dataset.rf;if(t.rf[n]===t.wk){mark(true);t.weakOK=true;say('좋아요! 아쉬운 점도 다르게 보면 장점이 돼요.','ok')}else{mark(false);t.rwrong.push(n);say('이 아쉬운 점과는 잘 이어지지 않아요. 다시 확인해 보세요.','bad')}render()});
+  if($('anok2'))$('anok2').onclick=()=>{t.i=3;t.read=false;S.card.animal={k:t.pick.k,text:animalSpeech(t).text};t.msg='';render()};
+  if($('anok'))$('anok').onclick=()=>{if(S.level===4){t.i=2;t.wk=null;t.weakOK=false;t.rwrong=[];t.msg='';render();return}t.i=2;t.read=false;const sp=animalSpeech(t);S.card.animal={k:t.pick.k,text:sp.text};render()};
   if($('readan'))$('readan').onclick=()=>{speak(animalSpeech(t).text,.85);t.read=true;render()};
-  if($('andone'))$('andone').onclick=()=>{t.i=3;finish()};
+  if($('andone'))$('andone').onclick=()=>{t.i=t.n;finish()};
   /* 카드 */
   if($('readcard'))$('readcard').onclick=()=>speak(cardText().replace(/\n/g,'. '));
   if($('copycard'))$('copycard').onclick=()=>{const m=$('copymsg'),fail=()=>{m.textContent='복사가 안 돼요. 카드 글자를 길게 눌러 직접 복사해 주세요.';m.className='fb bad'};
